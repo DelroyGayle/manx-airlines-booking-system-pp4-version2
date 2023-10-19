@@ -1,110 +1,177 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
+# Manx Airlines Travel Agent Booking System
 
-Welcome USER_NAME,
+[Live Link]
 
-This is the Code Institute student template for Gitpod. We have preinstalled all of the tools you need to get started. It's perfectly ok to use this template as the basis for your project submissions.
+## Introduction
 
-You can safely delete this README.md file, or change it for your own project. Please do read it at least once, though! It contains some important information about Gitpod and the extensions we use. Some of this information has been updated since the video content was created. The last update to this file was: **September 1, 2021**
+For my Code Institute Portfolio Project 4, 
+I would like to implement a Booking/Reservation system so that a Travel Agent<br>can make a booking for passengers to travel with Manx Airlines,<br> with regards to flights between London and the Isle of Man.
 
-## Gitpod Reminders
+Manx Airlines offer three flights everyday.
 
-To run a frontend (HTML, CSS, Javascript only) application in Gitpod, in the terminal, type:
+The Daily Flight Schedules are:
 
-`python3 -m http.server`
+**London City Airport TO Douglas, Isle of Man - LCYIOM**
+| Flight | Time of Departure | Time of Arrival |
+| -------| -----------       | --------------- |
+| XM465	| 08:00 | 9:45 |
+| XM475	| 13:30 | 15:15 |
+| XM485	| 18:30 | 20:15 |
 
-A blue button should appear to click: _Make Public_,
 
-Another blue button should appear to click: _Open Browser_.
+**Douglas, Isle of Man TO London City Airport to  - IOMLCY**
+| Flight | Time of Departure | Time of Arrival |
+| -------| -----------       | --------------- |
+| XM466	| 11:00 | 12:45 |
+| XM476	| 16:00 | 17:45 |
+| XM486	| 21:00 | 22:45 |
 
-To run a backend Python file, type `python3 app.py`, if your Python file is named `app.py` of course.
+## User Stories
 
-A blue button should appear to click: _Make Public_,
-
-Another blue button should appear to click: _Open Browser_.
-
-In Gitpod you have superuser security privileges by default. Therefore you do not need to use the `sudo` (superuser do) command in the bash terminal in any of the lessons.
-
-To log into the Heroku toolbelt CLI:
-
-1. Log in to your Heroku account and go to *Account Settings* in the menu under your avatar.
-2. Scroll down to the *API Key* and click *Reveal*
-3. Copy the key
-4. In Gitpod, from the terminal, run `heroku_config`
-5. Paste in your API key when asked
-
-You can now use the `heroku` CLI program - try running `heroku apps` to confirm it works. This API key is unique and private to you so do not share it. If you accidentally make it public then you can create a new one with _Regenerate API Key_.
-
-------
-
-## Release History
-
-We continually tweak and adjust this template to help give you the best experience. Here is the version history:
-
-**September 20 2023:** Update Python version to 3.9.17.
-
-**September 1 2021:** Remove `PGHOSTADDR` environment variable.
-
-**July 19 2021:** Remove `font_fix` script now that the terminal font issue is fixed.
-
-**July 2 2021:** Remove extensions that are not available in Open VSX.
-
-**June 30 2021:** Combined the P4 and P5 templates into one file, added the uptime script. See the FAQ at the end of this file.
-
-**June 10 2021:** Added: `font_fix` script and alias to fix the Terminal font issue
-
-**May 10 2021:** Added `heroku_config` script to allow Heroku API key to be stored as an environment variable.
-
-**April 7 2021:** Upgraded the template for VS Code instead of Theia.
-
-**October 21 2020:** Versions of the HTMLHint, Prettier, Bootstrap4 CDN and Auto Close extensions updated. The Python extension needs to stay the same version for now.
-
-**October 08 2020:** Additional large Gitpod files (`core.mongo*` and `core.python*`) are now hidden in the Explorer, and have been added to the `.gitignore` by default.
-
-**September 22 2020:** Gitpod occasionally creates large `core.Microsoft` files. These are now hidden in the Explorer. A `.gitignore` file has been created to make sure these files will not be committed, along with other common files.
-
-**April 16 2020:** The template now automatically installs MySQL instead of relying on the Gitpod MySQL image. The message about a Python linter not being installed has been dealt with, and the set-up files are now hidden in the Gitpod file explorer.
-
-**April 13 2020:** Added the _Prettier_ code beautifier extension instead of the code formatter built-in to Gitpod.
-
-**February 2020:** The initialisation files now _do not_ auto-delete. They will remain in your project. You can safely ignore them. They just make sure that your workspace is configured correctly each time you open it. It will also prevent the Gitpod configuration popup from appearing.
-
-**December 2019:** Added Eventyret's Bootstrap 4 extension. Type `!bscdn` in a HTML file to add the Bootstrap boilerplate. Check out the <a href="https://github.com/Eventyret/vscode-bcdn" target="_blank">README.md file at the official repo</a> for more options.
+* As a User I want the navigation to be user-friendly so that I can easily create and amend bookings corrsponding to passengers' requests.
+* As a User I can register, log-in and log-out from the website 
+* As a User I can log in using my email and password so that I can access the system and make bookings 
+* As a User I can **create a new bookings** by providing **Passenger Name(s) and Contact Details
+* As a User I can optionally add the date of birth if Passenger is a child or infant.
+* As a User I can optionally add whether Passenger(s) require bags and any special requirements such as wheelchairs
+* As a User I can add a note to the Booking in reqards to any special requests required by the Passenger(s)
+* As a User I can view bookings that have been made by myself or other users.
+* As a User I can **edit bookings** that I have made** in regards to Passenger details such as Name, Contact Details, Number of Bags, Date of Birth
+* As a User I can **delete bookings that I have made** when a booking is no longer applicable. For example, Passenger is no longer travelling or new parties need to be added
+* As a User I can see the total fees in regards to making a new booking
+* As a User I can see the total fees in regards to amending a booking
 
 ------
 
-## FAQ about the uptime script
+## UX
 
-**Why have you added this script?**
+### Design
 
-It will help us to calculate how many running workspaces there are at any one time, which greatly helps us with cost and capacity planning. It will help us decide on the future direction of our cloud-based IDE strategy.
 
-**How will this affect me?**
+------
 
-For everyday usage of Gitpod, it doesn’t have any effect at all. The script only captures the following data:
+## Features
 
-- An ID that is randomly generated each time the workspace is started.
-- The current date and time
-- The workspace status of “started” or “running”, which is sent every 5 minutes.
+------
 
-It is not possible for us or anyone else to trace the random ID back to an individual, and no personal data is being captured. It will not slow down the workspace or affect your work.
+## Limitations
 
-**So….?**
+## Future Features
+* Be able to add new passengers to an existing booking
+* Be able to *change* passenger type e.g. *Adult to Child, Child to Infant, Child to Adult* and vice versa
 
-We want to tell you this so that we are being completely transparent about the data we collect and what we do with it.
+------
 
-**Can I opt out?**
+## Data Model
 
-Yes, you can. Since no personally identifiable information is being captured, we'd appreciate it if you let the script run; however if you are unhappy with the idea, simply run the following commands from the terminal window after creating the workspace, and this will remove the uptime script:
+### SQL Tables
 
-```
-pkill uptime.sh
-rm .vscode/uptime.sh
-```
 
-**Anything more?**
+## Modules
 
-Yes! We'd strongly encourage you to look at the source code of the `uptime.sh` file so that you know what it's doing. As future software developers, it will be great practice to see how these shell scripts work.
+## Testing
 
----
++ Passed the code through the PEP8 linter and confirmed there are no problems.
++ Carried out tests of the program on both the local terminal and the Code Institute Heroku terminal.
 
-Happy coding!
+### Internal Errors
+
+## Code Validation
+
+## Bugs
+
+### Solved Bugs
+
+
+------
+
+## Deployment
+
+The project is deployed on Heroku. These are the steps in order to deploy on Heroku:
+1. Regarding your project:
+    + create a Procfile with the following one line entry
+    ```
+    web: node index.js
+    ```
+
+2. Then ensure that you have pushed your latest version including Procfile to GitHub
+
+3. Create a Heroku account. You will need to enter 
+* first name
+* last name
+* email address,  
+* role e.g. *student*
+* location
+* primary development language i.e. *Python*
+
+4. Click *Create free account*
+
+5. Proceed with confirmation via email
+
+6. Log into Heroku
+
+7. Create a new application by clicking the *Create New App* button.<br>
+You will need to enter
+* The *App name*
+* The region
+* Then click the *Create app* button
+
+8. Go into settings -> Config Var and add the following:
+    +  key by the name of *PORT* with the value of *8000*.<p>
+
+9. The next step is to add a couple of  buildpacks to your application.<br>Then click the *Add buildpack* button
+
+10. Include the following buildpacks:
+    + The first buildpack is *heroku/python* - then click "Save changes"
+    + The second buildpack is *heroku/nodejs* - then click "Save changes"
+    + Please note: the order is significant - the Python buildpack **must** appear on top before the NodeJs buildpack.<br>One can use the mouse to drag the buildpacks into the correct order<p>
+
+11. Then click the *Deploy* option. This is where you choose the deployment method of *GitHub*
+
+12. Find the repo with the project you want to deploy
+
+13. Confirm that you want to connect to GitHub by clicking the *Connect* button
+
+14. Scroll down to the two options, *Automatic deploys - Manual deploy*
+
+15. In this section, you can click *Enable Automatic deploys* - Heroku will rebuild your app every time you push a new change  
+to your code to GitHub
+
+16. Or you can choose to *manually deploy* using the *Deploy Branch* option here 
+
+17. Pick which branch you want to deploy -- Generally this would be **main**
+
+18. Click **Deploy Branch** and wait until the project is built
+
+19. Ensure there are no errors. Heroku will display the message **Your app was successfully deployed**
+
+20. Click the *View* button and you will be taken to an URL of the form *https:\/\/\<project-name>.herokuapp.com/*<br>
+This is your deployed app in operation
+
+## Languages, Libraries and Technologies
+
+### Languages
+* Python3
+
+### Python Libraries
+
+* os - I use this library for the *clear* function in order to clear the console before displaying an updated chessboard.
+* re - I use *regular expressions* in order to validate user input of chess moves.
+* time - I use the *sleep* function to cause the program to delay for a few seconds, in order so that the user can see the updated chessboard.
+
+### Other tools
+
+* [GitHub](https://github.com/) - for hosting the site
+* [Gitpod](https://www.gitpod.io/) - for editing the files
+* [Heroku](https://heroku.com) - for the deployment of the site
+* [Code Institute's GitHub full template](https://github.com/Code-Institute-Org/python-essentials-template) - in order to run Python on Heroku
+
+------
+
+## Credits
+
++ [Flowchart Fun](https://flowchart.fun/) 
++ [Miro](https://miro.com/)
++ [drawSQL](https://drawsql.app/) was used to draw the SQL tables
+        
+## Acknowledgements    
