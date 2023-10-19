@@ -66,6 +66,7 @@ The Daily Flight Schedules are:
 
 ### SQL Tables
 
+![drawSQL-teamdg2-export-2023-10-19](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/f52a38a1-2872-4f57-ad89-7546896e2f9c)
 
 ## Modules
 
