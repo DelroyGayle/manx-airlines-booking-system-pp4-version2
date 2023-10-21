@@ -51,9 +51,10 @@ The Daily Flight Schedules are:
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/24858511-6621-45e3-b1be-22c54d4c74a3)
 
-#### Initial Booking Page
+#### Initial Create Booking Page
 
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/0c0b2a16-4b4a-486c-a22e-cce05e9b1477)
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/674a8c24-8e04-41a9-a6b9-4ab4c72e169d)
+
 
 
 ------
