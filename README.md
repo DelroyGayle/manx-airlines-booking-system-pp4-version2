@@ -28,24 +28,28 @@ The Daily Flight Schedules are:
 
 ## User Stories
 
-* As a User I want the navigation to be user-friendly so that I can easily create and amend bookings corrsponding to passengers' requests.
-* As a User I can register, log-in and log-out from the website 
-* As a User I can log in using my email and password so that I can access the system and make bookings 
-* As a User I can **create a new bookings** by providing **Passenger Name(s) and Contact Details
-* As a User I can optionally add the date of birth if Passenger is a child or infant.
-* As a User I can optionally add whether Passenger(s) require bags and any special requirements such as wheelchairs
-* As a User I can add a note to the Booking in reqards to any special requests required by the Passenger(s)
-* As a User I can view bookings that have been made by myself or other users.
-* As a User I can **edit bookings** that I have made** in regards to Passenger details such as Name, Contact Details, Number of Bags, Date of Birth
-* As a User I can **delete bookings that I have made** when a booking is no longer applicable. For example, Passenger is no longer travelling or new parties need to be added
-* As a User I can see the total fees in regards to making a new booking
-* As a User I can see the total fees in regards to amending a booking
+* As a **Site User** I want the navigation to be user-friendly so that I can easily create and amend bookings corrsponding to passengers' requests.
+* As a **Site User** I can register, log-in and log-out from the website 
+* As a **Site User** I can log in using my email and password so that I can access the system and make bookings 
+* As a **Site User** I can **create a new bookings** by providing **Passenger Name(s) and Contact Details
+* As a **Site User** I can optionally add the date of birth if Passenger is a child or infant.
+* As a **Site User** I can optionally add whether Passenger(s) require bags and any special requirements such as wheelchairs
+* As a **Site User** I can add a note to the Booking in reqards to any special requests required by the Passenger(s)
+* As a **Site User** I can view bookings that have been made by myself or other users.
+* As a **Site User** I can **edit bookings** that I have made** in regards to Passenger details such as Name, Contact Details, Number of Bags, Date of Birth
+* As a **Site User** I can **delete bookings that I have made** when a booking is no longer applicable. For example, Passenger is no longer travelling or new parties need to be added
+* As a **Site User** I can see the fees in regards to making a new booking
+* As a **Site User** I can see the fees in regards to any amendments to the a booking
 
 ------
 
 ## UX
 
 ### Design
+
+#### Home Page
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/24858511-6621-45e3-b1be-22c54d4c74a3)
 
 #### Initial Booking Page
 
