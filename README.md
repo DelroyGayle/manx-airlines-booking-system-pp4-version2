@@ -51,11 +51,30 @@ The Daily Flight Schedules are:
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/24858511-6621-45e3-b1be-22c54d4c74a3)
 
-#### Initial Create Booking Page
+#### Initial Create Booking Page - Select Date and Time
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/674a8c24-8e04-41a9-a6b9-4ab4c72e169d)
 
+#### Passenger Selection Summary Page
 
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/2e4818bf-7f65-4bb8-8a7c-316a957d22e1)
+
+#### Sample Page of Entering the Passenger(s) Details
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ed5e6fcd-3808-4ff6-b88c-9f34442ba1d3)
+
+#### Sample Page of Entering Infant's Details
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/06fc5c88-2a01-428e-a032-735cdecfcf12)
+
+
+#### Supplementary Details Page in order to enter contacts and PRM details
+(PRM - Passenger with Reduced Mobility)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/952f76ee-92d0-4c1f-8db1-3062afe09822)
+
+#### Booking Review Page
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/1efefff7-5975-4f6a-82be-557e07e14572)
 
 ------
 
