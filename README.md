@@ -47,7 +47,7 @@ The Daily Flight Schedules are:
 
 ### Design
 
-#### Home Page
+#### Home Page - Create a new Booking Ref or Enter an Existing Booking Ref
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/24858511-6621-45e3-b1be-22c54d4c74a3)
 
@@ -58,27 +58,42 @@ The Daily Flight Schedules are:
 
 #### Passenger Selection Summary Page
 
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/43760da7-ee09-4b1b-848f-f552891f0886)
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/785e3fd8-ffdb-4e8b-a2f7-ad31d33abb71)
 
 
-#### Entering Passenger(s) Details - Top
+#### Sample of Entering Passenger(s) Details - Top of the Page
 
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/008ec7de-d2b3-4148-b4c1-c4e7458eccf2)
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/8bfd91ae-957e-4610-a7b6-9909c56b36db)
 
 
-#### Entering Passenger(s) Details - Bottom
+#### Sample of Entering Passenger(s) Details - Bottom of the Page
 
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/3625ff4e-87f0-4ddf-bc85-8601082227e1)
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/500cd571-e484-47b5-a722-4d3d56c17de1)
 
-#### Supplementary Details Page in order to enter Contact and PRM details
+#### The Page that follows is the Supplementary Details Page in order to enter Contact and PRM details
 (PRM - Passenger with Reduced Mobility)
 
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/662047a0-ee7f-4328-a125-4f20e5c3eb2b)
-
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b06afda9-46fd-4b46-a041-2014a39f254f)
 
 #### Booking Confirmation Page 
  
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/bd07ebc0-0310-4967-9481-fbc3da6df00a)
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/2d0f303d-bf18-4977-9c9d-152c7df1d250)
+
+
+#### Home Page - User has entered "DAX" - shows any matching Booking Refs with this Prefix
+User then can select which Booking Ref they would like to View
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/2b735f8f-860e-4000-bbba-3f934e6ca3ff)
+
+#### View Page - The User has the option to Edit or Delete the Booking
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/9dfd9785-3294-4922-ae8c-a0d6b1af0a28)
+
+#### Delete Page - The User can amend details such as name, contact details and number of bags, etc
+Also checkbox supplied in order to _remove a passenger from the booking_<br>
+When the user selects the checkbox - the passenger details are striked-out<br>to indicate that the passenger will be removed from the Booking after the user's confirmation
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/6c97ce8f-0629-4e5b-8c50-08322dc17f97)
 
 
 ------
@@ -99,8 +114,7 @@ The Daily Flight Schedules are:
 
 ### Database Schema
 
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/134a243c-82a5-4909-a93b-6b3dff02c9e9)
-
+![drawSQL-teamdg2-export-2023-10-23](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/bad6685a-cc79-4dc5-92ea-b057cee7a9d6)
 
 ## Modules
 
