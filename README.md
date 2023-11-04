@@ -5,7 +5,7 @@
 ## Introduction
 
 For my Code Institute Portfolio Project 4, 
-I would like to implement a Booking/Reservation system so that a Travel Agent<br>can make a booking for passengers to travel with Manx Airlines,<br> with regards to flights between London and the Isle of Man.
+I would like to implement a Booking/Reservation system so that a Travel Agent<br>can make a booking for passengers to travel with Manx Airlines, with regards to flights between London and the Isle of Man.
 
 Manx Airlines offer three flights everyday.
 
@@ -30,25 +30,26 @@ The Daily Flight Schedules are:
 
 1. [User Stories](#user-stories)
 2. [UX - User Experience](#ux-user-experience)
-3. [Design](#design)
    1. [Wireframes](#wireframes)
-   2. [Data Models](#data-models)
    3. [Agile Design](#agile-design)
-   4. [Database](#database)
-4. [Features](#features)
+   3. [Database Design](#database-design)
+   4. [Data Models](#data-models)
+3. [Features](#features)
    1. [Home Page](#home-page)
-   2. [Create Booking](#create-booking)
+   2. [Create Bookings](#create-bookings)
    3. [Search Bookings](#search-bookings)
-   4. [Edit Booking](#edit-booking)
-   5. [Delete Booking](#delete-booking)
-5. [Technologies Used](#technologies-used)
+   4. [Edit Bookings](#edit-bookings)
+   5. [Delete Bookings](#delete-bookings)
+4. [Technologies Used](#technologies-used)
     1. [Languages](#languages)
     2. [Libraries and Frameworks](#languages-and-frameworks)
- 6. [Future Features](#future-features)
- 7. [Testing](#testing)
+5. [Future Features](#future-features)
+6. [Testing](#testing)
     1. [Please Go To TESTING.md]()
-8. [Known Bugs](#known-bugs)
-9. [Deployment](#deployment)
+7. [Bugs](#bugs)
+     1. [Known Bugs](#known-bugs)
+     2. [Solved Bugs](#solved-bugs)
+8. [Deployment](#deployment)
 10. [Credits](#credits)
 11. [Acknowledgements](#acknowledgements)
 
@@ -70,9 +71,9 @@ The Daily Flight Schedules are:
 
 ------
 
-## UX
+## UX - User Experience
 
-### Design
+### Wireframes
 
 #### Home Page - Create a new Booking Ref or Enter an Existing Booking Ref
 
@@ -125,25 +126,56 @@ When the user selects the checkbox - the passenger details are striked-out<br>to
 
 ------
 
+### Agile Design
+
+### Database Design
+
+#### Mockup Schema
+
+![drawSQL-teamdg2-export-2023-10-23](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/bad6685a-cc79-4dc5-92ea-b057cee7a9d6)
+
+----
+
+### Data Models
+
 ## Features
+
+### Home Page
+
+### Create Booking
+### Search Bookings
+### Edit Bookings
+### Delete Bookings
 
 ------
 
-## Limitations
+## Technologies Used
+
+### Languages
+* Python3
+
+### Libraries and Frameworks
+
+#### Python Libraries
+
+* os - I use this library for the *clear* function in order to clear the console before displaying an updated chessboard.
+* re - I use *regular expressions* in order to validate user input of chess moves.
+* time - I use the *sleep* function to cause the program to delay for a few seconds, in order so that the user can see the updated chessboard.
+
+#### Other tools and frameworks
+
+* [GitHub](https://github.com/) - for hosting the site
+* [Gitpod](https://www.gitpod.io/) - for editing the files
+* [Heroku](https://heroku.com) - for the deployment of the site
+* [Code Institute's GitHub full template](https://github.com/Code-Institute-Org/python-essentials-template) - in order to run Python on Heroku
+
+------
 
 ## Future Features
 * Be able to add new passengers to an existing booking
 * Be able to *change* passenger type e.g. *Adult to Child, Child to Infant, Child to Adult* and vice versa
 
-------
-
-## Data Model
-
-### Database Schema
-
-![drawSQL-teamdg2-export-2023-10-23](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/bad6685a-cc79-4dc5-92ea-b057cee7a9d6)
-
-## Modules
+### Limitations
 
 ## Testing
 
@@ -154,10 +186,13 @@ When the user selects the checkbox - the passenger details are striked-out<br>to
 
 ## Code Validation
 
+------
+
 ## Bugs
 
-### Solved Bugs
+### Known Bugs
 
+### Solved Bugs
 
 ------
 
@@ -224,25 +259,6 @@ to your code to GitHub
 20. Click the *View* button and you will be taken to an URL of the form *https:\/\/\<project-name>.herokuapp.com/*<br>
 This is your deployed app in operation
 
-## Languages, Libraries and Technologies
-
-### Languages
-* Python3
-
-### Python Libraries
-
-* os - I use this library for the *clear* function in order to clear the console before displaying an updated chessboard.
-* re - I use *regular expressions* in order to validate user input of chess moves.
-* time - I use the *sleep* function to cause the program to delay for a few seconds, in order so that the user can see the updated chessboard.
-
-### Other tools
-
-* [GitHub](https://github.com/) - for hosting the site
-* [Gitpod](https://www.gitpod.io/) - for editing the files
-* [Heroku](https://heroku.com) - for the deployment of the site
-* [Code Institute's GitHub full template](https://github.com/Code-Institute-Org/python-essentials-template) - in order to run Python on Heroku
-
-------
 
 ## Credits
 
@@ -251,3 +267,5 @@ This is your deployed app in operation
 + [drawSQL](https://drawsql.app/) was used to draw the SQL tables
         
 ## Acknowledgements    
+
+
