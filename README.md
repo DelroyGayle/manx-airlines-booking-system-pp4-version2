@@ -1,6 +1,6 @@
 # Manx Airlines Travel Agent Booking System
 
-[View live website]()
+[View live website]
 
 ## Introduction
 
@@ -75,54 +75,94 @@ The Daily Flight Schedules are:
 
 ### Wireframes
 
-#### Home Page - Create a new Booking Ref or Enter an Existing Booking Ref
+<details>
+<summary>Home Page - Create a new Booking or Enter an Existing Booking</summary>
+<br/><br/>  
 
+   
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/24858511-6621-45e3-b1be-22c54d4c74a3)
+</details>
 
-#### Select Page for Flights' Date and Time
+<details>
+<summary>Select Page for Flights' Date, Time and the Number of Passengers</summary>
+<br/><br/>  
 
+   
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/dcb436d3-7314-4976-9132-6a1f872883a1)
+</details>
 
+<details>
+<summary>Passenger Selection Summary Page</summary>
+<br/><br/>  
 
-#### Passenger Selection Summary Page
-
+   
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/785e3fd8-ffdb-4e8b-a2f7-ad31d33abb71)
+</details>
 
+<details>
+<summary>Sample of Entering Passenger(s) Details - Top of the Page</summary>
+<br/><br/>  
 
-#### Sample of Entering Passenger(s) Details - Top of the Page
-
+   
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/8bfd91ae-957e-4610-a7b6-9909c56b36db)
+</details>
 
+<details>
+<summary>Sample of Entering Passenger(s) Details - Bottom of the Page</summary>
+<br/><br/>  
 
-#### Sample of Entering Passenger(s) Details - Bottom of the Page
-
+   
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/500cd571-e484-47b5-a722-4d3d56c17de1)
+</details>
 
-#### The Page that follows is the Supplementary Details Page in order to enter Contact and PRM details
+
+<details>
+<summary>Supplementary Details Page</summary>
+This Page is used so that the User can enter Contact and PRM details<br>
 (PRM - Passenger with Reduced Mobility)
+<br/><br/>  
 
+   
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b06afda9-46fd-4b46-a041-2014a39f254f)
+</details>
 
-#### Booking Confirmation Page 
- 
+<details>
+<summary>Booking Review Page</summary>
+<br/><br/>  
+
+    
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/2d0f303d-bf18-4977-9c9d-152c7df1d250)
+</details>
 
-
-#### Home Page - User has entered "DAX" - shows any matching Booking Refs with this Prefix
+<details>
+<summary>Home Page</summary>
+User has entered "DAX" - shows any matching Booking Refs with this Prefix<br>
 User then can select which Booking Ref they would like to View
+<br/><br/>  
 
+   
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/2b735f8f-860e-4000-bbba-3f934e6ca3ff)
+</details>
 
-#### View Page - The User has the option to Edit or Delete the Booking
+<details>
+<summary>View Page - The User has the option to Edit or Delete the Booking</summary>
+<br/><br/>  
 
+   
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/9dfd9785-3294-4922-ae8c-a0d6b1af0a28)
+</details>
 
-#### Delete Page - The User can amend details such as name, contact details and number of bags, etc
-Also checkbox supplied in order to _remove a passenger from the booking_<br>
-When the user selects the checkbox - the passenger details are striked-out<br>to indicate that the passenger will be removed from the Booking after the user's confirmation
 
+<details>
+<summary>Edit Page</summary>
+The User can amend details such as name, contact details and number of bags, etc<br>
+There is a checkbox supplied in order for the option to <i>remove a passenger from the booking</i><br>
+When the User selects this checkbox - the passenger details are striked-out<br>to indicate that the passenger will be removed from the Booking after the User's confirmation
+<br/><br/>  
+
+   
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/6c97ce8f-0629-4e5b-8c50-08322dc17f97)
-
+</details>
 
 ------
 
@@ -130,9 +170,13 @@ When the user selects the checkbox - the passenger details are striked-out<br>to
 
 ### Database Design
 
-#### Mockup Schema
+<details>
+<summary>Mockup Database Schema</summary>
+<br/><br/>  
+
 
 ![drawSQL-teamdg2-export-2023-10-23](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/bad6685a-cc79-4dc5-92ea-b057cee7a9d6)
+</details>
 
 ----
 
@@ -155,12 +199,6 @@ When the user selects the checkbox - the passenger details are striked-out<br>to
 * Python3
 
 ### Libraries and Frameworks
-
-#### Python Libraries
-
-* os - I use this library for the *clear* function in order to clear the console before displaying an updated chessboard.
-* re - I use *regular expressions* in order to validate user input of chess moves.
-* time - I use the *sleep* function to cause the program to delay for a few seconds, in order so that the user can see the updated chessboard.
 
 #### Other tools and frameworks
 
