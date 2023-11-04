@@ -56,18 +56,31 @@ The Daily Flight Schedules are:
 ***
 ## User Stories
 
-* As a **Site User** I want the navigation to be user-friendly so that I can easily create and amend bookings corrsponding to passengers' requests.
-* As a **Site User** I can register, log-in and log-out from the website 
-* As a **Site User** I can log in using my email and password so that I can access the system and make bookings 
-* As a **Site User** I can **create a new bookings** by providing Passenger Name(s) and Contact Details
-* As a **Site User** I can optionally add the date of birth if Passenger is a child or infant.
-* As a **Site User** I can optionally add whether Passenger(s) require bags and any special requirements such as wheelchairs
-* As a **Site User** I can add a note to the Booking in reqards to any special requests required by the Passenger(s)
-* As a **Site User** I can view bookings that have been made by myself or other users.
-* As a **Site User** I can **edit bookings that I have made** in regards to Passenger details such as Name, Contact Details, Number of Bags, Date of Birth
-* As a **Site User** I can **delete bookings that I have made** when a booking is no longer applicable. For example, Passenger is no longer travelling or new parties need to be added
-* As a **Site User** I can see the fees in regards to making a new booking
-* As a **Site User** I can see the fees in regards to any amendments to the a booking
+* As **Developer** I can **set up the workspace** so that **I can implement the necessary tools and start writing the code**
+
+* As a **Developer** I can **set up a Mock Django Application** so that **I can test CRUD functionality before creating the Main App**
+
+* As a **Developer** I can **set up a Mock Django Application** so that **I can test Search and View functionality**
+
+* As a **Site User** I can **use the NavBar** so that **I have the option to Create and Search for Bookings**
+
+* As a **Site User** I can **see a list of bookings** so that **I can select the one that I want to view or amend**
+
+* As a **Site User** I can **create a booking** so that **I can make a booking for a passenger's flight**
+
+* As a **Site User** I can **click on a booking view button** so that **I can view the full text of the booking**
+
+* As a **Site User** I can **edit a booking** so that **I can make amendments as requested by a passenger**
+
+* As a **Site User** I can **delete a booking** so that **I can cancel a passenger's proposed journey**
+
+* As a **Site User** I can **add children to a booking** so that **children can be included with an adult on a flight**
+
+* As a **Site User** I can **add an infant to a booking** so that **an infant can be included with an adult on a flight**
+
+* As a **Site User / Admin** I can **Register, Login and Logout** so that **I can access and manage my account**
+
+* As a **Site User / Admin** I can **amend my profile** so that **I can change my password**
 
 ------
 
@@ -186,7 +199,7 @@ When the User selects this checkbox - the passenger details are striked-out<br>t
 
 ### Home Page
 
-### Create Booking
+### Create Bookings
 ### Search Bookings
 ### Edit Bookings
 ### Delete Bookings
