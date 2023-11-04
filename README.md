@@ -1,6 +1,6 @@
 # Manx Airlines Travel Agent Booking System
 
-[Live Link]
+[View live website]()
 
 ## Introduction
 
@@ -26,6 +26,33 @@ The Daily Flight Schedules are:
 | XM476	| 16:00 | 17:45 |
 | XM486	| 21:00 | 22:45 |
 
+## Table of Contents
+
+1. [User Stories](#user-stories)
+2. [UX - User Experience](#ux-user-experience)
+3. [Design](#design)
+   1. [Wireframes](#wireframes)
+   2. [Data Models](#data-models)
+   3. [Agile Design](#agile-design)
+   4. [Database](#database)
+4. [Features](#features)
+   1. [Home Page](#home-page)
+   2. [Create Booking](#create-booking)
+   3. [Search Bookings](#search-bookings)
+   4. [Edit Booking](#edit-booking)
+   5. [Delete Booking](#delete-booking)
+5. [Technologies Used](#technologies-used)
+    1. [Languages](#languages)
+    2. [Libraries and Frameworks](#languages-and-frameworks)
+ 6. [Future Features](#future-features)
+ 7. [Testing](#testing)
+    1. [Please Go To TESTING.md]()
+8. [Known Bugs](#known-bugs)
+9. [Deployment](#deployment)
+10. [Credits](#credits)
+11. [Acknowledgements](#acknowledgements)
+
+***
 ## User Stories
 
 * As a **Site User** I want the navigation to be user-friendly so that I can easily create and amend bookings corrsponding to passengers' requests.
