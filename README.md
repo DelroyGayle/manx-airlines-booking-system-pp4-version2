@@ -181,6 +181,17 @@ When the User selects this checkbox - the passenger details are striked-out<br>t
 
 ### Agile Design
 
+Agile Kanban Board</summary>
+
+<details>
+At the start of this project this is how the Kanban Board looked 
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/f4c23961-19b6-4172-bcc0-4d764d394567)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/4e94438d-35db-4a0e-8319-ba0138a18afd)
+
+</details>
+
 ### Database Design
 
 <details>
