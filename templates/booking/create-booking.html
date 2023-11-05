@@ -8,4 +8,12 @@
 
 {% block content %}
     <h3>Create Booking</h3>
+
+    <form class="ui form" method="POST" action={% url 'create-booking' %}>
+        {% csrf_token %}
+
+        {{ form.as_p }}
+        
+        <input type="submit" class="ui button primary" value="Submit">
+    </form>
 {% endblock %}

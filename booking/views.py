@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .forms import BookingForm
 
 # Create your views here.
 
@@ -9,4 +10,7 @@ def homepage(request):
 
 
 def create_booking(request):
-    return render(request, 'booking/create-booking.html')
+    form = BookingForm()
+    context = {'form': form}
+    print(context)
+    return render(request, 'booking/create-booking.html', context)
