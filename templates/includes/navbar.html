@@ -2,7 +2,7 @@
 
 <div class="ui segment">
     <div class="ui stackable menu">
-        <a class="item">Create<br>Booking</a>
+        <a href={% url 'create-booking' %} class="item">Create<br>Booking</a>
         <div class="item">
             <form action="" method="get">
                 {% csrf_token %}

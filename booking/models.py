@@ -21,7 +21,7 @@ class Employee(models.Model):
     first_name = models.CharField(max_length=45)
     last_name = models.CharField(max_length=45)    
     employee_test_flag = models.BooleanField(default=False)
-    employer = models.ForeignKey(Employer, on_delete=models.CASCADE)
+    # employer = models.ForeignKey(Employer, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.first_name + ' ' + last_name

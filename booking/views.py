@@ -6,3 +6,7 @@ from django.shortcuts import render
 # Display the Home Page
 def homepage(request):
     return render(request, 'booking/index.html')
+
+
+def create_booking(request):
+    return render(request, 'booking/create-booking.html')
