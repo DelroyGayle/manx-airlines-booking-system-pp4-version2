@@ -45,7 +45,7 @@ The Daily Flight Schedules are:
     2. [Libraries and Frameworks](#languages-and-frameworks)
 5. [Future Features](#future-features)
 6. [Testing](#testing)
-    1. [Please Go To TESTING.md]()
+    1. [Please Go To TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md)
 7. [Bugs](#bugs)
      1. [Known Bugs](#known-bugs)
      2. [Solved Bugs](#solved-bugs)
@@ -241,8 +241,8 @@ At the start of this project this is how the Kanban Board looked
 
 ## Testing
 
-+ Passed the code through the PEP8 linter and confirmed there are no problems.
-+ Carried out tests of the program on both the local terminal and the Code Institute Heroku terminal.
+Please refer to [TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md)
+
 
 ### Internal Errors
 
