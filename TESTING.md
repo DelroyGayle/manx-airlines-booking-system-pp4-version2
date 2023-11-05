@@ -1,5 +1,8 @@
 # Testing
 
++ Passed the code through the PEP8 linter and confirmed there are no problems.
++ Carried out tests of the program on both the local terminal and the Code Institute Heroku terminal.
+  
 ## Manual Testing
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
@@ -8,7 +11,9 @@
 
 <details>
 <summary>Screenshot</summary>
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a36de784-ce15-4163-b176-8a8080cbb3df)
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/9fab1caa-a916-4c8e-a733-0e420a65d671)
+  
 </details>
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
@@ -21,7 +26,9 @@
 
 <details>
 <summary>Screenshot</summary>
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/8ce86214-4762-4695-9bf0-25fb974d0f80)
+  
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/5e82ae15-1dfd-4424-8fef-71d027c6dc3f)
+
 
 </details>
 
