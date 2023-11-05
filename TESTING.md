@@ -32,5 +32,17 @@
 
 </details>
 
+| Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
+| ------------- | ------------- | -------------    | ------------- | ------------- |
+|  T04 | Include 'base.html'  | Update index.html to use **base.html**. It contains <h1>HELLO WORLD</h1>. Whilst **index.html** contains  *{% block content %}* of <h3>GOODBYE!</h3>| Expect to see both sentences **Hello World** followed by **GOODBYE!** | PASS |
+
+<details>
+<summary>Screenshot</summary>
+  
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/5e82ae15-1dfd-4424-8fef-71d027c6dc3f)
+
+
+</details>
+
 
 ## Automated Testing
