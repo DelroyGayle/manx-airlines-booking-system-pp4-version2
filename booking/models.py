@@ -8,6 +8,8 @@ class Employer(models.Model):
     number_of_employees = models.IntegerField()    
     employer_test_flag = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.company_name
 
 class Employee(models.Model):
     TITLES = [
@@ -20,3 +22,6 @@ class Employee(models.Model):
     last_name = models.CharField(max_length=45)    
     employee_test_flag = models.BooleanField(default=False)
     employer = models.ForeignKey(Employer, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.first_name + ' ' + last_name
