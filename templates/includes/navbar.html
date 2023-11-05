@@ -1,0 +1,19 @@
+{% load static %}
+
+<div class="ui segment">
+    <div class="ui stackable menu">
+        <a class="item">Create<br>Booking</a>
+        <div class="item">
+            <form action="" method="get">
+                {% csrf_token %}
+                <input type="text" name="query" placeholder="Search Bookings">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <a class="item">Login</a>
+        <div class="right menu">
+            <a class="ui item">LogOut</a>
+            <a class="ui item">Register</a>
+        </div>
+    </div>
+</div>
