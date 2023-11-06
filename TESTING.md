@@ -44,4 +44,16 @@
 </details>
 
 
+| Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
+| ------------- | ------------- | -------------    | ------------- | ------------- |
+|  T05 | Create Booking  | Create a template and update views.py in order to be able to create a Booking| In Admin, expect to see a created record | PASS |
+
+<details>
+<summary>Screenshot</summary>
+  
+
+
+</details>
+
+
 ## Automated Testing

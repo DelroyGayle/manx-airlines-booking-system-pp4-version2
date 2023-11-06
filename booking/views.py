@@ -22,14 +22,13 @@ def create_booking(request):
         # employer_test_flag will either be set to "on" or None
         # Handle it so that it is either "on" or False
         employer_test_flag = request.POST.get('employer_test_flag', False)
-        print(company_name, number_of_employees, employer_test_flag)
-
+        
         new_employer = Employer()
 
         new_employer.company_name = company_name
         new_employer.number_of_employees = number_of_employees
-        # new_employer.employer_test_flag = True if employer_test_flag == "on" else False
-        new_employer.employer_test_flag = employer_test_flag
+        # 'employer_test_flag' -  convert "on" value to either True or False.']
+        new_employer.employer_test_flag = True if employer_test_flag == "on" else False
         new_employer.save()
 
         return HttpResponseRedirect(reverse("view-booking", kwargs={'id': new_employer.pk}))
