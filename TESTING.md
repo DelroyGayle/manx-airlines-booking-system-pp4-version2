@@ -18,11 +18,11 @@
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-|  T02 | Heroku Deployment  | Create App on Heroku. Call it **manx-airlines-bookings**. Setup a Database Instance on [ElephantSQL](elephantsql.com). Set up the following Heroku Config Vars: <br>1) Copy the generated URL into **DATABASE_URL**; <br>2) Copy Secret Key into **SECRET_KEY**; <br>3) Set **PORT to 8000**; <br>4) Set **DISABLE_COLLECTSTATIC to 1**. <br>Connect Heroku App to GitHub. Deploy.  | Expected to see the webpage showing the following message: *The install worked successfully!* As in the above screenshot | PASS |
+|  T02 | Heroku Deployment  | Create App on Heroku. Call it **manx-airlines-bookings**. Setup a Database Instance on [ElephantSQL](elephantsql.com). Set up the following Heroku Config Vars: <br>1) Copy the generated URL into **DATABASE_URL**; <br>2) Copy Secret Key into **SECRET_KEY**; <br>3) Set **PORT to 8000**; <br>4) Set **DISABLE_COLLECTSTATIC to 1**. <br>Connect Heroku App to GitHub. Deploy.  | Expected to see the webpage showing the following message: *The install worked successfully!* As in the above screenshot. | PASS |
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-|  T03 | Display Home Page  | Set up the relevant Django directories, views and urls to display **index.html**  | Expect to see the home page with the ubiquitous **Hello World** message. | PASS |
+|  T03 | Display Home Page  | Set up the relevant Django directories, views and urls to display **index.html**.  | Expect to see the home page with the ubiquitous **Hello World** message. | PASS |
 
 <details>
 <summary>Screenshot</summary>
@@ -46,11 +46,18 @@
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-|  T05 | Create Booking  | Create a template and update views.py in order to be able to create a Booking| In Admin, expect to see a created record | PASS |
+|  T05 | Create Booking  | Create a template and update views.py in order to be able to create a Booking.| In Admin, expect to see a created record. | PASS |
 
 <details>
-<summary>Screenshot</summary>
+<summary>Form used to Create a Record</summary>
   
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/0e2e9151-74af-401b-a791-bb95c8b220bc)
+
+<summary>Admin Views showing that the Record had been created</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/526f16b7-c657-4a5e-914f-ca5bfd9ec438)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/d510ad5b-ccca-4788-b653-2b99a1c660c4)
 
 
 </details>
