@@ -42,7 +42,6 @@ def view_booking(request, id):
     return render(request, 'booking/view-booking.html', context)
 
 
-
 def search_bookings(request):
     query = request.GET.get('query')
     # Blank Search
@@ -54,3 +53,14 @@ def search_bookings(request):
     context = {'queryset': queryset, 'query':query}
             
     return render(request, 'booking/search-bookings.html', context)
+
+
+def delete_booking(request, id):
+    booking = get_object_or_404(Employer, pk=id)
+    context = {'booking': booking}
+
+    if request.method == 'POST':
+        booking.delete()
+        return HttpResponseRedirect(reverse('home'))
+
+    return render(request, 'booking/delete-booking.html', context)

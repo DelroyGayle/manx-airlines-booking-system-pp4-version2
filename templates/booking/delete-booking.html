@@ -1,0 +1,16 @@
+{% extends 'includes/base.html' %}
+
+{% block title %}Delete Booking{% endblock %}
+
+{% block content %}
+    <h1 class="ui header">Delete Booking</h1>
+
+    <form method="POST"  action={% url 'delete-booking' booking.id %} class="ui form">
+        {% csrf_token %}
+        <p>Are you sure you want to delete this Booking?</p>
+
+        <input type="submit" class="ui button negative" value="YES">
+        <a href={% url 'view-booking' booking.id %}>Cancel</a>
+    </form
+
+{% endblock content %}
