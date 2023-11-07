@@ -38,3 +38,15 @@ def create_booking(request):
 
 def view_booking(request, id):
     return render(request, 'booking/view-booking.html', {})
+
+
+
+def search_bookings(request):
+    query = request.GET.get('query')
+    if not query:
+        return render(request, 'booking/index.html')
+
+    queryset = Employer.objects.filter(company_name__icontains=query).order_by('company_name')
+    context = {'queryset': queryset}
+            
+    return render(request, 'booking/search-bookings.html', context)

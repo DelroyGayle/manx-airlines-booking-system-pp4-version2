@@ -1,0 +1,75 @@
+{% extends 'includes/base.html' %}
+{% block title %}
+
+Search Bookings
+
+{% endblock %}
+
+{% load static %}
+
+
+{% block content %}
+
+ 
+  <h1 class="ui header">List of Matching Bookings</h1>
+
+  {% if queryset %}
+
+
+  <table class="ui table">
+
+    <thead>
+
+        <tr>
+            <th>Company Name</th>
+            <th>Number of Employees</th>
+            <th>Test Flag</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for element in queryset %}
+
+        <tr>
+
+            <td>{{element.company_name}}</td>
+            <td>{{element.number_of_employees}}</td>
+            <td>
+
+                {% if element.employer_test_flag %}
+                    YES <i class="check icon green"></i>
+
+                {% else %}
+                    NO <i class="window close icon red"></i>
+                {% endif %}
+            
+            </td>
+
+            <td>
+                <a href={% url 'view-booking' element.pk %} class="ui button">
+                    <i class="eye icon"></i> View
+                </a>
+            </td>
+
+        </tr>
+
+
+        {% endfor %}
+
+
+
+    </tbody>
+
+  </table>
+
+
+  {% else %}
+
+      <h2 class="ui header">No Booking matched the Search Criteria</h2>
+
+  {% endif %}
+
+    
+{% endblock content %}

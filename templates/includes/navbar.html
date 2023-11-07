@@ -4,8 +4,7 @@
     <div class="ui stackable menu">
         <a href={% url 'create-booking' %} class="item">Create<br>Booking</a>
         <div class="item">
-            <form action="" method="get">
-                {% csrf_token %}
+            <form action={% url 'search-bookings' %} method="get">
                 <input type="text" name="query" placeholder="Search Bookings">
                 <button type="submit">Search</button>
             </form>
