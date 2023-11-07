@@ -1,0 +1,20 @@
+{% extends 'includes/base.html' %}
+
+{% block title %}Edit Booking{% endblock %}
+
+
+{% block content %}
+
+    
+    <h3>Edit Booking</h3>
+
+    <form class="ui form" method="POST" action={% url 'edit-booking' booking.id %}>
+        {% csrf_token %}
+
+        {{form.as_p}}
+
+        <input type="submit" class="ui button primary" value="Save">
+    </form>
+
+    
+{% endblock content %}

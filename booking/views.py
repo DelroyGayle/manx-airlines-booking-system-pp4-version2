@@ -64,3 +64,25 @@ def delete_booking(request, id):
         return HttpResponseRedirect(reverse('home'))
 
     return render(request, 'booking/delete-booking.html', context)
+
+
+def edit_booking(request, id):
+    booking = get_object_or_404(Employer, pk=id)
+    form = BookingForm(instance=booking)
+    context = {'booking': booking, 'form': form}
+    if request.method == 'POST':
+
+        # Update Booking() with the new values
+        
+        booking.company_name = request.POST.get('company_name')
+        booking.number_of_employees = request.POST.get('number_of_employees')
+        # employer_test_flag will either be set to "on" or None
+        # Handle it so that it is either "on" or False
+        new_employer_test_flag = request.POST.get('employer_test_flag', False)
+        # 'employer_test_flag' -  convert "on" value to either True or False.']
+        booking.employer_test_flag = True if new_employer_test_flag == 'on' else False
+
+        booking.save()
+        return HttpResponseRedirect(reverse('view-booking', kwargs={'id': booking.pk}))
+
+    return render(request, 'booking/edit-booking.html', context)
