@@ -10,66 +10,68 @@ Search Bookings
 
 {% block content %}
 
- 
-  <h1 class="ui header">List of Matching Bookings</h1>
+    {% if queryset %}
 
-  {% if queryset %}
+      <h1 class="ui header">Bookings Containing "{{ query }}"</h1>
+      <h3>
+        {% with queryset.count as total_results %}
+        Found {{ total_results }} result{{ total_results|pluralize }}
+      {% endwith %}
+      </h3>
 
+        <table class="ui table">
 
-  <table class="ui table">
+            <thead>
 
-    <thead>
+                <tr>
+                    <th>Company Name</th>
+                    <th>Number of Employees</th>
+                    <th>Test Flag</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
 
-        <tr>
-            <th>Company Name</th>
-            <th>Number of Employees</th>
-            <th>Test Flag</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+            <tbody>
+        
+                {% for element in queryset %}
 
-    <tbody>
+                    <tr>
 
-        {% for element in queryset %}
+                        <td>{{element.company_name}}</td>
+                        <td>{{element.number_of_employees}}</td>
 
-        <tr>
+                        <td>
 
-            <td>{{element.company_name}}</td>
-            <td>{{element.number_of_employees}}</td>
-            <td>
+                            {% if element.employer_test_flag %}
+                                YES <i class="check icon green"></i>
 
-                {% if element.employer_test_flag %}
-                    YES <i class="check icon green"></i>
+                            {% else %}
 
-                {% else %}
-                    NO <i class="window close icon red"></i>
-                {% endif %}
+                                NO <i class="window close icon red"></i>
+                            {% endif %}
             
-            </td>
+                        </td>
 
-            <td>
-                <a href={% url 'view-booking' element.pk %} class="ui button">
-                    <i class="eye icon"></i> View
-                </a>
-            </td>
+                        <td>
+                            <a href={% url 'view-booking' element.pk %} class="ui button">
+                                <i class="eye icon"></i> View
+                            </a>
+                        </td>
 
-        </tr>
+                    </tr>
 
+                {% endfor %}
 
-        {% endfor %}
+            </tbody>
 
-
-
-    </tbody>
-
-  </table>
+        </table>
 
 
-  {% else %}
+    {% else %}
 
-      <h2 class="ui header">No Booking matched the Search Criteria</h2>
+        <h2 class="ui header">No Bookings found that matched "{{ query }}"</h2>
 
-  {% endif %}
+    {% endif %}
 
     
 {% endblock content %}

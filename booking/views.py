@@ -43,10 +43,12 @@ def view_booking(request, id):
 
 def search_bookings(request):
     query = request.GET.get('query')
+    # Blank Search
     if not query:
         return render(request, 'booking/index.html')
 
+    # Case Insensitive Search
     queryset = Employer.objects.filter(company_name__icontains=query).order_by('company_name')
-    context = {'queryset': queryset}
+    context = {'queryset': queryset, 'query':query}
             
     return render(request, 'booking/search-bookings.html', context)
