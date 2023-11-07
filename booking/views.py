@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .forms import BookingForm
@@ -28,16 +28,18 @@ def create_booking(request):
         new_employer.company_name = company_name
         new_employer.number_of_employees = number_of_employees
         # 'employer_test_flag' -  convert "on" value to either True or False.']
-        new_employer.employer_test_flag = True if employer_test_flag == "on" else False
+        new_employer.employer_test_flag = True if employer_test_flag == 'on' else False
         new_employer.save()
 
-        return HttpResponseRedirect(reverse("view-booking", kwargs={'id': new_employer.pk}))
+        return HttpResponseRedirect(reverse('view-booking', kwargs={'id': new_employer.pk}))
             
     return render(request, 'booking/create-booking.html', context)
 
 
 def view_booking(request, id):
-    return render(request, 'booking/view-booking.html', {})
+    booking = get_object_or_404(Employer, pk=id)
+    context = {'booking': booking}
+    return render(request, 'booking/view-booking.html', context)
 
 
 

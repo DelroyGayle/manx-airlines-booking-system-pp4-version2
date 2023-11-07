@@ -7,5 +7,31 @@
 
 
 {% block content %}
-    <h3>View Booking</h3>
+    <h1 class="ui header">View Booking</h1>
+
+    <div class="ui card">
+        <div class="content">
+          <div class="header">Employer: {{booking.company_name}}</div>
+          <div class="description">
+            <p>Total Employees: {{booking.number_of_employees}}</p>
+          </div>
+        </div>
+        <div class="extra content">
+
+            {% if booking.employer_test_flag %}
+                <p>
+                    <i class="check icon green"></i>    
+                    YES  
+                </p>
+
+            {% else %}
+                <p>
+                    <i class="window close icon red"></i>      
+                    NO
+                </p>
+            {% endif %}
+         <a href="" class="ui button primary">Edit</a>
+         <a href="" class="ui button red">Delete</a>
+    </div>
+
 {% endblock %}
