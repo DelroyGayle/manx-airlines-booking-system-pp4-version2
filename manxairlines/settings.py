@@ -30,7 +30,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['manx-airlines-bookings-c1e4c5533a20.herokuapp.com',
-                 '8000-delroygayle-manxairline-729hbyr65du.ws-eu105.gitpod.io']
+                 '8000-delroygayle-manxairline-729hbyr65du.ws-eu105.gitpod.io',
+                 '8000-delroygayle-manxairline-729hbyr65du.ws-eu106.gitpod.io']
 
 
 # Application definition

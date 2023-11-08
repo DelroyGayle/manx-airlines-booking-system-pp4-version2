@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import BookingForm
 from .models import Employer, Employee
 
@@ -60,9 +61,38 @@ def search_bookings(request):
     queryset = Employer.objects.filter(Q(company_name__icontains=query) | 
                                        Q(employee__first_name__icontains=query) |
                                        Q(employee__last_name__icontains=query)).order_by('company_name')
-    context = {'queryset': queryset, 'query':query}
+    if queryset.count() == 0:
+    # No Matching Bookings Found
+        context = {'query': query }
+        return render(request, 'booking/no-matches.html', context)
+
+    paginator = Paginator(queryset, 3)
+    page_number = request.GET.get("page", 1)
+
+    try:
+        page_object = paginator.page(page_number)
+    except PageNotAnInteger:
+        # if page is not an integer, deliver the first page
+        page_object = paginator.page(1)
+    except EmptyPage:
+        # if the page is out of range, deliver the last page
+        page_object = paginator.page(paginator.num_pages)
+
+    
+    print(paginator.num_pages)
+    print(page_number)
+    #page_object = paginator.get_page(page_number)
+    context = {'queryset': queryset, 'query':query, "page_object": page_object}
             
     return render(request, 'booking/search-bookings.html', context)
+
+
+def search_listing(request, page):
+    keywords = Keyword.objects.all().order_by("name")
+    paginator = Paginator(keywords, per_page=2)
+    page_object = paginator.get_page(page)
+    context = {"page_obj": page_object}
+    return render(request, "terms/keyword_list.html", context)
 
 
 def delete_booking(request, id):

@@ -8,4 +8,5 @@ urlpatterns = [
     path('search/', views.search_bookings, name='search-bookings'),
     path('delete/<id>/', views.delete_booking, name='delete-booking'),
     path('edit/<id>/', views.edit_booking, name='edit-booking'),
+    #path('terms/<int:page>', views.search_listing, name="terms-by-page"),
 ]

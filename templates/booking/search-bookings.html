@@ -10,68 +10,45 @@ Search Bookings
 
 {% block content %}
 
-    {% if queryset %}
-
       <h1 class="ui header">Bookings Containing "{{ query }}"</h1>
       <h3>
-        {% with queryset.count as total_results %}
-        Found {{ total_results }} result{{ total_results|pluralize }}
-      {% endwith %}
+            {% with queryset.count as total_results %}
+                Found {{ total_results }} result{{ total_results|pluralize }}
+            {% endwith %}
       </h3>
 
-        <table class="ui table">
 
-            <thead>
-
-                <tr>
-                    <th>Company Name</th>
-                    <th>Number of Employees</th>
-                    <th>Test Flag</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-
-            <tbody>
-        
-                {% for element in queryset %}
-
-                    <tr>
-
-                        <td>{{element.company_name}}</td>
-                        <td>{{element.number_of_employees}}</td>
-
-                        <td>
-
-                            {% if element.employer_test_flag %}
-                                YES <i class="check icon green"></i>
-
-                            {% else %}
-
-                                NO <i class="window close icon red"></i>
-                            {% endif %}
-            
-                        </td>
-
-                        <td>
-                            <a href="{% url 'view-booking' element.pk %}" class="ui button">
-                                <i class="eye icon"></i> View
-                            </a>
-                        </td>
-
-                    </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-
-    {% else %}
-
-        <h2 class="ui header">No Bookings found that matched "{{ query }}"</h2>
-
-    {% endif %}
-
+      {% for booking in page_object %}
+         <div class="ui card">
+             <div class="content">
+                 <div class="header">Employer: {{booking.company_name}}</div>
+                 <div class="description">
+                    <p>Total Employees: {{booking.number_of_employees}}</p>
+                 </div>
+             </div>
+             <div class="extra content">
     
+                    {% if booking.employer_test_flag %}
+                        <p>
+                           <i class="check icon green"></i>    
+                           YES  
+                        </p>
+    
+                    {% else %}
+                        <p>
+                           <i class="window close icon red"></i>      
+                           NO
+                        </p>
+                    {% endif %}
+                    <a href="{% url 'view-booking' booking.pk %}" class="ui button">
+                         <i class="eye icon"></i> View
+                    </a>
+             </div>
+         </div>   
+      {% endfor %}
+                
+      <br><hr>
+
+      {% include "includes/pagination.html" %}
+   
 {% endblock content %}
