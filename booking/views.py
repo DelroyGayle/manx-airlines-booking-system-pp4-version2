@@ -32,10 +32,6 @@ def create_booking(request):
         new_employer.employer_test_flag = True if employer_test_flag == 'on' else False
         new_employer.save()
 
-        # Add for Testing Purposes, an 'Employee' Record - Many-to-one relationship with 'Employer'
-        new_employee = Employee(first_name= "Joe", last_name= "Bloggs", employer= new_employer)
-        new_employee.save()
-
         return HttpResponseRedirect(reverse('view-booking', kwargs={'id': new_employer.pk}))
             
     return render(request, 'booking/create-booking.html', context)
@@ -66,6 +62,9 @@ def search_bookings(request):
         context = {'query': query }
         return render(request, 'booking/no-matches.html', context)
 
+    # Pagination as demonstrated in https://testdriven.io/blog/django-pagination/ 
+    
+    # 3 records per page
     paginator = Paginator(queryset, 3)
     page_number = request.GET.get("page", 1)
 
@@ -77,22 +76,9 @@ def search_bookings(request):
     except EmptyPage:
         # if the page is out of range, deliver the last page
         page_object = paginator.page(paginator.num_pages)
-
-    
-    print(paginator.num_pages)
-    print(page_number)
-    #page_object = paginator.get_page(page_number)
-    context = {'queryset': queryset, 'query':query, "page_object": page_object}
-            
+   
+    context = {'queryset': queryset, 'query':query, "page_object": page_object}           
     return render(request, 'booking/search-bookings.html', context)
-
-
-def search_listing(request, page):
-    keywords = Keyword.objects.all().order_by("name")
-    paginator = Paginator(keywords, per_page=2)
-    page_object = paginator.get_page(page)
-    context = {"page_obj": page_object}
-    return render(request, "terms/keyword_list.html", context)
 
 
 def delete_booking(request, id):
