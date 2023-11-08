@@ -7,7 +7,6 @@ from .models import Employer, Employee
 
 # Create your views here.
 
-
 # Display the Home Page
 def homepage(request):
     return render(request, 'booking/index.html')
@@ -55,12 +54,12 @@ def search_bookings(request):
         
 
     # Case Insensitive Search
-#   queryset = Employer.objects.filter(company_name__icontains=query).order_by('company_name')
-#   queryset = Employer.objects.filter(employee__first_name__icontains=query).order_by('company_name')
-#   queryset = Employer.objects.filter(employee__last_name__icontains=query).order_by('company_name')
+    #   queryset = Employer.objects.filter(company_name__icontains=query).order_by('company_name')
+    #   queryset = Employer.objects.filter(employee__first_name__icontains=query).order_by('company_name')
+    #   queryset = Employer.objects.filter(employee__last_name__icontains=query).order_by('company_name')
     queryset = Employer.objects.filter(Q(company_name__icontains=query) | 
                                        Q(employee__first_name__icontains=query) |
-                                       Q(employee__last_name__icontains=query))
+                                       Q(employee__last_name__icontains=query)).order_by('company_name')
     context = {'queryset': queryset, 'query':query}
             
     return render(request, 'booking/search-bookings.html', context)
