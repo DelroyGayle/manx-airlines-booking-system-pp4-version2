@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.db.models import Q
 from .forms import BookingForm
-from .models import Employer
+from .models import Employer, Employee
 
 # Create your views here.
 
@@ -11,7 +12,6 @@ from .models import Employer
 def homepage(request):
     return render(request, 'booking/index.html')
     
-
 
 def create_booking(request):
     form = BookingForm()
@@ -32,6 +32,10 @@ def create_booking(request):
         new_employer.employer_test_flag = True if employer_test_flag == 'on' else False
         new_employer.save()
 
+        # Add for Testing Purposes, an 'Employee' Record - Many-to-one relationship with 'Employer'
+        new_employee = Employee(first_name= "Joe", last_name= "Bloggs", employer= new_employer)
+        new_employee.save()
+
         return HttpResponseRedirect(reverse('view-booking', kwargs={'id': new_employer.pk}))
             
     return render(request, 'booking/create-booking.html', context)
@@ -51,7 +55,12 @@ def search_bookings(request):
         
 
     # Case Insensitive Search
-    queryset = Employer.objects.filter(company_name__icontains=query).order_by('company_name')
+#   queryset = Employer.objects.filter(company_name__icontains=query).order_by('company_name')
+#   queryset = Employer.objects.filter(employee__first_name__icontains=query).order_by('company_name')
+#   queryset = Employer.objects.filter(employee__last_name__icontains=query).order_by('company_name')
+    queryset = Employer.objects.filter(Q(company_name__icontains=query) | 
+                                       Q(employee__first_name__icontains=query) |
+                                       Q(employee__last_name__icontains=query))
     context = {'queryset': queryset, 'query':query}
             
     return render(request, 'booking/search-bookings.html', context)

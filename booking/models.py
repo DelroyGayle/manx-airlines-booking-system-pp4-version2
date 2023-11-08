@@ -11,17 +11,11 @@ class Employer(models.Model):
     def __str__(self):
         return self.company_name
 
+
 class Employee(models.Model):
-    TITLES = [
-        ("Mr", "Mister"),
-        ("Ms", "Miss"),
-        ("Mx", "Unspecified"),
-    ]
-    title = models.CharField(max_length=2, choices=TITLES)
     first_name = models.CharField(max_length=45)
     last_name = models.CharField(max_length=45)    
-    employee_test_flag = models.BooleanField(default=False)
-    # employer = models.ForeignKey(Employer, on_delete=models.CASCADE)
+    employer = models.ForeignKey(Employer, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.first_name + ' ' + last_name
+        return self.first_name + ' ' + self.last_name
