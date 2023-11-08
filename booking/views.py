@@ -10,6 +10,7 @@ from .models import Employer
 # Display the Home Page
 def homepage(request):
     return render(request, 'booking/index.html')
+    
 
 
 def create_booking(request):
@@ -46,7 +47,8 @@ def search_bookings(request):
     query = request.GET.get('query')
     # Blank Search
     if not query:
-        return render(request, 'booking/index.html')
+        return HttpResponseRedirect(reverse('home'))
+        
 
     # Case Insensitive Search
     queryset = Employer.objects.filter(company_name__icontains=query).order_by('company_name')
