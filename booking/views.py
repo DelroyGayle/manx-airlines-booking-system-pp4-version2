@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import BookingForm
-from .models import Employer, Employee
+from .models import Booking
 
 # Create your views here.
 
@@ -17,28 +17,28 @@ def create_booking(request):
     form = BookingForm()
     context = {'form': form}
 
-    if request.method == 'POST':
-        company_name = request.POST.get('company_name')
-        number_of_employees = request.POST.get('number_of_employees')
-        # employer_test_flag will either be set to "on" or None
-        # Handle it so that it is either "on" or False
-        employer_test_flag = request.POST.get('employer_test_flag', False)
+    # if request.method == 'POST':
+    #     company_name = request.POST.get('company_name')
+    #     number_of_employees = request.POST.get('number_of_employees')
+    #     # employer_test_flag will either be set to "on" or None
+    #     # Handle it so that it is either "on" or False
+    #     employer_test_flag = request.POST.get('employer_test_flag', False)
         
-        new_employer = Employer()
+    #     new_employer = Employer()
 
-        new_employer.company_name = company_name
-        new_employer.number_of_employees = number_of_employees
-        # 'employer_test_flag' -  convert "on" value to either True or False.']
-        new_employer.employer_test_flag = True if employer_test_flag == 'on' else False
-        new_employer.save()
+    #     new_employer.company_name = company_name
+    #     new_employer.number_of_employees = number_of_employees
+    #     # 'employer_test_flag' -  convert "on" value to either True or False.']
+    #     new_employer.employer_test_flag = True if employer_test_flag == 'on' else False
+    #     new_employer.save()
 
-        return HttpResponseRedirect(reverse('view-booking', kwargs={'id': new_employer.pk}))
+    #     return HttpResponseRedirect(reverse('view-booking', kwargs={'id': new_employer.pk}))
             
     return render(request, 'booking/create-booking.html', context)
 
 
 def view_booking(request, id):
-    booking = get_object_or_404(Employer, pk=id)
+    booking = get_object_or_404(Booking, pk=id)
     context = {'booking': booking}
     return render(request, 'booking/view-booking.html', context)
 

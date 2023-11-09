@@ -1,11 +1,11 @@
 
 from django import forms
-from .models import Employer
+from .models import Booking
 
 
 class BookingForm(forms.ModelForm):
 
     class Meta:
-        model = Employer
+        model = Booking
 
         fields = '__all__'
