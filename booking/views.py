@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import BookingForm
+from .forms import InputForm
 from .models import Booking
 
 # Create your views here.
@@ -16,7 +17,7 @@ def homepage(request):
 
 
 def create_booking(request):
-    form = BookingForm()
+    form = InputForm()
     context = {'form': form}
 
     # if request.method == 'POST':
