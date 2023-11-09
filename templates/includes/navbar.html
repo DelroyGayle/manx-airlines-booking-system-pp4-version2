@@ -2,6 +2,9 @@
 
 <div class="ui segment">
     <div class="ui stackable menu">
+        <a href={% url 'home' %} class="header item">
+            <img src="{% static 'booking/img/logo.png' %}"
+        </a>
         <a href={% url 'create-booking' %} class="item">Create<br>Booking</a>
         <div class="item">
             <form action={% url 'search-bookings' %} method="get">
