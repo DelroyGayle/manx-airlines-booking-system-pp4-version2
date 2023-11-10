@@ -1,6 +1,7 @@
 
 from django import forms
 from .models import Booking
+import datetime
 
 
 class BookingForm(forms.ModelForm):
@@ -12,9 +13,16 @@ class BookingForm(forms.ModelForm):
 
 
 # creating a form   
-class InputForm(forms.Form): 
+class CreateBooking_Form1(forms.Form): 
+    def as_p(self):
+        "Returns this form rendered as HTML <p>s."
+        return self._html_output(
+            normal_row = u'<p%(html_class_attr)s>%(label)s</p> %(field)s%(help_text)s',
+            error_row = u'%s',
+            row_ender = '</p>',
+            help_text_html = u'<br><span class="helptext">%s</span>',
+            errors_on_separate_row = True)
 
-    NUMBERS_1TO20 = [(i,)*2 for i in range(0,21)]
     RETURN = "Y"
     ONE_WAY = "N"
     RETURN_CHOICE = [
@@ -33,27 +41,26 @@ class InputForm(forms.Form):
     return_option = forms.ChoiceField(
         choices=RETURN_CHOICE,
     )
+ 
+    departing_date = forms.DateField(initial=datetime.date.today().strftime("%d/%m/%Y"),
+                                     help_text="Format: DD/MM/YYYY",
+                                     input_formats=["%d/%m/%Y"])
 
-    departing_date = forms.DateField()
-
-    departing_time = forms.ChoiceField(
+    departing_time = forms.ChoiceField(initial=OUTBOUND_TIME_OPTIONS[0],
         choices=list(zip(OUTBOUND_TIME_OPTIONS, OUTBOUND_TIME_OPTIONS)),
         widget=forms.RadioSelect,
     )
 
-    returning_date = forms.DateField()
+    returning_date = forms.DateField(initial=datetime.date.today().strftime("%d/%m/%Y"),
+                                     help_text="Format: DD/MM/YYYY",
+                                     input_formats=["%d/%m/%Y"])
 
-    returning_time = forms.ChoiceField(
+    returning_time = forms.ChoiceField(initial=INBOUND_TIME_OPTIONS[0],
         choices=list(zip(INBOUND_TIME_OPTIONS, INBOUND_TIME_OPTIONS)),
         widget=forms.RadioSelect,
     )
 
-    adults = forms.ChoiceField(
-        choices=NUMBERS_1TO20,
-    )    
-    children = forms.ChoiceField(
-        choices=NUMBERS_1TO20,
-    )    
-    infants = forms.ChoiceField(
-        choices=NUMBERS_1TO20,
-    )    
+    adults = forms.IntegerField(initial=0, min_value=0, max_value=20)
+    children = forms.IntegerField(initial=0, min_value=0, max_value=20)
+    infants = forms.IntegerField(initial=0, min_value=0, max_value=20)
+ 

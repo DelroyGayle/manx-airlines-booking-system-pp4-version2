@@ -1,7 +1,20 @@
+#id_return_option, 
+#id_adults,
+#id_children,
+#id_infants {
+    width: 50%;
+}
+
+#id_departing_date,
+#id_returning_date {
+    width: 40%;
+}
 
 
+/* TODO */
 @media only screen and (min-width: 600px)  {
     #homepage {
         height: 70vh;
     }
 } 
+

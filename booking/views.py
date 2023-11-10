@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import BookingForm
-from .forms import InputForm
+from .forms import CreateBooking_Form1
 from .models import Booking
 
 # Create your views here.
@@ -16,9 +16,9 @@ def homepage(request):
     return render(request, 'booking/index.html')
 
 
-def create_booking(request):
-    form = InputForm()
-    context = {'form': form}
+def create_booking_form1(request):
+    # form = CreateBooking_Form1()
+    # context = {'form': form}
 
     # if request.method == 'POST':
     #     company_name = request.POST.get('company_name')
@@ -41,7 +41,21 @@ def create_booking(request):
     #     return HttpResponseRedirect(reverse('view-booking',
     #            kwargs={'id': new_employer.pk}))
 
-    return render(request, 'booking/create-booking.html', context)
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = CreateBooking_Form1(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            print("YES")
+            print(form.cleaned_data)
+        else:
+            print("NO")
+            print(form.errors)
+    else:
+        form = CreateBooking_Form1()
+        
+    context = {'form': form}
+    return render(request, 'booking/create-booking-form1.html', context)
 
 
 def view_booking(request, id):

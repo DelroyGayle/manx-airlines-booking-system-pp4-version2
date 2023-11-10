@@ -1,0 +1,18 @@
+{% extends 'includes/base.html' %}
+
+{% block title %}Create Booking Form 1{% endblock %}
+
+
+{% load static %}
+
+{% block content %}
+    <h3>Create Booking</h3>
+
+    <form class="ui form" method="POST" action={% url 'create-booking-form1' %}>
+        {% csrf_token %}
+
+        {{ form.as_p }}
+        
+        <p><input type="submit" class="ui button primary" value="Submit">
+    </form>
+{% endblock %}
