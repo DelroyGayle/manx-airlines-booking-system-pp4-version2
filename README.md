@@ -7,24 +7,40 @@
 For my Code Institute Portfolio Project 4, 
 I would like to implement a Booking/Reservation system so that a Travel Agent<br>can make a booking for passengers to travel with Manx Airlines, with regards to flights between London and the Isle of Man.
 
-Manx Airlines offer three flights everyday.
+Throughout the travel industry, travel agents uses GDS ( [Global Distribution Systems](https://www.travelperk.com/corporate-travel-glossary/global-distribution-system/) ) and travel reservation system such as [Amadeus](https://amadeus.com/en/portfolio/hospitality/crs-central-reservation-system), [Galileo](https://en.wikipedia.org/wiki/Galileo_GDS) and [Sabre](https://en.wikipedia.org/wiki/Sabre_(travel_reservation_system)) in order to create travel bookings for passengers.
+
+So my project is an attempt to create a *toy travel reservation/booking system* for a fictitious airline called **Manx Airlines**.<br>
+Manx Airlines offer three flights everyday to the Isle of Man and vice versa.
 
 The Daily Flight Schedules are:
 
 **London City Airport TO Douglas, Isle of Man - LCYIOM**
 | Flight | Time of Departure | Time of Arrival |
 | -------| -----------       | --------------- |
-| XM465	| 08:00 | 9:45 |
-| XM475	| 13:30 | 15:15 |
-| XM485	| 18:30 | 20:15 |
+| MX465	| 08:00 | 9:45 |
+| MX475	| 13:30 | 15:15 |
+| MX485	| 18:30 | 20:15 |
 
 
 **Douglas, Isle of Man TO London City Airport to  - IOMLCY**
 | Flight | Time of Departure | Time of Arrival |
 | -------| -----------       | --------------- |
-| XM466	| 11:00 | 12:45 |
-| XM476	| 16:00 | 17:45 |
-| XM486	| 21:00 | 22:45 |
+| MX466	| 11:00 | 12:45 |
+| MX476	| 16:00 | 17:45 |
+| MX486	| 21:00 | 22:45 |
+
+## Glossary
+
+Throughout this document I will be using typical airline terminology when referring to certain concepts.
+Here are a sample of some of the terms used
+* PAX - Short for Passenger(s)
+* PRM - Passenger with Reduced Mobility
+* WCHR
+* WCHS
+* WCHC
+* WCMP
+* WCLB
+  
 
 ## Table of Contents
 
@@ -192,6 +208,7 @@ At the start of this project this is how the Kanban Board looked
 
 </details>
 
+Epics, User Stories and the related tasks are further explained in [TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md)
 ### Database Design
 
 <details>
@@ -252,9 +269,8 @@ Please refer to [TESTING.md](https://github.com/DelroyGayle/manx-airlines-bookin
 
 ## Bugs
 
-### Known Bugs
-
 ### Solved Bugs
+
 
 ------
 
