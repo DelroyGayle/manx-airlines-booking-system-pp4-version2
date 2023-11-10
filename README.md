@@ -210,7 +210,8 @@ At the start of this project this is how the Kanban Board looked
 
 </details>
 
-Epics, User Stories and the related tasks are further explained in [TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md)
+Epics, User Stories and their related Tasks are further explained in [TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md)
+
 ### Database Design
 
 <details>
