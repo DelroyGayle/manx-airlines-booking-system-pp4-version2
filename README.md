@@ -25,8 +25,7 @@
 8. [Testing](#testing)
     1. [Please Go To TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md)
 9. [Bugs](#bugs)
-     1. [Known Bugs](#known-bugs)
-     2. [Solved Bugs](#solved-bugs)
+     1. [Solved Bugs](#solved-bugs)
 10. [Deployment](#deployment)
 11. [Credits](#credits)
 12. [Acknowledgements](#acknowledgements)
@@ -274,6 +273,40 @@ Please refer to [TESTING.md](https://github.com/DelroyGayle/manx-airlines-bookin
 
 ### Solved Bugs
 
+#### 'Create Booking' Django Form
+
+The fields appeared too long with the *help text* being shown adjacent to the fields as opposed to below the fields
+However, there is a way of *overriding the default action of **forms.as_p** *
+
+<details>
+<summary>Before this fix:</summary>
+<br/><br/>  
+
+</details>
+
+I found this solution at [Stack Overflow](https://stackoverflow.com/questions/7769805/editing-django-form-as-p )
+
+I prefer this look:
+
+<details>
+<summary>After this fix:</summary>
+<br/><br/>  
+
+</details>
+
+#### Footer at the Bottom of the Page
+
+The Footer would not 'stay' at the bottom of the page depending on the view.
+I did not want a **sticky** footer.
+I found this solution at [Stack Overflow]
+
+<details>
+<summary>Mockup Database Schema</summary>
+<br/><br/>  
+
+</details>
+
+
 
 ------
 
@@ -342,7 +375,8 @@ This is your deployed app in operation
 
 
 ## Credits
-
++ I visited [BA](https://www.britishairways.com/travel/home/public/en_gb/)'s and [EasyJet](https://www.easyjet.com/en)'s websites to get an idea of layout the forms and the phraseology of error messages.
++ The Isle of Man Logo was downloaded from [icon-icons](https://icon-icons.com/icon/isle-of-man/17195) - *Free for personal use*
 + [drawSQL](https://drawsql.app/) was used to draw the SQL tables
         
 ## Acknowledgements    
