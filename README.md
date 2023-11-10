@@ -33,7 +33,7 @@
 ## Introduction
 
 For my Code Institute Portfolio Project 4, 
-I would like to implement a Booking/Reservation system so that a Travel Agent<br>can make a booking for passengers to travel with Manx Airlines, with regards to flights between London and the Isle of Man.
+I would like to implement a Booking/Reservation system<br>so that a Travel Agent<br>can make a booking for passengers to travel with Manx Airlines,<br>with regards to flights between London and the Isle of Man.
 
 Throughout the travel industry, travel agents uses GDS ( [Global Distribution Systems](https://www.travelperk.com/corporate-travel-glossary/global-distribution-system/) ) and travel reservation system such as [Amadeus](https://amadeus.com/en/portfolio/hospitality/crs-central-reservation-system), [Galileo](https://en.wikipedia.org/wiki/Galileo_GDS) and [Sabre](https://en.wikipedia.org/wiki/Sabre_(travel_reservation_system)) in order to create travel bookings for passengers.
 
@@ -63,9 +63,9 @@ Throughout this document I will be using typical airline terminology when referr
 Here are a sample of some of the terms used
 * PAX - Short for Passenger(s)
 * PRM - Passenger with Reduced Mobility
-* WCHR
-* WCHS
-* WCHC
+* WCHR - Passenger cannot walk long distances but able to go up and down the aircraft steps
+* WCHS - Passenger cannot walk long distances and cannot manage the aircraft steps
+* WCHC - Passenger completely immobile, need assistance all the way, to and from the aircraft
 * WCMP
 * WCLB
   
@@ -282,6 +282,8 @@ However, there is a way of *overriding the default action of **forms.as_p** *
 <summary>Before this fix:</summary>
 <br/><br/>  
 
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/05badf93-e91d-4c3d-9bdc-d0d1706f8fa1)
+
 </details>
 
 I found this solution at [Stack Overflow](https://stackoverflow.com/questions/7769805/editing-django-form-as-p )
@@ -291,6 +293,9 @@ I prefer this look:
 <details>
 <summary>After this fix:</summary>
 <br/><br/>  
+   
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/49e3cb2a-307c-42e4-93b0-27c836ffccb0)
+
 
 </details>
 
@@ -301,7 +306,7 @@ I did not want a **sticky** footer.
 I found this solution at [Stack Overflow]
 
 <details>
-<summary>Mockup Database Schema</summary>
+<summary>TODO</summary>
 <br/><br/>  
 
 </details>
