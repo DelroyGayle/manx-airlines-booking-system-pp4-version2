@@ -15,7 +15,12 @@ class BookingForm(forms.ModelForm):
 # creating a form   
 class CreateBooking_Form1(forms.Form): 
     def as_p(self):
-        "Returns this form rendered as HTML <p>s."
+        """This method overrides the default 'as_p' behaviour 
+           because I did not like the way this form looked.
+           This method returns this form rendered as HTML <p>s.
+           Found this solution at
+           https://stackoverflow.com/questions/7769805/editing-django-form-as-p
+        """
         return self._html_output(
             normal_row = u'<p%(html_class_attr)s>%(label)s</p> %(field)s%(help_text)s',
             error_row = u'%s',
