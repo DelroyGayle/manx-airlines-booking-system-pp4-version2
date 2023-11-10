@@ -5,6 +5,19 @@
   
 ## Manual Testing
 
+### Epic: *Set up a mock-up system to begin with that demonstrates CRUD functionality*
+
+This is broken down into the following User Stories:
+US
+
+User Tasks:
+1. Right at the onset, deploy the App on Heroku to ensure that works correctly
+2. Demonstrate that records can be created
+3. Demonstrate that records can be searched for by a reference or by names
+4. Demonstrate that records can be edited and updated.
+5. Demonstrate that records can be deleted
+
+
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
 |  T01 | Install Django  | Install Django, psycopg2. Create requirements.txt. Name the Project **manxairlines**. Create the App and name it **booking**. Deployed locally.  | Expected to see the webpage showing the following message: *The install worked successfully!*  | PASS |
@@ -18,7 +31,7 @@
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-|  T02 | Heroku Deployment  | Create App on Heroku. Call it **manx-airlines-bookings**. Setup a Database Instance on [ElephantSQL](elephantsql.com). Set up the following Heroku Config Vars: <br>1) Copy the generated URL into **DATABASE_URL**; <br>2) Copy Secret Key into **SECRET_KEY**; <br>3) Set **PORT to 8000**; <br>4) Set **DISABLE_COLLECTSTATIC to 1**. <br>Connect Heroku App to GitHub. Deploy.  | Expected to see the webpage showing the following message: *The install worked successfully!* As in the above screenshot. | PASS |
+|  T02 | Heroku Deployment  | Create App on Heroku. Call it **manx-airlines-bookings**. Setup a Database Instance on [ElephantSQL](https://www.elephantsql.com/). Set up the following Heroku Config Vars: <br>1) Copy the generated URL into **DATABASE_URL**; <br>2) Copy Secret Key into **SECRET_KEY**; <br>3) Set **PORT to 8000**; <br>4) Set **DISABLE_COLLECTSTATIC to 1**. <br>Connect Heroku App to GitHub. Deploy.  | Expected to see the webpage showing the following message: *The install worked successfully!* As in the above screenshot. | PASS |
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
@@ -62,5 +75,17 @@
 
 </details>
 
+----
 
+### Epic: *Create Bookings*
+
+This is broken down into the following User Stories:
+US
+
+User Tasks:
+1. Demonstrate the forms used to create a booking
+2. Show each stage of a Booking being created
+3. Demonstrate the validation of the fields entered
+
+   
 ## Automated Testing
