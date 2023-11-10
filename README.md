@@ -2,6 +2,35 @@
 
 [View live website]
 
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Glossary](#glossary)
+3. [User Stories](#user-stories)
+4. [UX - User Experience](#ux-user-experience)
+   1. [Wireframes](#wireframes)
+   3. [Agile Design](#agile-design)
+   3. [Database Design](#database-design)
+   4. [Data Models](#data-models)
+5. [Features](#features)
+   1. [Home Page](#home-page)
+   2. [Create Bookings](#create-bookings)
+   3. [Search Bookings](#search-bookings)
+   4. [Edit Bookings](#edit-bookings)
+   5. [Delete Bookings](#delete-bookings)
+6. [Technologies Used](#technologies-used)
+    1. [Languages](#languages)
+    2. [Libraries and Frameworks](#languages-and-frameworks)
+7. [Future Features](#future-features)
+8. [Testing](#testing)
+    1. [Please Go To TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md)
+9. [Bugs](#bugs)
+     1. [Known Bugs](#known-bugs)
+     2. [Solved Bugs](#solved-bugs)
+10. [Deployment](#deployment)
+11. [Credits](#credits)
+12. [Acknowledgements](#acknowledgements)
+
 ## Introduction
 
 For my Code Institute Portfolio Project 4, 
@@ -41,35 +70,8 @@ Here are a sample of some of the terms used
 * WCMP
 * WCLB
   
-
-## Table of Contents
-
-1. [User Stories](#user-stories)
-2. [UX - User Experience](#ux-user-experience)
-   1. [Wireframes](#wireframes)
-   3. [Agile Design](#agile-design)
-   3. [Database Design](#database-design)
-   4. [Data Models](#data-models)
-3. [Features](#features)
-   1. [Home Page](#home-page)
-   2. [Create Bookings](#create-bookings)
-   3. [Search Bookings](#search-bookings)
-   4. [Edit Bookings](#edit-bookings)
-   5. [Delete Bookings](#delete-bookings)
-4. [Technologies Used](#technologies-used)
-    1. [Languages](#languages)
-    2. [Libraries and Frameworks](#languages-and-frameworks)
-5. [Future Features](#future-features)
-6. [Testing](#testing)
-    1. [Please Go To TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md)
-7. [Bugs](#bugs)
-     1. [Known Bugs](#known-bugs)
-     2. [Solved Bugs](#solved-bugs)
-8. [Deployment](#deployment)
-10. [Credits](#credits)
-11. [Acknowledgements](#acknowledgements)
-
 ***
+
 ## User Stories
 
 * As **Developer** I can **set up the workspace** so that **I can implement the necessary tools and start writing the code**
@@ -340,8 +342,6 @@ This is your deployed app in operation
 
 ## Credits
 
-+ [Flowchart Fun](https://flowchart.fun/) 
-+ [Miro](https://miro.com/)
 + [drawSQL](https://drawsql.app/) was used to draw the SQL tables
         
 ## Acknowledgements    
