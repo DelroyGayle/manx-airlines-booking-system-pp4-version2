@@ -7,11 +7,17 @@
 
 ### Epic: *Set up a mock-up system to begin with that demonstrates CRUD functionality*
 
-This is broken down into the following User Stories:
-US
+This is broken down into the following
 
-User Tasks:
-1. Right at the onset, deploy the App on Heroku to ensure that works correctly
+<details>
+  <summary>User Stories</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a542b30f-f782-4cf1-a2b2-c8fdfa597f5c)
+
+</details>
+
+**User Tasks:**
+1. Right at the onset, deploy the App on Heroku to ensure that it runs correctly on Heroku
 2. Demonstrate that records can be created
 3. Demonstrate that records can be searched for by a reference or by names
 4. Demonstrate that records can be edited and updated.
@@ -20,7 +26,7 @@ User Tasks:
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-|  T01 | Install Django  | Install Django, psycopg2. Create requirements.txt. Name the Project **manxairlines**. Create the App and name it **booking**. Deployed locally.  | Expected to see the webpage showing the following message: *The install worked successfully!*  | PASS |
+| T01 | Install Django  | Install Django, psycopg2. Create requirements.txt. Name the Project **manxairlines**. Create the App and name it **booking**. Deployed locally. | Expected to see the webpage showing the following message: *The install worked successfully!* | PASS |
 
 <details>
 <summary>Screenshot</summary>
@@ -31,11 +37,11 @@ User Tasks:
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-|  T02 | Heroku Deployment  | Create App on Heroku. Call it **manx-airlines-bookings**. Setup a Database Instance on [ElephantSQL](https://www.elephantsql.com/). Set up the following Heroku Config Vars: <br>1) Copy the generated URL into **DATABASE_URL**; <br>2) Copy Secret Key into **SECRET_KEY**; <br>3) Set **PORT to 8000**; <br>4) Set **DISABLE_COLLECTSTATIC to 1**. <br>Connect Heroku App to GitHub. Deploy.  | Expected to see the webpage showing the following message: *The install worked successfully!* As in the above screenshot. | PASS |
+| T02 | Heroku Deployment  | Create App on Heroku. Call it **manx-airlines-bookings**. Setup a Database Instance on [ElephantSQL](https://www.elephantsql.com/). Set up the following Heroku Config Vars: <br>1) Copy the generated URL into **DATABASE_URL**; <br>2) Copy Secret Key into **SECRET_KEY**; <br>3) Set **PORT to 8000**; <br>4) Set **DISABLE_COLLECTSTATIC to 1**. <br>Connect Heroku App to GitHub. Deploy. | Expected to see the webpage showing the following message: *The install worked successfully!* As in the above screenshot. | PASS |
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-|  T03 | Display Home Page  | Set up the relevant Django directories, views and urls to display **index.html**.  | Expect to see the home page with the ubiquitous **Hello World** message. | PASS |
+| T03 | Display Home Page  | Set up the relevant Django directories, views and urls to display **index.html**. | Expect to see the home page with the ubiquitous **Hello World** message. | PASS |
 
 <details>
 <summary>Screenshot</summary>
@@ -47,7 +53,7 @@ User Tasks:
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-|  T04 | Include 'base.html'  | Update index.html to use **base.html**.<br>It contains H1 Tagged: *HELLO WORLD*. Whilst **index.html** contains  *{% block content %}* of H3 tagged: *GOODBYE!*| Expect to see both sentences:<br>**Hello World** followed by **GOODBYE!** | PASS |
+| T04 | Include 'base.html' | Update index.html to use **base.html**.<br>It contains H1 Tagged: *HELLO WORLD*. Whilst **index.html** contains  *{% block content %}* of H3 tagged: *GOODBYE!* | Expect to see both sentences:<br>**Hello World** followed by **GOODBYE!** | PASS |
 
 <details>
 <summary>Screenshot</summary>
@@ -59,10 +65,10 @@ User Tasks:
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-|  T05 | Create Booking  | Create a template and update views.py in order to be able to create a Booking.| In Admin, expect to see a created record. | PASS |
+| T05 | Create Booking | Create a template and update views.py in order to be able to create a Booking.| In Admin, expect to see a created record. | PASS |
 
 <details>
-<summary>Form used to Create a Record</summary>
+<summary>Form used to Create a Mock Record</summary>
   
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/0e2e9151-74af-401b-a791-bb95c8b220bc)
 
@@ -72,6 +78,56 @@ User Tasks:
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/d510ad5b-ccca-4788-b653-2b99a1c660c4)
 
+</details>
+
+----
+
+| Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
+| ------------- | ------------- | -------------    | ------------- | ------------- |
+| T06 | Search Bookings | Create a Searchbar in order to be able to search for created bookings. Searches are *case insensitive*. | Expect to see matching records or a message showing that no matching criteria found. | PASS |
+
+<details>
+<summary>Searchbar - Demonstrate when no matching records found</summary>
+  
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/bee4f3f5-abcc-4959-b767-cd5067f5294f)
+
+</details>
+
+<details>
+<summary>Demonstrate when search text "wa" is entered - case insensitive - three matches found</summary>
+  
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/2bc24dc8-5c36-41b8-b98a-d94af6e71cf8)
+
+</details>
+
+| Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
+| ------------- | ------------- | -------------    | ------------- | ------------- |
+| T07 | View Bookings | Once a Booking has been found, view the Booking. | Click the View Button to see a matched record. | PASS |
+
+<details>
+  <summary>View Waterstons record by clicking the View button. Showing the Edit and Delete options</summary>
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a4a584fd-6e97-4fa7-8294-297a28fd8c6f)
+
+</details>
+
+
+| Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
+| ------------- | ------------- | -------------    | ------------- | ------------- |
+| T08 | Delete Bookings | Implement the functionality to delete a record. Give the user the option to cancel the 'Delete' command. | Click the Yes Button to delete a record . | PASS |
+
+<details>
+  <summary>Showing Yes/Cancel options</summary> 
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/8e9b2c0c-4789-47a8-a075-adff7f57fd51)
+
+  <summary>Record deleted - originally three records, now two</summary>
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/5a5a41e4-026d-41aa-8111-230e4239f7e7)
+
+  <summary>Delete the other two - confirm that there are no further records that match "wa"</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/c357e514-2256-48f9-9101-083a353c51f4)
 
 </details>
 
@@ -79,13 +135,26 @@ User Tasks:
 
 ### Epic: *Create Bookings*
 
-This is broken down into the following User Stories:
-US
+This is broken down into the following
+<details>
+  <summary>User Stories</summary>
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/d02560ce-863d-46e5-b13d-90082efb77a5)
+
+</details>
 
 User Tasks:
-1. Demonstrate the forms used to create a booking
-2. Show each stage of a Booking being created
-3. Demonstrate the validation of the fields entered
+1. Implement Navbar with Isle of Man Logo
+2. Demonstrate the forms used to create a booking
+3. Show each stage of a Booking being created
+4. Demonstrate the validation of the fields entered
 
-   
+<details>
+  <summary>Navbar</summary>
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/94f86cd6-17c0-4488-8ca5-39fbb4525f7c)
+
+</details>
+---
+
 ## Automated Testing
