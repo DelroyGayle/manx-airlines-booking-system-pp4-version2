@@ -13,7 +13,7 @@ class BookingForm(forms.ModelForm):
 
 
 # creating a form
-class CreateBooking_Form1(forms.Form):
+class CreateBooking_Form(forms.Form):
     def as_p(self):
         """This method overrides the default 'as_p' behaviour
            because I did not like the way this form looked.

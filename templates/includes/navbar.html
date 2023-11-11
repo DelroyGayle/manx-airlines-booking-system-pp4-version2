@@ -6,7 +6,7 @@
             <img src="{% static 'booking/img/logo.png' %}"
                  alt = "Flag of the Isle of Man">
         </a>
-        <a href={% url 'create-booking-form1' %} class="item">Create<br>Booking</a>
+        <a href={% url 'create-booking-form' %} class="item">Create<br>Booking</a>
         <div class="item">
             <form action={% url 'search-bookings' %} method="get">
                 <input type="text" name="query" placeholder="Search Bookings">

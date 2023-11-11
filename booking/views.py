@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from .forms import BookingForm
-from .forms import CreateBooking_Form1
+from .forms import CreateBooking_Form
 from .models import Booking
 
 # Create your views here.
@@ -17,7 +17,7 @@ def homepage(request):
     return render(request, 'booking/index.html')
 
 
-def create_booking_form1(request):
+def create_booking_form(request):
     # form = CreateBooking_Form1()
     # context = {'form': form}
 
@@ -44,7 +44,7 @@ def create_booking_form1(request):
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = CreateBooking_Form1(request.POST)
+        form = CreateBooking_Form(request.POST)
         # check whether it's valid:
         if form.is_valid():
             print("YES")
@@ -54,10 +54,10 @@ def create_booking_form1(request):
             print(form.errors)
             messages.add_message(request, messages.ERROR, "bad date")
     else:
-        form = CreateBooking_Form1()
+        form = CreateBooking_Form()
 
     context = {'form': form}
-    return render(request, 'booking/create-booking-form1.html', context)
+    return render(request, 'booking/create-booking-form.html', context)
 
 
 def view_booking(request, id):
