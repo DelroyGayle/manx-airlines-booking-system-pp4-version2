@@ -12,13 +12,13 @@
 
 /* Footer Solution found at https://stackoverflow.com/questions/34250019/footer-semantic-ui */
 
-.my-main-style1 {min-height:100%; 
+.my-main-style {min-height:74%; 
     padding-bottom:60px; 
     box-sizing:border-box;
 }
 
-.my-footer-style1 {
-    background-color: #212121;
+.my-footer-style {
+    /*background-color: #212121;*/
     position: absolute;
     margin-top: -50px;
     left: 0;
@@ -27,9 +27,11 @@
 }
 
 /* TODO #homepage */
+/*
 @media only screen and (min-width: 600px)  {
     #homepage {
         height: 70vh;
     }
 } 
+*/
 
