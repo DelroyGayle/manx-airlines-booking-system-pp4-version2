@@ -8,6 +8,8 @@
 {% block content %}
     <h3>Create Booking</h3>
 
+    {% include 'includes/messages.html' %}
+
     <form class="ui form" method="POST" action={% url 'create-booking-form1' %}>
         {% csrf_token %}
 

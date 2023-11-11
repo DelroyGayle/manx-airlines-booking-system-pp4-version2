@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
 from .forms import BookingForm
 from .forms import CreateBooking_Form1
 from .models import Booking
@@ -51,6 +52,7 @@ def create_booking_form1(request):
         else:
             print("NO")
             print(form.errors)
+            messages.add_message(request, messages.SUCCESS, "bad date")
     else:
         form = CreateBooking_Form1()
         

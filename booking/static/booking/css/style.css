@@ -12,12 +12,12 @@
 
 /* Footer Solution found at https://stackoverflow.com/questions/34250019/footer-semantic-ui */
 
-.my-main-style {min-height:100%; 
+.my-main-style1 {min-height:100%; 
     padding-bottom:60px; 
     box-sizing:border-box;
 }
 
-.my-footer-style {
+.my-footer-style1 {
     background-color: #212121;
     position: absolute;
     margin-top: -50px;
