@@ -52,10 +52,10 @@ def create_booking_form1(request):
         else:
             print("NO")
             print(form.errors)
-            messages.add_message(request, messages.SUCCESS, "bad date")
+            messages.add_message(request, messages.ERROR, "bad date")
     else:
         form = CreateBooking_Form1()
-        
+
     context = {'form': form}
     return render(request, 'booking/create-booking-form1.html', context)
 

@@ -12,21 +12,22 @@ class BookingForm(forms.ModelForm):
         fields = '__all__'
 
 
-# creating a form   
-class CreateBooking_Form1(forms.Form): 
+# creating a form
+class CreateBooking_Form1(forms.Form):
     def as_p(self):
-        """This method overrides the default 'as_p' behaviour 
+        """This method overrides the default 'as_p' behaviour
            because I did not like the way this form looked.
            This method returns this form rendered as HTML <p>s.
            Found this solution at
            https://stackoverflow.com/questions/7769805/editing-django-form-as-p
         """
         return self._html_output(
-            normal_row = u'<p%(html_class_attr)s>%(label)s</p> %(field)s%(help_text)s',
-            error_row = u'%s',
-            row_ender = '</p>',
-            help_text_html = u'<br><span class="helptext">%s</span>',
-            errors_on_separate_row = True)
+            normal_row=u'<p%(html_class_attr)s>%(label)s</p>'
+            u'%(field)s%(help_text)s',
+            error_row=u'%s',
+            row_ender='</p>',
+            help_text_html=u'<br><span class="helptext">%s</span>',
+            errors_on_separate_row=True)
 
     RETURN = "Y"
     ONE_WAY = "N"
@@ -46,26 +47,27 @@ class CreateBooking_Form1(forms.Form):
     return_option = forms.ChoiceField(
         choices=RETURN_CHOICE,
     )
- 
-    departing_date = forms.DateField(initial=datetime.date.today().strftime("%d/%m/%Y"),
+
+    departing_date = forms.DateField(initial=datetime.date.today()
+                                     .strftime("%d/%m/%Y"),
                                      help_text="Format: DD/MM/YYYY",
                                      input_formats=["%d/%m/%Y"])
 
+    the_choices = list(zip(OUTBOUND_TIME_OPTIONS, OUTBOUND_TIME_OPTIONS))
     departing_time = forms.ChoiceField(initial=OUTBOUND_TIME_OPTIONS[0],
-        choices=list(zip(OUTBOUND_TIME_OPTIONS, OUTBOUND_TIME_OPTIONS)),
-        widget=forms.RadioSelect,
-    )
+                                       choices=the_choices,
+                                       widget=forms.RadioSelect)
 
-    returning_date = forms.DateField(initial=datetime.date.today().strftime("%d/%m/%Y"),
+    returning_date = forms.DateField(initial=datetime.date.today()
+                                     .strftime("%d/%m/%Y"),
                                      help_text="Format: DD/MM/YYYY",
                                      input_formats=["%d/%m/%Y"])
 
+    the_choices = list(zip(INBOUND_TIME_OPTIONS, INBOUND_TIME_OPTIONS))
     returning_time = forms.ChoiceField(initial=INBOUND_TIME_OPTIONS[0],
-        choices=list(zip(INBOUND_TIME_OPTIONS, INBOUND_TIME_OPTIONS)),
-        widget=forms.RadioSelect,
-    )
+                                       choices=the_choices,
+                                       widget=forms.RadioSelect)
 
     adults = forms.IntegerField(initial=0, min_value=0, max_value=20)
     children = forms.IntegerField(initial=0, min_value=0, max_value=20)
     infants = forms.IntegerField(initial=0, min_value=0, max_value=20)
- 
