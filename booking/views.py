@@ -4,8 +4,8 @@ from django.urls import reverse
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
-from .forms import BookingForm
-from .forms import CreateBookingForm, PassengerDetailsForm
+from .forms import BookingForm, CreateBookingForm, PassengerDetailsForm
+from .forms import AdultsForm, MinorsForm
 from django.forms import formset_factory
 # TODO
 from .forms import BasePaxFormSet, PaxForm
@@ -56,10 +56,21 @@ def create_booking_form(request):
             PaxFormSet = formset_factory(PaxForm, formset=BasePaxFormSet,
                                          extra=0)
             formset = PaxFormSet()
+            # TODO 'form'
             context = {'booking': form.cleaned_data, 'form': form.cleaned_data,
                        'range': range(form.cleaned_data['adults']),
                        'range3': range(3),
                        'formset': formset}
+            # TODO
+            AdultsFormSet = formset_factory(AdultsForm)
+            for form in AdultsFormSet(prefix='adult'):
+                 print(form.as_p())
+            ChildrenFormSet = formset_factory(MinorsForm)
+            for form in ChildrenFormSet(prefix='child'):
+                 print(form.as_p())
+            context['adults_formset'] = AdultsFormSet
+            context['children_formset'] = ChildrenFormSet
+
             return render(request, 'booking/passenger-details-form.html',
                           context)
 
@@ -215,7 +226,9 @@ def passenger_details_form(request):
                                              message_string)
 
     else:
-        form = PassengerDetailsForm(3)
+        # TODO
+        # form = PassengerDetailsForm(3)
+        pass
 
     context = {'form': form}
     return render(request, 'booking/create-booking-form.html', context)

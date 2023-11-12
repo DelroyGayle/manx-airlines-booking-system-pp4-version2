@@ -95,3 +95,23 @@ class BasePaxFormSet(BaseFormSet):
     def add_fields(self, form, index):
         super().add_fields(form, index)
         form.fields['body'] = forms.CharField()
+
+
+class AdultsForm(forms.Form):
+    title = forms.CharField()
+    first_name = forms.CharField(max_length=40)
+    last_name = forms.CharField(max_length=40)
+    contact_number = forms.CharField(max_length=40)
+    email = forms.CharField(max_length=40)
+    wheelchair_ssr = forms.CharField(max_length=1)
+    wheelchair_type = forms.CharField(max_length=1)
+
+
+# Used also for Children and Infants
+class MinorsForm(forms.Form):
+    title = forms.CharField()
+    first_name = forms.CharField(max_length=40)
+    last_name = forms.CharField(max_length=40)
+    date_of_birth = forms.DateField()
+    wheelchair_ssr = forms.CharField(max_length=1)
+    wheelchair_type = forms.CharField(max_length=1)
