@@ -53,7 +53,7 @@ MESSAGE_TAGS = {
     messages.INFO: 'success',
     messages.SUCCESS: 'teal message',
     messages.WARNING: 'negative',
-    messages.ERROR: 'yellow message',
+    messages.ERROR: 'red message',
 }
 
 MIDDLEWARE = [

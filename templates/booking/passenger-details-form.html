@@ -1,0 +1,55 @@
+{% extends 'includes/base.html' %}
+
+{% block title %}Passenger Details Form{% endblock %}
+
+
+{% load static %}
+
+{% block content %}
+    <h3>Passenger Details</h3>
+
+    {% include 'includes/messages.html' %}
+
+    <form class="ui form" method="POST" action={% url 'passenger-details-form' %}>
+        {% csrf_token %}
+
+        <label for="your_name">Your name: </label>
+
+
+
+        {% for _ in range3 %}
+           <p><label for="id_adult_{{ forloop.counter }}">Adult {{ forloop.counter }}</label></p>
+           <p><input id="id_adult_{{ forloop.counter }}" type="text" 
+                name="id_adult_{{ forloop.counter }}" 
+                maxlength="40" required>
+            </p>
+            <span class="helptext">Format: DD/MM/YYYY</span><br>
+        {% endfor %}
+        <br>
+
+        {% for _ in range3 %}
+           <p><label for="id_child_{{ forloop.counter }}">Child {{ forloop.counter }}</label></p>
+           <p><input id="id_child_{{ forloop.counter }}" type="text" 
+                name="id_child_{{ forloop.counter }}" 
+                maxlength="40" required>
+            </p>
+            <span class="helptext">Format: DD/MM/YYYY</span><br>
+        {% endfor %}
+        <br>
+{{ formset }}
+     
+        <br>
+
+        {% for item in form %}
+        <div class="fieldWrapper">
+            {{ item.label }} {{ item }}
+            {% if item.help_text %}
+                {{ item.help_text|safe }}
+            {% endif %}
+        </div>
+        <br>
+    {% endfor %}
+        
+        <p><input type="submit" class="ui button primary" value="Submit">
+    </form>
+{% endblock %}

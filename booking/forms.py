@@ -1,5 +1,6 @@
 
 from django import forms
+from django.forms import BaseFormSet
 from .models import Booking
 import datetime
 
@@ -13,7 +14,7 @@ class BookingForm(forms.ModelForm):
 
 
 # creating a form
-class CreateBooking_Form(forms.Form):
+class CreateBookingForm(forms.Form):
     def as_p(self):
         """This method overrides the default 'as_p' behaviour
            because I did not like the way this form looked.
@@ -36,13 +37,21 @@ class CreateBooking_Form(forms.Form):
         (ONE_WAY, "One Way")
     ]
 
-    OUTBOUND_TIME_OPTIONS = ("08:00 LCY - 09:45 IOM",
-                             "13:30 LCY - 15:15 IOM",
-                             "18:30 LCY - 20:15 IOM")
+    OUTBOUND_TIME_OPTIONS1 = ("0800",
+                              "1330",
+                              "1830")
 
-    INBOUND_TIME_OPTIONS = ("11:00 IOM - 12:45 LCY",
-                            "16:00 IOM - 17:45 LCY",
-                            "21:00 IOM - 22:45 LCY")
+    OUTBOUND_TIME_OPTIONS2 = ("08:00 LCY - 09:45 IOM",
+                              "13:30 LCY - 15:15 IOM",
+                              "18:30 LCY - 20:15 IOM")
+
+    INBOUND_TIME_OPTIONS1 = ("1100",
+                             "1600",
+                             "2100")
+
+    INBOUND_TIME_OPTIONS2 = ("11:00 IOM - 12:45 LCY",
+                             "16:00 IOM - 17:45 LCY",
+                             "21:00 IOM - 22:45 LCY")
 
     return_option = forms.ChoiceField(
         choices=RETURN_CHOICE,
@@ -53,8 +62,8 @@ class CreateBooking_Form(forms.Form):
                                      help_text="Format: DD/MM/YYYY",
                                      input_formats=["%d/%m/%Y"])
 
-    the_choices = list(zip(OUTBOUND_TIME_OPTIONS, OUTBOUND_TIME_OPTIONS))
-    departing_time = forms.ChoiceField(initial=OUTBOUND_TIME_OPTIONS[0],
+    the_choices = list(zip(OUTBOUND_TIME_OPTIONS1, OUTBOUND_TIME_OPTIONS2))
+    departing_time = forms.ChoiceField(initial=OUTBOUND_TIME_OPTIONS1[0],
                                        choices=the_choices,
                                        widget=forms.RadioSelect)
 
@@ -63,11 +72,26 @@ class CreateBooking_Form(forms.Form):
                                      help_text="Format: DD/MM/YYYY",
                                      input_formats=["%d/%m/%Y"])
 
-    the_choices = list(zip(INBOUND_TIME_OPTIONS, INBOUND_TIME_OPTIONS))
-    returning_time = forms.ChoiceField(initial=INBOUND_TIME_OPTIONS[0],
+    the_choices = list(zip(INBOUND_TIME_OPTIONS1, INBOUND_TIME_OPTIONS2))
+    returning_time = forms.ChoiceField(initial=INBOUND_TIME_OPTIONS1[0],
                                        choices=the_choices,
                                        widget=forms.RadioSelect)
 
-    adults = forms.IntegerField(initial=0, min_value=0, max_value=20)
+    adults = forms.IntegerField(initial=1, min_value=0, max_value=20)
     children = forms.IntegerField(initial=0, min_value=0, max_value=20)
     infants = forms.IntegerField(initial=0, min_value=0, max_value=20)
+
+
+# TODO
+class PassengerDetailsForm(forms.Form):
+    pass
+
+
+class PaxForm(forms.Form):
+    pass
+
+
+class BasePaxFormSet(BaseFormSet):
+    def add_fields(self, form, index):
+        super().add_fields(form, index)
+        form.fields['body'] = forms.CharField()

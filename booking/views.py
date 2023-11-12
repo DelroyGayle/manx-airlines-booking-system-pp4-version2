@@ -5,8 +5,12 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from .forms import BookingForm
-from .forms import CreateBooking_Form
+from .forms import CreateBookingForm, PassengerDetailsForm
+from django.forms import formset_factory
+# TODO
+from .forms import BasePaxFormSet, PaxForm
 from .models import Booking
+
 
 # Create your views here.
 
@@ -17,8 +21,9 @@ def homepage(request):
     return render(request, 'booking/index.html')
 
 
+# TODO
 def create_booking_form(request):
-    # form = CreateBooking_Form1()
+    # form = CreateBookingForm1()
     # context = {'form': form}
 
     # if request.method == 'POST':
@@ -44,17 +49,32 @@ def create_booking_form(request):
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = CreateBooking_Form(request.POST)
+        form = CreateBookingForm(request.POST)
         # check whether it's valid:
+        # TODO
         if form.is_valid():
-            print("YES")
-            print(form.cleaned_data)
+            PaxFormSet = formset_factory(PaxForm, formset=BasePaxFormSet,
+                                         extra=0)
+            formset = PaxFormSet()
+            context = {'booking': form.cleaned_data, 'form': form.cleaned_data,
+                       'range': range(form.cleaned_data['adults']),
+                       'range3': range(3),
+                       'formset': formset}
+            return render(request, 'booking/passenger-details-form.html',
+                          context)
+
         else:
-            print("NO")
-            print(form.errors)
-            messages.add_message(request, messages.ERROR, "bad date")
+            # TODO
+            for field in form.errors:
+                messages.add_message(request, messages.ERROR, "MESSAGE")
+                for field in form.errors:
+                    for item in form.errors[field]:
+                        message_string = f"{field} - {item}"
+                        messages.add_message(request, messages.ERROR,
+                                             message_string)
+
     else:
-        form = CreateBooking_Form()
+        form = CreateBookingForm()
 
     context = {'form': form}
     return render(request, 'booking/create-booking-form.html', context)
@@ -145,3 +165,57 @@ def edit_booking(request, id):
                                             kwargs={'id': booking.pk}))
 
     return render(request, 'booking/edit-booking.html', context)
+
+
+# TODO
+def passenger_details_form(request):
+    print("REQ", request)
+    # form = CreateBookingForm()
+    # context = {'form': form}
+
+    # if request.method == 'POST':
+    #     company_name = request.POST.get('company_name')
+    #     number_of_employees = request.POST.get('number_of_employees')
+    #     # employer_test_flag will either be set to "on" or None
+    #     # Handle it so that it is either "on" or False
+    #     employer_test_flag = request.POST.get('employer_test_flag', False)
+
+    #     new_employer = Employer()
+
+    #     new_employer.company_name = company_name
+    #     new_employer.number_of_employees = number_of_employees
+    #     # 'employer_test_flag' -  convert "on" value
+    #      to either True or False.']
+    #
+    #     new_employer.employer_test_flag = True if employer_test_flag == 'on'
+    #     else False
+    #     new_employer.save()
+
+    #     return HttpResponseRedirect(reverse('view-booking',
+    #            kwargs={'id': new_employer.pk}))
+
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = CreateBookingForm(request.POST)
+        # check whether it's valid:
+        # TODO
+        if form.is_valid():
+            print("YES1")
+            return render(request, 'booking/passenger-details-form.html',
+                          context)
+
+        else:
+            # TODO
+            for field in form.errors:
+                messages.add_message(request, messages.ERROR, "MESSAGE")
+                for field in form.errors:
+                    for item in form.errors[field]:
+                        message_string = f"{field} - {item}"
+                        messages.add_message(request, messages.ERROR,
+                                             message_string)
+
+    else:
+        form = PassengerDetailsForm(3)
+
+    context = {'form': form}
+    return render(request, 'booking/create-booking-form.html', context)

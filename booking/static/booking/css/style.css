@@ -26,6 +26,8 @@
     padding: 15px 0;
 }
 
+ul.errorlist {display:none;}
+
 /* TODO #homepage */
 /*
 @media only screen and (min-width: 600px)  {
@@ -35,3 +37,9 @@
 } 
 */
 
+
+.errorlist {
+    display: none;
+    color:red
+  }
+  
