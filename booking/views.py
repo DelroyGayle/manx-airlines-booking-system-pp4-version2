@@ -10,8 +10,9 @@ from .forms import AdultsForm, MinorsForm, PaxForm
 from django.forms import formset_factory
 # TODO BasePaxFormSet?
 from .forms import BasePaxFormSet, HiddenForm
-from .models import Booking
+from .models import Booking, Passenger
 from datetime import datetime
+from datetime import date # TODO
 import random # TODO
 
 
@@ -197,9 +198,10 @@ def create_records(request):
 
         # For now use a random number
         booking = Booking()
-        print("HELLO", booking)
+        print("BOOKING", booking) # TODO        
         random_string = str(random.randrange(100,1000)) # 3 digits
         pnr = "SMI" + random_string
+        print(pnr)
         booking.flight_from = "LCY"
         booking.flight_to = "IOM"
         # 'return_flight' = either True or False.
@@ -229,16 +231,19 @@ def create_records(request):
         booking.principal_email = "test@email.com"
         booking.remarks = ""
         print(booking) # TODO
+        print(pnr)
+        # TODO
+        # Booking.objects.filter(pk=1).delete()
         booking.save()
-
+        adhoc_date = date(2005, 7, 27) # TODO
 # Create the Passenger Records - 2 adhoc recs - TODO
         for i in range(2):
-            adhoc_date = date(2005, 7, 27) # TODO
+             # TODO
             pax = Passenger(title="MR",
                             first_name="JOE",
                             last_name="BLOGGS",
                             pax_type="A",
-                            date_of_birth=adhoc, #TODO CAN BE NULL FOR ADULTS
+                            date_of_birth=adhoc_date, #TODO CAN BE NULL FOR ADULTS
                             contact_number="123456",
                             contact_email="test@email.com",
                             seat_number=i, # TODO

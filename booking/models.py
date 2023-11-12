@@ -31,7 +31,7 @@ class Schedule(models.Model):
 
 
 class Booking(models.Model):
-    pnr = models.CharField(max_length=6, primary_key=True)
+    pnr = models.CharField(max_length=6, unique=True)
     flight_from = models.CharField(max_length=3)
     flight_to = models.CharField(max_length=3)
     return_flight = models.BooleanField(default=True)
