@@ -12,8 +12,8 @@ from django.forms import formset_factory
 from .forms import BasePaxFormSet, HiddenForm
 from .models import Booking, Passenger
 from datetime import datetime
-from datetime import date # TODO
-import random # TODO
+from datetime import date  # TODO
+import random  # TODO
 
 
 # Create your views here.
@@ -128,13 +128,18 @@ def search_bookings(request):
     #   queryset =
     #           Employer.objects.filter(employee__last_name__icontains=query)
     #                                   .order_by('company_name')
-    queryset = (Employer.objects
-                .filter(Q(company_name__icontains=query) |
-                        Q(employee__first_name__icontains=query) |
-                        Q(employee__last_name__icontains=query))
-                .order_by("company_name"))
-    if queryset.count() == 0:
+    # queryset = (Employer.objects
+    #             .filter(Q(company_name__icontains=query) |
+    #                     Q(employee__first_name__icontains=query) |
+    #                     Q(employee__last_name__icontains=query))
+    #             .order_by("company_name"))
+    if True or queryset.count() == 0:
         # No Matching Bookings Found
+        message_string = f"No Bookings found that matched '{query }'"
+        messages.add_message(request, messages.ERROR,
+                             message_string)
+        return HttpResponseRedirect(reverse("home"))
+
         context = {"query": query}
         return render(request, "booking/no-matches.html", context)
 
@@ -196,68 +201,68 @@ def edit_booking(request, id):
 
 def create_records(request):
 
-        # For now use a random number
-        booking = Booking()
-        print("BOOKING", booking) # TODO        
-        random_string = str(random.randrange(100,1000)) # 3 digits
-        pnr = "SMI" + random_string
-        print(pnr)
-        booking.pnr = pnr
-        booking.flight_from = "LCY"
-        booking.flight_to = "IOM"
-        # 'return_flight' = either True or False.
-        booking.return_flight = True if request["return_option"] == "Y" else False
+    # For now use a random number
+    booking = Booking()
+    print("BOOKING", booking)  # TODO
+    random_string = str(random.randrange(100, 1000))  # 3 digits TODO
+    pnr = "SMI" + random_string
+    print(pnr)
+    booking.pnr = pnr
+    booking.flight_from = "LCY"
+    booking.flight_to = "IOM"
+    # 'return_flight' = either True or False.
+    booking.return_flight = True if request["return_option"] == "Y" else False
+    # Outbound Date (YYYYMMDD) + Flight No (e.g. MX0485)
+    # EG 'departing_date': ['2023-11-12']
+    thedate = datetime.strptime(request["departing_date"], "%Y-%m-%d")
+    thedate = thedate.strftime("%Y%m%d")
 
-        # Outbound Date (YYYYMMDD) + Flight No (e.g. MX0485)
-        # EG 'departing_date': ['2023-11-12']
-        thedate = datetime.strptime(request["departing_date"], "%Y-%m-%d")
-        thedate = thedate.strftime("%Y%m%d")
-        booking.outbound = f"{thedate}MX485"
+    booking.outbound = f"{thedate}MX485"
+    thedate = datetime.strptime(request["returning_date"], "%Y-%m-%d")
+    thedate = thedate.strftime("%Y%m%d")
 
-        thedate = datetime.strptime(request["returning_date"], "%Y-%m-%d")
-        thedate = thedate.strftime("%Y%m%d")
-
-        booking.inbound = f"{thedate}MX486"
-        booking.ticket_class = "Y"
-        booking.cabin_class = "Y"
-        number_of_adults = int(request["adults"])
-        number_of_children = int(request["children"])
-        number_of_infants = int(request["infants"])
-        booking.number_of_pax = number_of_adults + number_of_children
-        booking.number_of_infants = number_of_infants
-        booking.number_of_bags = 0
-        booking.departure_time = "0800"
-        booking.arrival_time = "0930"
-        booking.principal_contact_number = "123456"
-        booking.principal_email = "test@email.com"
-        booking.remarks = ""
-        print(booking) # TODO
-        print(pnr)
+    booking.inbound = f"{thedate}MX486"
+    booking.ticket_class = "Y"
+    booking.cabin_class = "Y"
+    number_of_adults = int(request["adults"])
+    number_of_children = int(request["children"])
+    number_of_infants = int(request["infants"])
+    booking.number_of_pax = number_of_adults + number_of_children
+    booking.number_of_infants = number_of_infants
+    booking.number_of_bags = 0
+    booking.departure_time = "0800"
+    booking.arrival_time = "0930"
+    booking.principal_contact_number = "123456"
+    booking.principal_email = "test@email.com"
+    booking.remarks = ""
+    print(booking)  # TODO
+    print(pnr)
+    # TODO
+    # Booking.objects.filter(pk=1).delete()
+    booking.save()
+    adhoc_date = date(2005, 7, 27)  # TODO
+    # Create the Passenger Records - 2 adhoc recs - TODO
+    for i in range(2):
+        print("ISCORE=", i)
+    for i in range(2):
         # TODO
-        # Booking.objects.filter(pk=1).delete()
-        booking.save()
-        adhoc_date = date(2005, 7, 27) # TODO
-# Create the Passenger Records - 2 adhoc recs - TODO
-        for i in range(2):
-            print("ISCORE=",i)
-        for i in range(2):
-             # TODO
-            pax = Passenger(title="MR",
-                            first_name="JOE",
-                            last_name="BLOGGS",
-                            pax_type="A",
-                            pax_order_number=i+1, # TODO
-                            date_of_birth=adhoc_date, #TODO CAN BE NULL FOR ADULTS
-                            contact_number="123456",
-                            contact_email="test@email.com",
-                            seat_number=i, # TODO
-                            status=f"HK{i + 1}",
-                            ticket_class = "Y",
-                            pnr = booking)
-            pax.save()
-            print("I=",i,pax)
+        pax = Passenger(title="MR",
+                        first_name="JOE",
+                        last_name="BLOGGS",
+                        pax_type="A",
+                        pax_order_number=i+1,  # TODO
+                        # TODO CAN BE NULL FOR ADULTS
+                        date_of_birth=adhoc_date,
+                        contact_number="123456",
+                        contact_email="test@email.com",
+                        seat_number=i,  # TODO
+                        status=f"HK{i + 1}",
+                        ticket_class="Y",
+                        pnr=booking)
+        pax.save()
+        print("I=", i, pax)
 
-        # RETURN TO HOME PAGE = # TODO: SHOW MESSAGE
+        # RETURN TO HOME PAGE =  # TODO: SHOW MESSAGE
         return HttpResponseRedirect(reverse("home"))
 
 
@@ -269,29 +274,23 @@ def passenger_details_form(request):
 
     AdultsFormSet = formset_factory(AdultsForm)
     ChildrenFormSet = formset_factory(MinorsForm)
-    adult_formset = AdultsFormSet(request.POST or None, request.FILES or None, prefix="adult")
+    adult_formset = AdultsFormSet(request.POST or None, request.FILES or None,
+                                  prefix="adult")
     children_formset = ChildrenFormSet(request.POST or None, prefix="child")
 
     if request.method == "POST":
         # TODO
-        # AdultsFormSet = formset_factory(AdultsForm)
-        # ChildrenFormSet = formset_factory(MinorsForm)
-        # adult_formset = AdultsFormSet(request.POST, request.FILES, prefix="adult")
-        # children_formset = ChildrenFormSet(request.POST, request.FILES, prefix="child")
         print(adult_formset.is_valid(), children_formset.is_valid(), "WELL?")
-        # print(100,children_formset)
-        # print(200,children_formset.errors)
-        # print(300,children_formset.non_form_errors)
         if adult_formset.is_valid() and children_formset.is_valid():
-            print("CLEAN A")
+            print("CLEAN A")  # TODO
             for f in adult_formset:
                 cd = f.cleaned_data
                 print(cd)
-            print("CLEAN C")
+            print("CLEAN C")  # TODO
             print(children_formset.cleaned_data)
-            print("RP")
+            print("RP")  # TODO
             print(request.POST)
-  
+
             create_records(request.POST)
 
         else:
@@ -304,7 +303,7 @@ def passenger_details_form(request):
                                          message_string)
             messages.add_message(request, messages.ERROR,
                                  adult_formset.non_form_errors())
-            print("D", children_formset.errors)
+            print("D", children_formset.errors)  # TODO
             for field in children_formset.errors:
                 if field:
                     message_string = children_formset.errors
