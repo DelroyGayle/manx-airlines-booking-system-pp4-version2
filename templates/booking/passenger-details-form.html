@@ -13,20 +13,17 @@
     <form class="ui form" method="POST" action={% url 'passenger-details-form' %}>
         {% csrf_token %}
 
+        {{ adults_formset.management_form }}
+        {{ children_formset.management_form }}
+        MF
         {{ adults_formset }}
+        MF2
+        {{ children_formset }}
+        HIDDEN
+        {{ hidden_form }}
      
         <br>
-
-        {% for item in adults_formset %}
-        <div class="fieldWrapper">
-            {{ item.label }} {{ item }}
-            {% if item.help_text %}
-                {{ item.help_text|safe }}
-            {% endif %}
-        </div>
-        <br>
-    {% endfor %}
         
-        <p><input type="submit" class="ui button primary" value="Submit">
+        <p><input type="submit" class="ui button primary" value="Continue">
     </form>
 {% endblock %}

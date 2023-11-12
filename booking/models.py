@@ -57,10 +57,10 @@ class Booking(models.Model):
         ordering = ["pnr"]
 
     def __str__(self):
-        return ("PNR: {0} ROUTE: {1}{2} DATE: {3} - {4} "
+        return ("PNR: {0} ROUTE: {1}{2} JOURNEY: {3} - {4} "
                 "PAX + {5} INFANTS".format(
                  self.pnr, self.flight_from, self.flight_to,
-                 self.flight_date.strftime("%d/%m/%Y"),
+                 f"{self.outbound} {self.inbound}",
                  self.number_of_pax, self.number_of_infants))
 
 
@@ -71,13 +71,13 @@ class Passenger(models.Model):
     # A=Adult C=Child I=Infant
     pax_type = models.CharField(max_length=1, default="A")
     # D.O.B. applicable to Children and Infants only
-    date_of_birth = models.DateField()
+    date_of_birth = models.DateField(null=True)
     contact_number = models.CharField(max_length=40, blank=True, default="")
     # Either one of these two fields needs to be set for Adult No. 1
     # is used to populate either
     # 'principal_contact_number' or 'principal_email'
     # So, Either one of these two fields below needs to be set
-    email = models.CharField(max_length=40, blank=True, default="")
+    contact_email = models.CharField(max_length=40, blank=True, default="")
     pnr = models.ForeignKey(Booking, on_delete=models.CASCADE)
     seat_number = models.PositiveSmallIntegerField(default=0)
     # Status: HK1 for PAX 1, HK2 for PAX 2, etc

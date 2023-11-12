@@ -87,14 +87,27 @@ class PassengerDetailsForm(forms.Form):
     pass
 
 
+# TODO
 class PaxForm(forms.Form):
     pass
 
 
+# TODO
 class BasePaxFormSet(BaseFormSet):
     def add_fields(self, form, index):
         super().add_fields(form, index)
         form.fields['body'] = forms.CharField()
+
+
+class HiddenForm(forms.Form):
+    return_option = forms.CharField(max_length=1, widget=forms.HiddenInput())
+    departing_date = forms.DateField(input_formats=["%d/%m/%Y"], widget=forms.HiddenInput())
+    departing_time = forms.CharField(max_length=4, widget=forms.HiddenInput())
+    returning_date = forms.DateField(input_formats=["%d/%m/%Y"], widget=forms.HiddenInput())
+    returning_time = forms.CharField(max_length=4, widget=forms.HiddenInput())
+    adults = forms.IntegerField(widget=forms.HiddenInput())
+    children = forms.IntegerField(widget=forms.HiddenInput())
+    infants = forms.IntegerField(widget=forms.HiddenInput())
 
 
 class AdultsForm(forms.Form):
