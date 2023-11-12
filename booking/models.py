@@ -70,13 +70,14 @@ class Passenger(models.Model):
     last_name = models.CharField(max_length=40)
     # A=Adult C=Child I=Infant
     pax_type = models.CharField(max_length=1, default="A")
+    pax_order_number = models.PositiveSmallIntegerField(default=1)
     # D.O.B. applicable to Children and Infants only
     date_of_birth = models.DateField(null=True)
-    contact_number = models.CharField(max_length=40, blank=True, default="")
     # Either one of these two fields needs to be set for Adult No. 1
     # is used to populate either
     # 'principal_contact_number' or 'principal_email'
     # So, Either one of these two fields below needs to be set
+    contact_number = models.CharField(max_length=40, blank=True, default="")
     contact_email = models.CharField(max_length=40, blank=True, default="")
     pnr = models.ForeignKey(Booking, on_delete=models.CASCADE)
     seat_number = models.PositiveSmallIntegerField(default=0)
@@ -88,7 +89,7 @@ class Passenger(models.Model):
     wheelchair_ssr = models.CharField(max_length=1, blank=True, default="")
     # This field will only be set if 'wheelchair_ssr' is non-blank
     # M for WCMP, L for WCLB; Blank - PAX not travelling with a wheelchair
-    wheelchair_type = models.CharField(max_length=1, default="")
+    wheelchair_type = models.CharField(max_length=1, blank=True, default="")
 
     def __str__(self):
         return "PNR: {0} PAX: {1} {2} {3}".format(

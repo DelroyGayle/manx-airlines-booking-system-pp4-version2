@@ -202,6 +202,7 @@ def create_records(request):
         random_string = str(random.randrange(100,1000)) # 3 digits
         pnr = "SMI" + random_string
         print(pnr)
+        booking.pnr = pnr
         booking.flight_from = "LCY"
         booking.flight_to = "IOM"
         # 'return_flight' = either True or False.
@@ -238,11 +239,14 @@ def create_records(request):
         adhoc_date = date(2005, 7, 27) # TODO
 # Create the Passenger Records - 2 adhoc recs - TODO
         for i in range(2):
+            print("ISCORE=",i)
+        for i in range(2):
              # TODO
             pax = Passenger(title="MR",
                             first_name="JOE",
                             last_name="BLOGGS",
                             pax_type="A",
+                            pax_order_number=i+1, # TODO
                             date_of_birth=adhoc_date, #TODO CAN BE NULL FOR ADULTS
                             contact_number="123456",
                             contact_email="test@email.com",
@@ -250,8 +254,8 @@ def create_records(request):
                             status=f"HK{i + 1}",
                             ticket_class = "Y",
                             pnr = booking)
-        pax.save()
-        print(pax)
+            pax.save()
+            print("I=",i,pax)
 
         # RETURN TO HOME PAGE = # TODO: SHOW MESSAGE
         return HttpResponseRedirect(reverse("home"))
