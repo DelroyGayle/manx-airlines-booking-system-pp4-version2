@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.db.models import Q
+from django.db.models import Q, OuterRef, Subquery
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from .forms import BookingForm, CreateBookingForm, PassengerDetailsForm
@@ -133,15 +133,47 @@ def search_bookings(request):
     #                     Q(employee__first_name__icontains=query) |
     #                     Q(employee__last_name__icontains=query))
     #             .order_by("company_name"))
-    if True or queryset.count() == 0:
+
+    # TODO
+
+    # queryset = Booking.objects.filter(pnr__icontains=query).order_by('pnr')
+    query_passenger = Passenger.objects.filter(pnr=OuterRef('id'),
+                                               pax_type="A",
+                                               pax_order_number=1)
+#    queryset = Booking.objects.filter(pnr__icontains=query).order_by('pnr')
+#    queryset = (Booking.objects.filter(pnr__icontains=query)
+    queryset = (Booking.objects.filter(
+                                Q(pnr__icontains=query) | (
+
+                                 Q(passenger__first_name__icontains=query) &
+                                 Q(passenger__pax_type__exact="A") &
+                                 Q(passenger__pax_order_number=1)) | (
+
+                                 Q(passenger__last_name__icontains=query) &
+                                 Q(passenger__pax_type__exact="A") &
+                                 Q(passenger__pax_order_number=1)))
+                       .order_by('pnr').distinct()
+                       .annotate(first_name=Subquery(
+                                 query_passenger.values('first_name')[:1]),
+                                 last_name=Subquery(
+                                 query_passenger.values('last_name')[:1])))
+
+    if queryset.count() == 0:
         # No Matching Bookings Found
         message_string = f"No Bookings found that matched '{query }'"
         messages.add_message(request, messages.ERROR,
                              message_string)
         return HttpResponseRedirect(reverse("home"))
 
-        context = {"query": query}
-        return render(request, "booking/no-matches.html", context)
+    print("QS1", queryset)
+    for element in queryset:
+        print("PNR1", element.pnr)
+        qs = Passenger.objects.filter(pnr=element.id,
+                                      pax_type="A",
+                                      pax_order_number=1)
+        print("SUBQ", qs)
+        for elem2 in qs:
+            print(elem2.first_name, elem2.last_name)
 
     # Pagination as demonstrated in
     # https://testdriven.io/blog/django-pagination/
