@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 
 # Create your models here.
 
@@ -33,12 +32,15 @@ class Schedule(models.Model):
 
 class Booking(models.Model):
     pnr = models.CharField(max_length=6, unique=True)
+    created_at = models.DateField(auto_now=True)
+    amended_at = models.DateField(auto_now_add=True)
+
     flight_from = models.CharField(max_length=3)
     flight_to = models.CharField(max_length=3)
     return_flight = models.BooleanField(default=True)
 
     # Outbound Date + Flight No (e.g. MX0485)
-    outbound_date = models.DateField(default=timezone.now)
+    outbound_date = models.DateField(auto_now=True)
     outbound_flightno = models.CharField(max_length=6, default="")
     # Inbound Date + Flight No (e.g. MX0486)
     # Optional i.e. One-Way Journey

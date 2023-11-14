@@ -11,19 +11,20 @@ TODO
 
     <div class="ui centered card">
         <div class="content">
-            <div class="header">{{booking.pnr}}</div>
+            <div class="header">{{  booking.pnr }}</div>
+            <div class="meta">{{ booking.created_at }}</div>
             <div class="description">
                 <p>MX485&nbsp;{{ booking.ticket_class }}&nbsp;13NOV23&nbsp;
                     {{ booking.flight_from }}{{ booking.flight_to }}</p>
                 <p>MX486&nbsp;{{ booking.ticket_class }}&nbsp;13NOV23&nbsp;
-                    {{ booking.flight_to }}{{ booking.flight_from }}</p>
+                    {{  booking.flight_to }}{{ booking.flight_from }}</p>
                 {% for pax in passengers %}
-                    <p>{{pax.title}}&nbsp;{{pax.first_name}}&nbsp;{{pax.last_name}}</p>
-                    <p>Seat&nbsp;23A&nbsp;Status&nbsp;{{pax.status}}&nbsp;Booking&nbsp;Class&nbsp;{{pax.ticket_class}}</p>
+                    <p>{{ pax.title }}&nbsp;{{ pax.first_name }}&nbsp;{{ pax.last_name }}</p>
+                    <p>Seat&nbsp;23A&nbsp;Status&nbsp;{{ pax.status }}&nbsp;Booking&nbsp;Class&nbsp;{{ pax.ticket_class }}</p>
                     <p>Contact&nbsp;Telephone&nbsp;{{ pax.contact_number }}</p>
                     <p>Contact Email&nbsp;{{ pax.contact_email }}</p>
                 {% endfor %}
-                <p>{{ booking.number_of_bags}} Bags</p>
+                <p>{{ booking.number_of_bags }} Bags</p>
             </div>
         </div>
         <div class="extra content">
