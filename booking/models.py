@@ -1,4 +1,5 @@
 from django.db import models
+#from datetime import date  TODO
 
 # Create your models here.
 
@@ -67,11 +68,13 @@ class Booking(models.Model):
         ordering = ["pnr"]
 
     def __str__(self):
+        print(self.inbound_flightno, self.inbound_date, self.return_flight,
+              self.outbound_flightno, self.outbound_date)
         return_flight_info = ("{0} {1}"
-                              .format(self.inbound_flight,
+                              .format(self.inbound_flightno,
                                       self.inbound_date.strftime("%d%b%Y")
                                           .upper())
-                              if return_flight else "")
+                              if self.return_flight else "")
 
         return ("PNR: {0} {1} {2} {3} - {4} PAX + {5} INFANTS".format(
                  self.pnr,

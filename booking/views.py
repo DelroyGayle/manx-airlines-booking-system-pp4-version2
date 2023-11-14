@@ -69,7 +69,7 @@ def create_booking_form(request):
                                          extra=0)
             formset = PaxFormSet()
             # TODO "form"
-            print("CLEANED", Common.testno, form.cleaned_data)
+            print("CLEANED", form.cleaned_data)
             context = {"booking": form.cleaned_data, "form": form.cleaned_data,
                        "range": range(form.cleaned_data["adults"]),
                        "range3": range(3),
