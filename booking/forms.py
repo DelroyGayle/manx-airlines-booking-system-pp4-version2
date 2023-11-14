@@ -10,7 +10,7 @@ class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
 
-        fields = '__all__'
+        fields = "__all__"
 
 
 # creating a form
@@ -23,11 +23,11 @@ class CreateBookingForm(forms.Form):
            https://stackoverflow.com/questions/7769805/editing-django-form-as-p
         """
         return self._html_output(
-            normal_row=u'<p%(html_class_attr)s>%(label)s</p>'
-            u'%(field)s%(help_text)s',
-            error_row=u'%s',
-            row_ender='</p>',
-            help_text_html=u'<br><span class="helptext">%s</span>',
+            normal_row=u"<p%(html_class_attr)s>%(label)s</p>"
+            u"%(field)s%(help_text)s",
+            error_row=u"%s",
+            row_ender="</p>",
+            help_text_html=u"<br><span class='helptext'>%s</span>",
             errors_on_separate_row=True)
 
     RETURN = "Y"
@@ -96,7 +96,7 @@ class PaxForm(forms.Form):
 class BasePaxFormSet(BaseFormSet):
     def add_fields(self, form, index):
         super().add_fields(form, index)
-        form.fields['body'] = forms.CharField()
+        form.fields["body"] = forms.CharField()
 
 
 class HiddenForm(forms.Form):
@@ -115,7 +115,7 @@ class AdultsForm(forms.Form):
     first_name = forms.CharField(max_length=40)
     last_name = forms.CharField(max_length=40)
     contact_number = forms.CharField(max_length=40)
-    email = forms.CharField(max_length=40)
+    contact_email = forms.CharField(max_length=40)
     wheelchair_ssr = forms.CharField(max_length=1)
     wheelchair_type = forms.CharField(max_length=1)
 
@@ -128,3 +128,15 @@ class MinorsForm(forms.Form):
     date_of_birth = forms.DateField()
     wheelchair_ssr = forms.CharField(max_length=1)
     wheelchair_type = forms.CharField(max_length=1)
+
+
+class testform1(forms.Form):
+    pnr = forms.CharField(max_length=6)
+    username = forms.CharField(max_length=100)
+    email = forms.EmailField()
+
+
+class testform2(forms.Form):
+    title = forms.CharField(max_length=3)
+    first_name = forms.CharField(max_length=40)
+    last_name = forms.CharField(max_length=40)

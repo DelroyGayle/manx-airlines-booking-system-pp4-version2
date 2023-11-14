@@ -60,16 +60,19 @@ The Daily Flight Schedules are:
 ## Glossary
 
 Throughout this document I will be using typical airline terminology when referring to certain concepts.
-Here are a sample of some of the terms used
+Here are a sample of some of the terms used:
 * PAX - Short for Passenger(s)
+* PNR - Passenger Name Record
 * PRM - Passenger with Reduced Mobility
+* SSR - Special Service Request
 * WCHR - Passenger cannot walk long distances but able to go up and down the aircraft steps
 * WCHS - Passenger cannot walk long distances and cannot manage the aircraft steps
 * WCHC - Passenger completely immobile, need assistance all the way, to and from the aircraft
-* WCMP
-* WCLB
+* WCLB - Electric wheelchair operated by lithium ion battery
+* WCBD - Electric wheelchair operated by a non-spillable ("dry") battery
+* WCBW - Electric wheelchair operated by a spillable ("wet") battery
   
-***
+----
 
 ## User Stories
 

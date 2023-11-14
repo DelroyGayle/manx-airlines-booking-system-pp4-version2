@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 
@@ -35,10 +36,15 @@ class Booking(models.Model):
     flight_from = models.CharField(max_length=3)
     flight_to = models.CharField(max_length=3)
     return_flight = models.BooleanField(default=True)
-    # Outbound Date (YYYYMMDD) + Flight No (e.g. MX0485)
-    outbound = models.CharField(max_length=14)
-    # Inbound Date (YYYYMMDD) + Flight No (e.g. MX0486)
-    inbound = models.CharField(max_length=14, blank=True, default="")
+
+    # Outbound Date + Flight No (e.g. MX0485)
+    outbound_date = models.DateField(default=timezone.now)
+    outbound_flightno = models.CharField(max_length=6, default="")
+    # Inbound Date + Flight No (e.g. MX0486)
+    # Optional i.e. One-Way Journey
+    inbound_date = models.DateField(null=True)
+    inbound_flightno = models.CharField(max_length=6, blank=True, default="")
+
     fare_quote = models.DecimalField(max_digits=6, decimal_places=2, default=0)
     ticket_class = models.CharField(max_length=1, default="Y")
     cabin_class = models.CharField(max_length=1, default="Y")
@@ -47,20 +53,23 @@ class Booking(models.Model):
     number_of_bags = models.PositiveSmallIntegerField(default=0)
     departure_time = models.CharField(max_length=4)
     arrival_time = models.CharField(max_length=4)
-    # Either one of these two fields needs to be set
-    principal_contact_number = models.CharField(max_length=40, blank=True,
-                                                default="")
-    principal_email = models.CharField(max_length=40, blank=True, default="")
     remarks = models.TextField(blank=True, default="")
 
     class Meta:
         ordering = ["pnr"]
 
     def __str__(self):
-        return ("PNR: {0} ROUTE: {1}{2} JOURNEY: {3} - {4} "
-                "PAX + {5} INFANTS".format(
-                 self.pnr, self.flight_from, self.flight_to,
-                 f"{self.outbound} {self.inbound}",
+        return_flight_info = ("{0} {1}"
+                               .format(self.inbound_flight,
+                                       self.inbound_date.strftime("%d%b%Y")
+                                           .upper())
+                                if return_flight else "")
+
+        return ("PNR: {0} {1} {2} {3} - {4} PAX + {5} INFANTS".format(
+                 self.pnr,
+                 self.outbound_flightno,
+                 self.outbound_date.strftime("%d%b%Y").upper(),
+                 return_flight_info,
                  self.number_of_pax, self.number_of_infants))
 
 
@@ -74,9 +83,6 @@ class Passenger(models.Model):
     # D.O.B. applicable to Children and Infants only
     date_of_birth = models.DateField(null=True)
     # Either one of these two fields needs to be set for Adult No. 1
-    # is used to populate either
-    # 'principal_contact_number' or 'principal_email'
-    # So, Either one of these two fields below needs to be set
     contact_number = models.CharField(max_length=40, blank=True, default="")
     contact_email = models.CharField(max_length=40, blank=True, default="")
     pnr = models.ForeignKey(Booking, on_delete=models.CASCADE)
@@ -88,11 +94,11 @@ class Passenger(models.Model):
     # Blank or R for WHCR, S for WCHS, C for WCHC
     wheelchair_ssr = models.CharField(max_length=1, blank=True, default="")
     # This field will only be set if 'wheelchair_ssr' is non-blank
-    # M for WCMP, L for WCLB; Blank - PAX not travelling with a wheelchair
+    # M for WCMP, L for WCLB; D for WCBD; W for WCBW; Blank - PAX not travelling with a wheelchair
     wheelchair_type = models.CharField(max_length=1, blank=True, default="")
 
     def __str__(self):
-        return "PNR: {0} PAX: {1} {2} {3}".format(
+        return "{0} PAX: {1} {2} {3}".format(
             self.pnr, self.title, self.first_name, self.last_name)
 
 
@@ -102,6 +108,6 @@ class Transactions(models.Model):
     date_created = models.DateField()
 
     def __str__(self):
-        return "PNR: {0} AMOUNT: {1} DATE CREATED {2}".format(
+        return "{0} AMOUNT: {1} DATE CREATED {2}".format(
             self.pnr, self.amount,
             self.date_created.strftime("%Y%m%d"), self.flight_number)
