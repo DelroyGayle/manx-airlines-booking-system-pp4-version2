@@ -12,6 +12,7 @@ from .forms import BookingForm, CreateBookingForm, PassengerDetailsForm
 from .forms import AdultsForm, MinorsForm, PaxForm
 # TODO BasePaxFormSet?
 from .forms import BasePaxFormSet, HiddenForm
+from .common import Common
 from datetime import datetime
 from datetime import date  # TODO
 import random  # TODO
@@ -23,11 +24,17 @@ import random  # TODO
 
 
 def homepage(request):
+    # On the first display of the Home Page
+    # Initialise various settings
+    if not Common.initialised:
+        Common.initialisation()
+
     return render(request, "booking/index.html")
 
 
 # TODO
 def create_booking_form(request):
+
     # form = CreateBookingForm1()
     # context = {'form': form}
 
@@ -62,7 +69,7 @@ def create_booking_form(request):
                                          extra=0)
             formset = PaxFormSet()
             # TODO "form"
-            print("CLEANED", form.cleaned_data)
+            print("CLEANED", Common.testno, form.cleaned_data)
             context = {"booking": form.cleaned_data, "form": form.cleaned_data,
                        "range": range(form.cleaned_data["adults"]),
                        "range3": range(3),
@@ -84,7 +91,7 @@ def create_booking_form(request):
             hiddenForm = HiddenForm(form.cleaned_data)
             # hiddenForm.adults = 10  # TODO
             print(hiddenForm)  # TODO
-            print(form.cleaned_data)
+            # print(form.cleaned_data) TODO
             context["adults_formset"] = adults_formset
             context["children_formset"] = children_formset
             context["hidden_form"] = hiddenForm
@@ -140,7 +147,6 @@ def search_bookings(request):
 
     # TODO
 
-    # queryset = Booking.objects.filter(pnr__icontains=query).order_by('pnr')
     # Each Booking must has one Principal Passenger
     # That Passenger must be the first mentioned (pax_order_number=1)
     # and an Adult (pax_type="A")
@@ -320,7 +326,7 @@ def create_records(request):
 # TODO
 def passenger_details_form(request):
     print("REQ", request.method)  # TODO
-    # form = CreateBookingForm()
+    # form = CreateBookingForm()  # TODO
     # context = {'form': form}
 
     AdultsFormSet = formset_factory(AdultsForm)
