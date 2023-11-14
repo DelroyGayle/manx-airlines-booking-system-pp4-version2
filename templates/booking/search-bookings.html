@@ -10,8 +10,8 @@ Search Bookings
 
 {% block content %}
 
-<h1 class="ui header">Bookings Containing "{{ query }}"</h1>
-<h3>
+<h1 class="ui centered header">Bookings Containing "{{ query }}"</h1>
+<h3 class="ui centered header">
     {% with queryset.count as total_results %}
         Found {{ total_results }} result{{ total_results|pluralize }}
     {% endwith %}

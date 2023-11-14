@@ -70,19 +70,19 @@ def create_booking_form(request):
             AdultsFormSet = formset_factory(AdultsForm)
             adults_formset = AdultsFormSet(prefix="adult")
             # for form in adults_formset:
-            #      print(form.as_p())
+            #      print(form.as_p()) # TODO
             ChildrenFormSet = formset_factory(MinorsForm)
             children_formset = ChildrenFormSet(prefix="child")
             # for form in children_formset:
-            #      print(form.as_p())
+            #      print(form.as_p()) # TODO
 
             data = {
                 "adults": 10,
                 "children": 20
             }
             hiddenForm = HiddenForm(form.cleaned_data)
-            # hiddenForm.adults = 10
-            print(hiddenForm)
+            # hiddenForm.adults = 10  # TODO
+            print(hiddenForm)  # TODO
             print(form.cleaned_data)
             context["adults_formset"] = adults_formset
             context["children_formset"] = children_formset
@@ -109,7 +109,24 @@ def create_booking_form(request):
 
 def view_booking(request, id):
     booking = get_object_or_404(Booking, pk=id)
-    context = {"booking": booking}
+    print("BOOKING:",booking) # PK/ID
+    print("ID",id)
+    print("PNR", booking.pnr)
+    #context = {"booking": booking}
+    print(200)
+    #qs = Passenger.objects.filter(booking=b)
+    qs = Passenger.objects.filter(pnr_id=id).order_by("pax_type", "pax_order_number")
+    print(300)
+    print(qs)
+    print(len(qs))
+    passenger_list = []
+    for pax_record in qs:
+        print(type(pax_record))
+        print(pax_record.pax_type, pax_record.pax_order_number)
+        passenger_list.append(pax_record)
+    print(type(passenger_list))
+    context = {"booking": booking, "passengers": passenger_list}
+    #print(pax.title, pax.first_name, pax.last_name)
     return render(request, "booking/view-booking.html", context)
 
 
@@ -137,26 +154,36 @@ def search_bookings(request):
     # TODO
 
     # queryset = Booking.objects.filter(pnr__icontains=query).order_by('pnr')
-    query_passenger = Passenger.objects.filter(pnr=OuterRef('id'),
+    # Each Booking must has one Principal Passenger
+    # That Passenger must be the first mentioned (pax_order_number=1)
+    # and an Adult (pax_type="A")
+    query_passenger = Passenger.objects.filter(pnr=OuterRef("id"),
                                                pax_type="A",
                                                pax_order_number=1)
 #    queryset = Booking.objects.filter(pnr__icontains=query).order_by('pnr')
 #    queryset = (Booking.objects.filter(pnr__icontains=query)
     queryset = (Booking.objects.filter(
-                                Q(pnr__icontains=query) | (
+                # Matching PNR
+                Q(pnr__icontains=query) | (
 
-                                 Q(passenger__first_name__icontains=query) &
-                                 Q(passenger__pax_type__exact="A") &
-                                 Q(passenger__pax_order_number=1)) | (
+                 # Or Matching First Name
+                 Q(passenger__first_name__icontains=query) &
+                 Q(passenger__pax_type__exact="A") &
+                 Q(passenger__pax_order_number=1)) | (
 
-                                 Q(passenger__last_name__icontains=query) &
-                                 Q(passenger__pax_type__exact="A") &
-                                 Q(passenger__pax_order_number=1)))
-                       .order_by('pnr').distinct()
-                       .annotate(first_name=Subquery(
-                                 query_passenger.values('first_name')[:1]),
-                                 last_name=Subquery(
-                                 query_passenger.values('last_name')[:1])))
+                 # Or Matching Last Name
+                 Q(passenger__last_name__icontains=query) &
+                 Q(passenger__pax_type__exact="A") &
+                 Q(passenger__pax_order_number=1)))
+
+                # Sort the Query
+                .distinct().order_by("pnr")
+
+                # Include the name of the Principal Passenger
+                .annotate(first_name=Subquery(
+                         query_passenger.values("first_name")[:1]),
+                          last_name=Subquery(
+                         query_passenger.values("last_name")[:1])))
 
     if queryset.count() == 0:
         # No Matching Bookings Found
@@ -165,13 +192,13 @@ def search_bookings(request):
                              message_string)
         return HttpResponseRedirect(reverse("home"))
 
-    print("QS1", queryset)
+    print("QS1", queryset)  # TODO
     for element in queryset:
-        print("PNR1", element.pnr)
+        print("PNR1", element.pnr)  # TODO
         qs = Passenger.objects.filter(pnr=element.id,
                                       pax_type="A",
                                       pax_order_number=1)
-        print("SUBQ", qs)
+        print("SUBQ", qs)  # TODO
         for elem2 in qs:
             print(elem2.first_name, elem2.last_name)
 
@@ -197,11 +224,13 @@ def search_bookings(request):
 
 
 def delete_booking(request, id):
-    booking = get_object_or_404(Employer, pk=id)
+    booking = get_object_or_404(Booking, pk=id)
     context = {"booking": booking}
 
     if request.method == "POST":
         booking.delete()
+        messages.add_message(request, messages.SUCCESS,
+                                             "Booking Deleted Successfully")
         return HttpResponseRedirect(reverse("home"))
 
     return render(request, "booking/delete-booking.html", context)
@@ -238,7 +267,7 @@ def create_records(request):
     print("BOOKING", booking)  # TODO
     random_string = str(random.randrange(100, 1000))  # 3 digits TODO
     pnr = "SMI" + random_string
-    print(pnr)
+    print(pnr)  # TODO
     booking.pnr = pnr
     booking.flight_from = "LCY"
     booking.flight_to = "IOM"
@@ -292,7 +321,7 @@ def create_records(request):
                         ticket_class="Y",
                         pnr=booking)
         pax.save()
-        print("I=", i, pax)
+        print("I=", i, pax)  # TODO
 
         # RETURN TO HOME PAGE =  # TODO: SHOW MESSAGE
         return HttpResponseRedirect(reverse("home"))
@@ -300,7 +329,7 @@ def create_records(request):
 
 # TODO
 def passenger_details_form(request):
-    print("REQ", request.method)
+    print("REQ", request.method)  # TODO
     # form = CreateBookingForm()
     # context = {'form': form}
 
@@ -317,7 +346,7 @@ def passenger_details_form(request):
             print("CLEAN A")  # TODO
             for f in adult_formset:
                 cd = f.cleaned_data
-                print(cd)
+                print(cd)  # TODO
             print("CLEAN C")  # TODO
             print(children_formset.cleaned_data)
             print("RP")  # TODO
@@ -329,7 +358,7 @@ def passenger_details_form(request):
             # TODO
             for field in adult_formset.errors:
                 if field:
-                    print(adult_formset.errors)
+                    print(adult_formset.errors)  # TODO
                     message_string = adult_formset.errors
                     messages.add_message(request, messages.ERROR,
                                          message_string)
