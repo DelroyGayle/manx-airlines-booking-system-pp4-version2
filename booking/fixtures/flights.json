@@ -1,0 +1,80 @@
+[
+  {
+    "model": "booking.flight",
+    "pk": 1,
+    "fields": {
+      "flight_number": "MX0465",
+      "flight_from": "LCY",
+      "flight_to": "IOM",
+      "flight_STD": "0800",
+      "flight_STA": "0945",
+      "outbound": "True",
+      "capacity": 96
+    }
+  },
+  {
+    "model": "booking.flight",
+    "pk": 2,
+    "fields": {
+      "flight_number": "MX475",
+      "flight_from": "LCY",
+      "flight_to": "IOM",
+      "flight_STD": "1330",
+      "flight_STA": "1515",
+      "outbound": "True",
+      "capacity": 96
+    }
+   },
+   {
+    "model": "booking.flight",
+    "pk": 3,
+    "fields": {
+      "flight_number": "MX485",
+      "flight_from": "LCY",
+      "flight_to": "IOM",
+      "flight_STD": "1830",
+      "flight_STA": "2015",
+      "outbound": "True",
+      "capacity": 96
+    }
+   },
+   {
+    "model": "booking.flight",
+    "pk": 4,
+    "fields": {
+      "flight_number": "MX466",
+      "flight_from": "IOM",
+      "flight_to": "LCY",
+      "flight_STD": "1100",
+      "flight_STA": "1245",
+      "outbound": "False",
+      "capacity": 96
+    }
+   },
+   {
+    "model": "booking.flight",
+    "pk": 5,
+    "fields": {
+      "flight_number": "MX476",
+      "flight_from": "IOM",
+      "flight_to": "LCY",
+      "flight_STD": "1600",
+      "flight_STA": "1745",
+      "outbound": "False",
+      "capacity": 96
+    }
+   },
+   {
+    "model": "booking.flight",
+    "pk": 6,
+    "fields": {
+      "flight_number": "MX486",
+      "flight_from": "IOM",
+      "flight_to": "LCY",
+      "flight_STD": "2100",
+      "flight_STA": "2245",
+      "outbound": "False",
+      "capacity": 96
+    }
+   }
+]

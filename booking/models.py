@@ -8,13 +8,17 @@ class Flight(models.Model):
     flight_from = models.CharField(max_length=3)
     flight_to = models.CharField(max_length=3)
     flight_STD = models.CharField(max_length=4)
+    flight_STA = models.CharField(max_length=4)
+    outbound = models.BooleanField(default=True)
     capacity = models.PositiveSmallIntegerField()
 
     class Meta:
         ordering = ["flight_number"]
 
     def __str__(self):
-        return self.flight_number
+        return (f"{self.flight_number} "
+                f"{self.flight_from} {self.flight_to} "
+                f"{self.flight_STD} {self.flight_STA}")
 
 
 class Schedule(models.Model):
@@ -26,8 +30,10 @@ class Schedule(models.Model):
         ordering = ["flight_date", "flight_number"]
 
     def __str__(self):
-        return "{0}{1}".format(self.flight_date.strftime("%Y%m%d"),
-                               self.flight_number)
+        return "{0} {1} BOOKED TO {2} PAX".format(self.flight_number,
+                                                  self.flight_date
+                                                  .strftime("%d/%m/%Y"),
+                                                  self.total_booked)
 
 
 class Booking(models.Model):
@@ -62,10 +68,10 @@ class Booking(models.Model):
 
     def __str__(self):
         return_flight_info = ("{0} {1}"
-                               .format(self.inbound_flight,
-                                       self.inbound_date.strftime("%d%b%Y")
-                                           .upper())
-                                if return_flight else "")
+                              .format(self.inbound_flight,
+                                      self.inbound_date.strftime("%d%b%Y")
+                                          .upper())
+                              if return_flight else "")
 
         return ("PNR: {0} {1} {2} {3} - {4} PAX + {5} INFANTS".format(
                  self.pnr,
@@ -96,7 +102,8 @@ class Passenger(models.Model):
     # Blank or R for WHCR, S for WCHS, C for WCHC
     wheelchair_ssr = models.CharField(max_length=1, blank=True, default="")
     # This field will only be set if 'wheelchair_ssr' is non-blank
-    # M for WCMP, L for WCLB; D for WCBD; W for WCBW; Blank - PAX not travelling with a wheelchair
+    # M for WCMP, L for WCLB; D for WCBD; W for WCBW;
+    # Blank - PAX not travelling with a wheelchair
     wheelchair_type = models.CharField(max_length=1, blank=True, default="")
 
     def __str__(self):
