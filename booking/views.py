@@ -4,13 +4,14 @@ from django.urls import reverse
 from django.db.models import Q, OuterRef, Subquery
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
+from django.forms import formset_factory
+
+from .models import Booking, Passenger
 from .forms import BookingForm, CreateBookingForm, PassengerDetailsForm
 # TODO PaxForm?
 from .forms import AdultsForm, MinorsForm, PaxForm
-from django.forms import formset_factory
 # TODO BasePaxFormSet?
 from .forms import BasePaxFormSet, HiddenForm
-from .models import Booking, Passenger
 from datetime import datetime
 from datetime import date  # TODO
 import random  # TODO
@@ -91,6 +92,8 @@ def create_booking_form(request):
             return render(request, "booking/passenger-details-form.html",
                           context)
 
+            # CREATE MESSAGE TODO
+
         else:
             # TODO
             for field in form.errors:
@@ -109,24 +112,23 @@ def create_booking_form(request):
 
 def view_booking(request, id):
     booking = get_object_or_404(Booking, pk=id)
-    print("BOOKING:",booking) # PK/ID
-    print("ID",id)
+    print("BOOKING:", booking)  # PK/ID   TODO
+    print("ID", id)
     print("PNR", booking.pnr)
-    #context = {"booking": booking}
-    print(200)
-    #qs = Passenger.objects.filter(booking=b)
-    qs = Passenger.objects.filter(pnr_id=id).order_by("pax_type", "pax_order_number")
-    print(300)
-    print(qs)
+    # context = {"booking": booking}
+    # qs = Passenger.objects.filter(booking=b)
+    qs = Passenger.objects.filter(pnr_id=id).order_by("pax_type",
+                                                      "pax_order_number")
+    print(qs)  # TODO
     print(len(qs))
     passenger_list = []
-    for pax_record in qs:
+    for pax_record in qs:  # TODO
         print(type(pax_record))
         print(pax_record.pax_type, pax_record.pax_order_number)
         passenger_list.append(pax_record)
     print(type(passenger_list))
     context = {"booking": booking, "passengers": passenger_list}
-    #print(pax.title, pax.first_name, pax.last_name)
+    # print(pax.title, pax.first_name, pax.last_name) TODO
     return render(request, "booking/view-booking.html", context)
 
 
@@ -136,54 +138,44 @@ def search_bookings(request):
     if not query:
         return HttpResponseRedirect(reverse("home"))
 
-    # Case Insensitive Search
-    #   queryset = Employer.objects.filter(company_name__icontains=query)
-    #               .order_by('company_name')
-    #   queryset =
-    #           Employer.objects.filter(employee__first_name__icontains=query)
-    #                                   .order_by('company_name')
-    #   queryset =
-    #           Employer.objects.filter(employee__last_name__icontains=query)
-    #                                   .order_by('company_name')
-    # queryset = (Employer.objects
-    #             .filter(Q(company_name__icontains=query) |
-    #                     Q(employee__first_name__icontains=query) |
-    #                     Q(employee__last_name__icontains=query))
-    #             .order_by("company_name"))
-
     # TODO
 
     # queryset = Booking.objects.filter(pnr__icontains=query).order_by('pnr')
     # Each Booking must has one Principal Passenger
     # That Passenger must be the first mentioned (pax_order_number=1)
     # and an Adult (pax_type="A")
-    query_passenger = Passenger.objects.filter(pnr=OuterRef("id"),
-                                               pax_type="A",
-                                               pax_order_number=1)
-#    queryset = Booking.objects.filter(pnr__icontains=query).order_by('pnr')
-#    queryset = (Booking.objects.filter(pnr__icontains=query)
+
+    # Every Booking has 'one' Principal Passenger
+    # Adult 1 - query that Passenger i.e.abs
+    # pax_type == "A" and pax_order_number == 1
+    adult1_qs = Passenger.objects.filter(pnr=OuterRef("id"),
+                                         pax_type="A",
+                                         pax_order_number=1)
+
+    # Case Insensitive Search - in 3 parts
+
     queryset = (Booking.objects.filter(
-                # Matching PNR
+                # 1) Matching PNR
                 Q(pnr__icontains=query) | (
 
-                 # Or Matching First Name
+                 # 2) Or Matching Principal Passenger's First Name
                  Q(passenger__first_name__icontains=query) &
                  Q(passenger__pax_type__exact="A") &
                  Q(passenger__pax_order_number=1)) | (
 
-                 # Or Matching Last Name
+                 # 3) Or Matching Principal Passenger's Last Name
                  Q(passenger__last_name__icontains=query) &
                  Q(passenger__pax_type__exact="A") &
                  Q(passenger__pax_order_number=1)))
 
-                # Sort the Query
+                # Sort the Query Result by the PNR
                 .distinct().order_by("pnr")
 
                 # Include the name of the Principal Passenger
                 .annotate(first_name=Subquery(
-                         query_passenger.values("first_name")[:1]),
+                         adult1_qs.values("first_name")[:1]),
                           last_name=Subquery(
-                         query_passenger.values("last_name")[:1])))
+                         adult1_qs.values("last_name")[:1])))
 
     if queryset.count() == 0:
         # No Matching Bookings Found
@@ -230,7 +222,7 @@ def delete_booking(request, id):
     if request.method == "POST":
         booking.delete()
         messages.add_message(request, messages.SUCCESS,
-                                             "Booking Deleted Successfully")
+                             "Booking Deleted Successfully")
         return HttpResponseRedirect(reverse("home"))
 
     return render(request, "booking/delete-booking.html", context)
@@ -243,6 +235,7 @@ def edit_booking(request, id):
     if request.method == "POST":
 
         # Update Booking() with the new values
+        # TODO
 
         booking.company_name = request.POST.get("company_name")
         booking.number_of_employees = request.POST.get("number_of_employees")
@@ -256,13 +249,14 @@ def edit_booking(request, id):
         booking.save()
         return HttpResponseRedirect(reverse("view-booking",
                                             kwargs={"id": booking.pk}))
+        # CREATE MESSAGE TODO
 
     return render(request, "booking/edit-booking.html", context)
 
 
 def create_records(request):
 
-    # For now use a random number
+    # For now use a random number - TODO
     booking = Booking()
     print("BOOKING", booking)  # TODO
     random_string = str(random.randrange(100, 1000))  # 3 digits TODO
@@ -273,16 +267,14 @@ def create_records(request):
     booking.flight_to = "IOM"
     # 'return_flight' = either True or False.
     booking.return_flight = True if request["return_option"] == "Y" else False
-    # Outbound Date (YYYYMMDD) + Flight No (e.g. MX0485)
-    # EG 'departing_date': ['2023-11-12']
-    thedate = datetime.strptime(request["departing_date"], "%Y-%m-%d")
-    thedate = thedate.strftime("%Y%m%d")
-
-    booking.outbound = f"{thedate}MX485"
-    thedate = datetime.strptime(request["returning_date"], "%Y-%m-%d")
-    thedate = thedate.strftime("%Y%m%d")
-
-    booking.inbound = f"{thedate}MX486"
+    # TODO
+    # Outbound Date & Flight No (e.g. MX0485)
+    booking.outbound_date = datetime.now()  # TODO
+    booking.outbound_flightno = "MX485"
+    # Inbound  Date & Flight No (e.g. MX0486)
+    # Note: this is optional in the case of a One-Way Journey
+    booking.inbound_date = datetime.now()  # TODO
+    booking.inbound_flightno = "MX486"
     booking.ticket_class = "Y"
     booking.cabin_class = "Y"
     number_of_adults = int(request["adults"])
@@ -293,9 +285,7 @@ def create_records(request):
     booking.number_of_bags = 0
     booking.departure_time = "0800"
     booking.arrival_time = "0930"
-    booking.principal_contact_number = "123456"
-    booking.principal_email = "test@email.com"
-    booking.remarks = ""
+    booking.remarks = ""  # TODO
     print(booking)  # TODO
     print(pnr)
     # TODO

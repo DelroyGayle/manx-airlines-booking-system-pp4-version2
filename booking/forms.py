@@ -77,6 +77,7 @@ class CreateBookingForm(forms.Form):
                                        choices=the_choices,
                                        widget=forms.RadioSelect)
 
+    # TODO
     adults = forms.IntegerField(initial=1, min_value=0, max_value=20)
     children = forms.IntegerField(initial=0, min_value=0, max_value=20)
     infants = forms.IntegerField(initial=0, min_value=0, max_value=20)
@@ -101,9 +102,11 @@ class BasePaxFormSet(BaseFormSet):
 
 class HiddenForm(forms.Form):
     return_option = forms.CharField(max_length=1, widget=forms.HiddenInput())
-    departing_date = forms.DateField(input_formats=["%d/%m/%Y"], widget=forms.HiddenInput())
+    departing_date = forms.DateField(input_formats=["%d/%m/%Y"],
+                                     widget=forms.HiddenInput())
     departing_time = forms.CharField(max_length=4, widget=forms.HiddenInput())
-    returning_date = forms.DateField(input_formats=["%d/%m/%Y"], widget=forms.HiddenInput())
+    returning_date = forms.DateField(input_formats=["%d/%m/%Y"],
+                                     widget=forms.HiddenInput())
     returning_time = forms.CharField(max_length=4, widget=forms.HiddenInput())
     adults = forms.IntegerField(widget=forms.HiddenInput())
     children = forms.IntegerField(widget=forms.HiddenInput())
@@ -120,7 +123,7 @@ class AdultsForm(forms.Form):
     wheelchair_type = forms.CharField(max_length=1)
 
 
-# Used also for Children and Infants
+# For Children and Infants
 class MinorsForm(forms.Form):
     title = forms.CharField()
     first_name = forms.CharField(max_length=40)
@@ -128,15 +131,3 @@ class MinorsForm(forms.Form):
     date_of_birth = forms.DateField()
     wheelchair_ssr = forms.CharField(max_length=1)
     wheelchair_type = forms.CharField(max_length=1)
-
-
-class testform1(forms.Form):
-    pnr = forms.CharField(max_length=6)
-    username = forms.CharField(max_length=100)
-    email = forms.EmailField()
-
-
-class testform2(forms.Form):
-    title = forms.CharField(max_length=3)
-    first_name = forms.CharField(max_length=40)
-    last_name = forms.CharField(max_length=40)
