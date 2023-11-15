@@ -6,15 +6,17 @@
 {% load static %}
 
 {% block content %}
-    <h3>Create Booking</h3>
+<h1 class="ui centered header">Create Booking</h1>
 
-    {% include 'includes/messages.html' %}
+{% include 'includes/messages.html' %}
 
-    <form class="ui form" method="POST" action={% url 'create-booking-form' %}>
+<div class="form-container">
+    <form class="ui form form-centre" method="POST" action={% url 'create-booking-form' %}>
         {% csrf_token %}
 
         {{ form.as_p }}
-        
+
         <p><input type="submit" class="ui button primary" value="Continue">
     </form>
+</div>
 {% endblock %}

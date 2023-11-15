@@ -6,8 +6,8 @@ from django.shortcuts import get_list_or_404
 
 class Common:
     """
-    I use this class as the repository of global variables
-    settings needed throughout this App
+    I use this class as the repository of global variables, settings
+    and methods needed throughout this App.
     """
 
 # Class Variables
@@ -19,6 +19,11 @@ class Common:
         pass
 
     def initialisation():
+        """ Fetch the contents of the Flights Database
+        which holds the available flights' times, routes and capacity
+        information and set them up in variables to be accessed by this App.
+        """
+
         all_flight_entries = get_list_or_404(Flight.objects.all())
         count = 0
         # Two dictionaries for outbound and inbound
@@ -64,3 +69,8 @@ class Common:
 
         # Indicate that Initialisation has been done
         Common.initialised = True
+
+    def format_error(text):
+        """ Convert any underscores to spaces and capitalise the text. """
+        text = text.replace("_", " ")
+        return f"{text[0].capitalize()}{text[1:]}"

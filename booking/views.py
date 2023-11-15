@@ -103,10 +103,13 @@ def create_booking_form(request):
 
         else:
             # TODO
-            for field in form.errors:
+            #for field in form.errors:
                 for field in form.errors:
+                    print(request.POST.get('departing_date'))
+                    #print(form)
+                    print(form.errors)
                     for item in form.errors[field]:
-                        message_string = f"{field} - {item}"
+                        message_string = Common.format_error(f"{field} - {item}")
                         messages.add_message(request, messages.ERROR,
                                              message_string)
 
@@ -264,7 +267,7 @@ def create_records(request):
 
     # For now use a random number - TODO
     booking = Booking()
-    print("BOOKING", booking)  # TODO
+    # print("BOOKING", booking)  # TODO
     random_string = str(random.randrange(100, 1000))  # 3 digits TODO
     pnr = "SMI" + random_string
     print(pnr)  # TODO
@@ -292,8 +295,8 @@ def create_records(request):
     booking.departure_time = "0800"
     booking.arrival_time = "0930"
     booking.remarks = ""  # TODO
-    print(booking)  # TODO
-    print(pnr)
+    print(100,booking)  # TODO
+    print(101, pnr)
     # TODO
     # Booking.objects.filter(pk=1).delete()
     booking.save()
@@ -376,3 +379,7 @@ def passenger_details_form(request):
 
     context = {"form": "form"}
     return render(request, "booking/passenger-details-form.html", context)
+
+
+    def clean_departing_date(self):
+        print("TEST", self.cleaned_data.get("departing_date"))

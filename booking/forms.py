@@ -57,20 +57,18 @@ class CreateBookingForm(forms.Form):
         choices=RETURN_CHOICE,
     )
 
-    departing_date = forms.DateField(initial=datetime.date.today()
-                                     .strftime("%d/%m/%Y"),
+    departing_date = forms.DateField(initial=datetime.date.today(),
                                      help_text="Format: DD/MM/YYYY",
-                                     input_formats=["%d/%m/%Y"])
+                                     widget=forms.DateInput(attrs=dict(type='date')))
 
     the_choices = list(zip(OUTBOUND_TIME_OPTIONS1, OUTBOUND_TIME_OPTIONS2))
     departing_time = forms.ChoiceField(initial=OUTBOUND_TIME_OPTIONS1[0],
                                        choices=the_choices,
                                        widget=forms.RadioSelect)
 
-    returning_date = forms.DateField(initial=datetime.date.today()
-                                     .strftime("%d/%m/%Y"),
+    returning_date = forms.DateField(initial=datetime.date.today(),
                                      help_text="Format: DD/MM/YYYY",
-                                     input_formats=["%d/%m/%Y"])
+                                     widget=forms.DateInput(attrs=dict(type='date')))
 
     the_choices = list(zip(INBOUND_TIME_OPTIONS1, INBOUND_TIME_OPTIONS2))
     returning_time = forms.ChoiceField(initial=INBOUND_TIME_OPTIONS1[0],
@@ -82,6 +80,25 @@ class CreateBookingForm(forms.Form):
     children = forms.IntegerField(initial=0, min_value=0, max_value=20)
     infants = forms.IntegerField(initial=0, min_value=0, max_value=20)
 
+    def clean_departing_date(self):
+        print("TEST", self.cleaned_data.get("departing_date"))
+        departing_date = self.cleaned_data.get("departing_date")
+        if departing_date < datetime.date.today():
+            raise forms.ValidationError("This date cannot be in the past")
+        return departing_date
+
+    def clean_returning_date(self):
+        returning_date = self.cleaned_data.get("returning_date")
+        departing_date = self.cleaned_data.get("departing_date")
+        print(returning_date, type(returning_date))
+        print(departing_date, type(departing_date))
+        if returning_date < departing_date:
+            raise forms.ValidationError("This date cannot be earlier than the Departing date")
+        datediff = returning_date - departing_date
+        days = datediff.days
+        if days > 180:
+            raise forms.ValidationError("This date cannot be more than 180 days later than the Departing date")
+        return returning_date
 
 # TODO
 class PassengerDetailsForm(forms.Form):
@@ -131,3 +148,5 @@ class MinorsForm(forms.Form):
     date_of_birth = forms.DateField()
     wheelchair_ssr = forms.CharField(max_length=1)
     wheelchair_type = forms.CharField(max_length=1)
+
+
