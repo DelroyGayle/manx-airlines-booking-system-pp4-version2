@@ -14,9 +14,30 @@ class Common:
     initialised = None
     outbound_flights = None
     inbound_flights = None
+    flight_info = None
+    OUTBOUND_TIME_OPTIONS1 = None
+    OUTBOUND_TIME_OPTIONS2 = None
 
     def __init__(self):
         pass
+
+    def format_radio_button_option(flight_STD,
+                                   flight_from,
+                                   flight_STA,
+                                   flight_to):
+        """
+        STD: Standard Time of Departure
+        STA: Standard Time of Arrival
+        Produce the following format for the radio buttons:
+        STD FROM - STA TO
+        EG
+        08:00 LCY - 09:45 IOM
+        11:00 IOM - 12:45 LCY
+        """
+        return (f"{flight_STD[0:2]}:{flight_STD[2:4]} "
+                f"{flight_from} - "
+                f"{flight_STA[0:2]}:{flight_STA[2:4]} "
+                f"{flight_to}")
 
     def initialisation():
         """ Fetch the contents of the Flights Database
@@ -35,6 +56,13 @@ class Common:
         # even flight no. - inbound
         # however use a boolean flag
         boolean_flag = True
+
+        # Needed to create the radio button options for each flight
+        out_time_options1 = []
+        out_time_options2 = []
+        in_time_options1 = []
+        in_time_options2 = []
+
         for each in all_flight_entries:
             newdict[each.flight_number] = {}
             newdict[each.flight_number]["flight_from"] = each.flight_from
@@ -50,6 +78,12 @@ class Common:
                 outbound[each.flight_number]["flight_STD"] = each.flight_STD
                 outbound[each.flight_number]["flight_STA"] = each.flight_STA
                 outbound[each.flight_number]["capacity"] = each.capacity
+                out_time_options1.append(each.flight_STD)
+                out_time_options2.append(Common.format_radio_button_option(
+                                                each.flight_STD,
+                                                each.flight_from,
+                                                each.flight_STA,
+                                                each.flight_to))
             else:
                 inbound[each.flight_number] = {}
                 inbound[each.flight_number]["flight_from"] = each.flight_from
@@ -57,19 +91,34 @@ class Common:
                 inbound[each.flight_number]["flight_STD"] = each.flight_STD
                 inbound[each.flight_number]["flight_STA"] = each.flight_STA
                 inbound[each.flight_number]["capacity"] = each.capacity
+                in_time_options1.append(each.flight_STD)
+                in_time_options2.append(Common.format_radio_button_option(
+                                               each.flight_STD,
+                                               each.flight_from,
+                                               each.flight_STA,
+                                               each.flight_to))
 
             boolean_flag = not boolean_flag
 
         newdict["num_daily_flight"] = len(all_flight_entries) // 2
+        print(10000,  out_time_options1)
 
         # Store the results in Class variables
         Common.flight_info = newdict
         Common.outbound_flights = outbound
         Common.inbound_flights = inbound
+        print(out_time_options1, 100)
+        Common.OUTBOUND_TIME_OPTIONS1 = out_time_options1
+        Common.OUTBOUND_TIME_OPTIONS2 = out_time_options2
+        print(Common.OUTBOUND_TIME_OPTIONS1,"WW")
+        Common.INBOUND_TIME_OPTIONS1 = in_time_options1
+        Common.INBOUND_TIME_OPTIONS2 = in_time_options2
 
         # Indicate that Initialisation has been done
         Common.initialised = True
 
+        # print(outbound_time_options1, outbound_time_options2,
+        #       inbound_time_options1, inbound_time_options2)
     def format_error(text):
         """ Convert any underscores to spaces and capitalise the text. """
         text = text.replace("_", " ")

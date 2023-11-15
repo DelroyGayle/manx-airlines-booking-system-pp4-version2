@@ -32,14 +32,19 @@ ul.errorlist {display:none;}
     color:red
   }
   
+/* Used to centre the forms */
 
-  .form-container {
+.form-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* vh stands for viewport height */
-  }
+    min-height: 100vh;
+}
   
-  .form-centre {
-    width: 50%; /* adjust this value to control the form's width */
-  }  
+.form-centre {
+    width: 50%;
+}
+
+#id_departing_time, #id_returning_time {
+    list-style-type: none;
+}

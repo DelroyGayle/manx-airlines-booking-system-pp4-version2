@@ -2,6 +2,7 @@
 from django import forms
 from django.forms import BaseFormSet
 from .models import Booking
+from .common import Common
 import datetime
 
 
@@ -15,6 +16,24 @@ class BookingForm(forms.ModelForm):
 
 # creating a form
 class CreateBookingForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        super(CreateBookingForm, self).__init__(*args, **kwargs)
+
+        # Finally found the solution to how to update choice fields here:
+        # https://stackoverflow.com/questions/24877686/update-django-choice-field-with-database-results
+        the_choices = list(zip(Common.OUTBOUND_TIME_OPTIONS1,
+                               Common.OUTBOUND_TIME_OPTIONS2))
+        self.fields['departing_time'] = forms.ChoiceField(
+                    initial=Common.OUTBOUND_TIME_OPTIONS1[0],
+                    choices=the_choices, widget=forms.RadioSelect)
+
+        the_choices = list(zip(Common.INBOUND_TIME_OPTIONS1,
+                               Common.INBOUND_TIME_OPTIONS2))
+        self.fields['returning_time'] = forms.ChoiceField(
+                    initial=Common.INBOUND_TIME_OPTIONS1[0],
+                    choices=the_choices, widget=forms.RadioSelect)
+
     def as_p(self):
         """This method overrides the default 'as_p' behaviour
            because I did not like the way this form looked.
@@ -37,43 +56,23 @@ class CreateBookingForm(forms.Form):
         (ONE_WAY, "One Way")
     ]
 
-    OUTBOUND_TIME_OPTIONS1 = ("0800",
-                              "1330",
-                              "1830")
-
-    OUTBOUND_TIME_OPTIONS2 = ("08:00 LCY - 09:45 IOM",
-                              "13:30 LCY - 15:15 IOM",
-                              "18:30 LCY - 20:15 IOM")
-
-    INBOUND_TIME_OPTIONS1 = ("1100",
-                             "1600",
-                             "2100")
-
-    INBOUND_TIME_OPTIONS2 = ("11:00 IOM - 12:45 LCY",
-                             "16:00 IOM - 17:45 LCY",
-                             "21:00 IOM - 22:45 LCY")
-
     return_option = forms.ChoiceField(
         choices=RETURN_CHOICE,
     )
 
     departing_date = forms.DateField(initial=datetime.date.today(),
                                      help_text="Format: DD/MM/YYYY",
-                                     widget=forms.DateInput(attrs=dict(type='date')))
+                                     widget=forms.DateInput(
+                                                 attrs=dict(type='date')))
 
-    the_choices = list(zip(OUTBOUND_TIME_OPTIONS1, OUTBOUND_TIME_OPTIONS2))
-    departing_time = forms.ChoiceField(initial=OUTBOUND_TIME_OPTIONS1[0],
-                                       choices=the_choices,
-                                       widget=forms.RadioSelect)
+    departing_time = forms.ChoiceField(widget=forms.RadioSelect)
 
     returning_date = forms.DateField(initial=datetime.date.today(),
                                      help_text="Format: DD/MM/YYYY",
-                                     widget=forms.DateInput(attrs=dict(type='date')))
+                                     widget=forms.DateInput(
+                                                  attrs=dict(type='date')))
 
-    the_choices = list(zip(INBOUND_TIME_OPTIONS1, INBOUND_TIME_OPTIONS2))
-    returning_time = forms.ChoiceField(initial=INBOUND_TIME_OPTIONS1[0],
-                                       choices=the_choices,
-                                       widget=forms.RadioSelect)
+    returning_time = forms.ChoiceField(widget=forms.RadioSelect)
 
     # TODO
     adults = forms.IntegerField(initial=1, min_value=0, max_value=20)
@@ -81,7 +80,6 @@ class CreateBookingForm(forms.Form):
     infants = forms.IntegerField(initial=0, min_value=0, max_value=20)
 
     def clean_departing_date(self):
-        print("TEST", self.cleaned_data.get("departing_date"))
         departing_date = self.cleaned_data.get("departing_date")
         if departing_date < datetime.date.today():
             raise forms.ValidationError("This date cannot be in the past")
@@ -90,18 +88,19 @@ class CreateBookingForm(forms.Form):
     def clean_returning_date(self):
         returning_date = self.cleaned_data.get("returning_date")
         departing_date = self.cleaned_data.get("departing_date")
-        print(returning_date, type(returning_date))
-        print(departing_date, type(departing_date))
         if returning_date < departing_date:
-            raise forms.ValidationError("This date cannot be earlier than the Departing date")
+            raise forms.ValidationError(
+                        "This date cannot be earlier than the Departing date")
         datediff = returning_date - departing_date
         days = datediff.days
         if days > 180:
-            raise forms.ValidationError("This date cannot be more than 180 days later than the Departing date")
+            raise forms.ValidationError(
+                        "This date cannot be more than 180 "
+                        "days later than the Departing date")
         return returning_date
 
-# TODO
-class PassengerDetailsForm(forms.Form):
+
+class PassengerDetailsForm(forms.Form):  # TODO
     pass
 
 
@@ -148,5 +147,3 @@ class MinorsForm(forms.Form):
     date_of_birth = forms.DateField()
     wheelchair_ssr = forms.CharField(max_length=1)
     wheelchair_type = forms.CharField(max_length=1)
-
-

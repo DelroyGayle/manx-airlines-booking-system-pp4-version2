@@ -16,6 +16,7 @@ from .common import Common
 from datetime import datetime
 from datetime import date  # TODO
 import random  # TODO
+from .models import Flight
 
 
 # Create your views here.
@@ -35,6 +36,16 @@ def homepage(request):
 # TODO
 def create_booking_form(request):
 
+    print(6400, Common.OUTBOUND_TIME_OPTIONS1,  Common.flight_info)
+    print(6401,Common.OUTBOUND_TIME_OPTIONS1,Common.OUTBOUND_TIME_OPTIONS2)
+    print(Common.OUTBOUND_TIME_OPTIONS1, 6600, Common.flight_info)
+    print(Flight.objects.count(), Common.initialised)
+    if not Common.initialised:
+        Common.initialisation()
+    print(602,Flight.objects.count(), Common.initialised, Common.OUTBOUND_TIME_OPTIONS1,Common.OUTBOUND_TIME_OPTIONS2)
+
+    form = CreateBookingForm(request.POST or None)
+    
     # form = CreateBookingForm1()
     # context = {'form': form}
 
@@ -61,7 +72,7 @@ def create_booking_form(request):
 
     if request.method == "POST":
         # create a form instance and populate it with data from the request:
-        form = CreateBookingForm(request.POST)
+        #form = CreateBookingForm(request.POST)
         # check whether it"s valid:
         # TODO
         if form.is_valid():
@@ -114,7 +125,8 @@ def create_booking_form(request):
                                              message_string)
 
     else:
-        form = CreateBookingForm()
+        #form = CreateBookingForm()
+        pass
 
     context = {"form": form}
     return render(request, "booking/create-booking-form.html", context)
@@ -379,7 +391,3 @@ def passenger_details_form(request):
 
     context = {"form": "form"}
     return render(request, "booking/passenger-details-form.html", context)
-
-
-    def clean_departing_date(self):
-        print("TEST", self.cleaned_data.get("departing_date"))
