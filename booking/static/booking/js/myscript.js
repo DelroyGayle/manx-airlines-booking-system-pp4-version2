@@ -6,14 +6,6 @@ function returnCheck() {
     document.getElementById("id_returning_date").hidden = setValue;
     document.getElementById("id_returning_time").hidden = setValue;
 }
-
-function adultsCheck() {
-/* TODO */
-}
-
-function childrenCheck() {
-    /* TODO */
-}
     
 function infantsCheck() {
     
@@ -38,20 +30,6 @@ function infantsCheck() {
     }
 
     return true  // Indicate Test Success
-}
-
-function leavePageValidation() {
-    // Check that there is at least one adult
-    // (However the 'minimum value' of #id_adults is set to 1)
-    let adultsValue = Number(document.getElementById("id_adults").value);
-    alert((adultsValue === 0 || true))
-    if (adultsValue === 0 || true)
-    {
-        openNoAdultsModal();
-        document.getElementById("id_adults").focus();
-        event.preventDefault();
-        return false // Indicate Test Failure
-    }
 }
 
 const openTooManyInfantsModal = () => {

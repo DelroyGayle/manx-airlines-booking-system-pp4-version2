@@ -101,11 +101,9 @@ class Common:
             boolean_flag = not boolean_flag
 
         newdict["numberof_oneway_flights"] = len(all_flight_entries) // 2
-        print("NUMBER<", newdict["numberof_oneway_flights"])
 
         # Store the results in Class variables
         Common.flight_info = newdict
-        print("NUMBER<", Common.flight_info["numberof_oneway_flights"])
         Common.outbound_flights = outbound
         Common.inbound_flights = inbound
         Common.OUTBOUND_TIME_OPTIONS1 = out_time_options1

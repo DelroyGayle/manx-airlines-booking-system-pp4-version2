@@ -65,6 +65,8 @@ Here are a sample of some of the terms used:
 * PNR - Passenger Name Record
 * PRM - Passenger with Reduced Mobility
 * SSR - Special Service Request
+* STA - Standard Time of Arrival
+* STD - Standard Time of Departure
 * WCHR - Passenger cannot walk long distances but able to go up and down the aircraft steps
 * WCHS - Passenger cannot walk long distances and cannot manage the aircraft steps
 * WCHC - Passenger completely immobile, need assistance all the way, to and from the aircraft

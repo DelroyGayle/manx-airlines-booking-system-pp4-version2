@@ -54,28 +54,43 @@ class CreateBookingForm(forms.Form):
         if departing_date < datetime.date.today():
             raise forms.ValidationError("This date cannot be in the past")
 
+        datediff = departing_date - datetime.date.today()
+        days = datediff.days
+        if days > 180:
+            raise forms.ValidationError(
+                        "This date cannot be more than 180 "
+                        "days later than the Current Date")
+
         return departing_date
 
     def clean_returning_date(self):
         returning_date = self.cleaned_data.get("returning_date")
+        if self.cleaned_data.get("return_option") == "N":
+            # One Way Journey
+            return returning_date
+
         departing_date = self.cleaned_data.get("departing_date")
-        if self.cleaned_data.get("departing_date") == "Y":
-            if returning_date < departing_date:
-                raise forms.ValidationError(
+        if not departing_date:
+            # An error has already been determined -- use current date
+            return datetime.date.today()
+
+        if returning_date < departing_date:
+            raise forms.ValidationError(
                         "This date cannot be earlier than the Departing date")
-            datediff = returning_date - departing_date
-            days = datediff.days
-            if days > 180:
-                raise forms.ValidationError(
+
+        datediff = returning_date - departing_date
+        days = datediff.days
+        if days > 180:
+            raise forms.ValidationError(
                         "This date cannot be more than 180 "
                         "days later than the Departing date")
 
         return returning_date
 
     def clean_adults(self):
-        return forms.ValidationError("Children are not allowed "
-                                     "without an adult aged 16 or over")
+        #raise forms.ValidationError("There must be at least one adult per booking")
 
+        pass
     # Initialisations
 
     RETURN = "Y"

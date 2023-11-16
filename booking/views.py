@@ -77,7 +77,6 @@ def create_booking_form(request):
             # TODO "form"
             print("CLEANED", form.cleaned_data)
             context = {"booking": form.cleaned_data, "form": form.cleaned_data,
-                       "range": range(form.cleaned_data["adults"]),
                        "range3": range(3),
                        "formset": formset}
             # TODO
@@ -110,21 +109,18 @@ def create_booking_form(request):
         else:
             # TODO
             for field in form.errors:
-                print(request.POST.get('departing_date'))
-                #  print(form)
-                print(form.errors)  # TODO
                 for item in form.errors[field]:
                     message_string = Common.format_error(f"{field} - {item}")
                     messages.add_message(request, messages.ERROR,
                                          message_string)
+            # RERENDER
+            form = CreateBookingForm(request.POST)
 
     else:
         # form = CreateBookingForm()
         pass  # TODO
 
-    print("NUMBER<", Common.flight_info["numberof_oneway_flights"])
-
-    context = {"form": form, "numberof_oneway":Common.flight_info["numberof_oneway_flights"]}
+    context = {"form": form, "numberof_oneway": Common.flight_info["numberof_oneway_flights"]}
     return render(request, "booking/create-booking-form.html", context)
 
 
@@ -163,7 +159,7 @@ def search_bookings(request):
     # and an Adult (pax_type="A")
 
     # Every Booking has 'one' Principal Passenger
-    # Adult 1 - query that Passenger i.e.abs
+    # Adult 1 - query that Passenger i.e.
     # pax_type == "A" and pax_order_number == 1
     adult1_qs = Passenger.objects.filter(pnr=OuterRef("id"),
                                          pax_type="A",
