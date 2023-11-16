@@ -88,9 +88,38 @@ class CreateBookingForm(forms.Form):
         return returning_date
 
     def clean_adults(self):
-        #raise forms.ValidationError("There must be at least one adult per booking")
+        """
+        Defensive Programming
+        The definition of this field has a 'min' value of one
+        so it should never be zero
+        Nonetheless just in case
+        """
+        number_of_adults = self.cleaned_data.get("adults")
+        if number_of_adults <= 0:
+            raise forms.ValidationError(
+                        "There must be at least one adult per booking")
 
-        pass
+        return number_of_adults
+
+    def clean_infants(self):
+        """
+        Defensive Programming
+        The field is validated server-side
+        using JavaScript to ensure Infants <= Adults
+        Nonetheless just in case
+        """
+        number_of_infants = self.cleaned_data.get("infants")
+        number_of_adults = self.cleaned_data.get("adults")
+        if not number_of_adults:
+            # An error has already been determined - abort validation
+            return number_of_infants
+        if number_of_infants > number_of_adults:
+            raise forms.ValidationError(
+                        "You cannot travel with more infants than adults")
+
+        return number_of_infants
+
+    ######################################################################
     # Initialisations
 
     RETURN = "Y"
@@ -118,8 +147,6 @@ class CreateBookingForm(forms.Form):
 
     returning_time = forms.ChoiceField(widget=forms.RadioSelect)
 
-    # TODO
-    # There must be at least one adult per booking
     adults = forms.IntegerField(initial=1, min_value=1, max_value=20)
     children = forms.IntegerField(initial=0, min_value=0, max_value=20)
     infants = forms.IntegerField(initial=0, min_value=0, max_value=20)
