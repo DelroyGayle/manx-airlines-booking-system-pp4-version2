@@ -1,10 +1,21 @@
 
-function returnCheck() {
+   // Hide/Show elements depending on 'theReturn'
+   function returnCheck() {
     let theReturn = document.getElementById("id_return_option").value;
-    setValue = (theReturn === "N") ? true : false;
-    // Hide/Show elements depending on 'theReturn'
-    document.getElementById("id_returning_date").hidden = setValue;
-    document.getElementById("id_returning_time").hidden = setValue;
+    if (theReturn === "N") {
+        $("#id_returning_date").hide();
+        $("#id_returning_time").hide();
+    } else {
+        $("#id_returning_date").show();
+        $("#id_returning_time").show();
+    }
+}
+
+function checkAddress() {
+    let currentURL = window.location.href;
+    if (currentURL.endsWith("create/")){
+        returnCheck();
+    }
 }
     
 function infantsCheck() {
@@ -39,3 +50,10 @@ const openTooManyInfantsModal = () => {
 const openNoAdultsModal = () => {
     $('.ui.modal.no_adults').modal('show');
 }
+
+// window.onload = codeAddress;
+
+$(document).ready(function(){
+    // your code
+    checkAddress()
+});
