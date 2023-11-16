@@ -15,13 +15,42 @@
         {% csrf_token %}
 
         {{ form.as_p }}
-
-        <p><input type="submit" class="ui button primary" value="Continue">
+        <input type="hidden" name="numberof_oneway" id="numberof_oneway" value={{numberof_oneway}} />
+        <p><input type="submit" class="ui button primary"
+            value="Continue"  onclick = "leavePageValidation()">
     </form>
 </div>
 
+<div class="ui mini modal toomanyinfants">
+    <div class="ui header">
+        You cannot travel with more infants than adults
+    </div>
+    <div class="actions">
+        <div class="ui negative button">
+            Ok, Continue
+        </div>
+    </div>
+</div>
+
+<div class="ui mini modal no_adults">
+    <div class="ui header">
+        Children are not allowed to travel without an adult aged 16 or over
+    </div>
+    <div class="actions">
+        <div class="ui negative button">
+            Ok, Continue
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
+    let returnField = document.getElementById("id_return_option");
+    returnField.onchange = returnCheck;
+    let adultsField = document.getElementById("id_adults");
+    adultsField.onchange = adultsCheck;
+    let childrenField = document.getElementById("id_children");
+    childrenField.onchange = childrenCheck;
     let infantsField = document.getElementById("id_infants");
-    infantsField.onchange = infantCheck;
+    infantsField.onchange = infantsCheck;
 </script>
 {% endblock %}

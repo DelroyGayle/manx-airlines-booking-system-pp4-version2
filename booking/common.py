@@ -46,7 +46,7 @@ class Common:
         """
 
         all_flight_entries = get_list_or_404(Flight.objects.all())
-        count = 0
+
         # Two dictionaries for outbound and inbound
         outbound = {}
         inbound = {}
@@ -100,25 +100,22 @@ class Common:
 
             boolean_flag = not boolean_flag
 
-        newdict["num_daily_flight"] = len(all_flight_entries) // 2
-        print(10000,  out_time_options1)
+        newdict["numberof_oneway_flights"] = len(all_flight_entries) // 2
+        print("NUMBER<", newdict["numberof_oneway_flights"])
 
         # Store the results in Class variables
         Common.flight_info = newdict
+        print("NUMBER<", Common.flight_info["numberof_oneway_flights"])
         Common.outbound_flights = outbound
         Common.inbound_flights = inbound
-        print(out_time_options1, 100)
         Common.OUTBOUND_TIME_OPTIONS1 = out_time_options1
         Common.OUTBOUND_TIME_OPTIONS2 = out_time_options2
-        print(Common.OUTBOUND_TIME_OPTIONS1,"WW")
         Common.INBOUND_TIME_OPTIONS1 = in_time_options1
         Common.INBOUND_TIME_OPTIONS2 = in_time_options2
 
         # Indicate that Initialisation has been done
         Common.initialised = True
 
-        # print(outbound_time_options1, outbound_time_options2,
-        #       inbound_time_options1, inbound_time_options2)
     def format_error(text):
         """ Convert any underscores to spaces and capitalise the text. """
         text = text.replace("_", " ")

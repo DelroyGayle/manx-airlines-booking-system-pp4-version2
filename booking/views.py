@@ -122,7 +122,9 @@ def create_booking_form(request):
         # form = CreateBookingForm()
         pass  # TODO
 
-    context = {"form": form}
+    print("NUMBER<", Common.flight_info["numberof_oneway_flights"])
+
+    context = {"form": form, "numberof_oneway":Common.flight_info["numberof_oneway_flights"]}
     return render(request, "booking/create-booking-form.html", context)
 
 

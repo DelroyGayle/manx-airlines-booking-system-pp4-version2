@@ -98,7 +98,7 @@ class CreateBookingForm(forms.Form):
     returning_time = forms.ChoiceField(widget=forms.RadioSelect)
 
     # TODO
-    adults = forms.IntegerField(initial=1, min_value=0, max_value=20)
+    adults = forms.IntegerField(initial=1, min_value=1, max_value=20)
     children = forms.IntegerField(initial=0, min_value=0, max_value=20)
     infants = forms.IntegerField(initial=0, min_value=0, max_value=20)
 
