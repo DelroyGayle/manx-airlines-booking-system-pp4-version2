@@ -72,6 +72,12 @@ class CreateBookingForm(forms.Form):
 
         return returning_date
 
+    def clean_adults(self):
+        return forms.ValidationError("Children are not allowed "
+                                     "without an adult aged 16 or over")
+
+    # Initialisations
+
     RETURN = "Y"
     ONE_WAY = "N"
     RETURN_CHOICE = [
@@ -98,6 +104,7 @@ class CreateBookingForm(forms.Form):
     returning_time = forms.ChoiceField(widget=forms.RadioSelect)
 
     # TODO
+    # There must be at least one adult per booking
     adults = forms.IntegerField(initial=1, min_value=1, max_value=20)
     children = forms.IntegerField(initial=0, min_value=0, max_value=20)
     infants = forms.IntegerField(initial=0, min_value=0, max_value=20)
