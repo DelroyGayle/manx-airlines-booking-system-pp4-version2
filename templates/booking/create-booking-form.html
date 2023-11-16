@@ -19,4 +19,16 @@
         <p><input type="submit" class="ui button primary" value="Continue">
     </form>
 </div>
+
+<script type="text/javascript">
+    let infantsField = document.getElementById("id_infants");
+    infantsField.onchange = function() {
+        alert("OK")
+        let infantsValue = document.getElementById("id_infants").value;
+        console.log(100,infantsValue)
+        let adultsValue = document.getElementById("id_adults").value;
+        console.log(adultsValue)
+        alert(`${infantsValue} & ${adultsValue}`)
+  }
+</script>
 {% endblock %}

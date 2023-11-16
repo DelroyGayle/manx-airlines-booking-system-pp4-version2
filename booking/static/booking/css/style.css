@@ -48,3 +48,8 @@ ul.errorlist {display:none;}
 #id_departing_time, #id_returning_time {
     list-style-type: none;
 }
+
+.helptext {
+    color: green;
+    font-weight: bold;
+}

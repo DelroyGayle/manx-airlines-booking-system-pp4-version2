@@ -36,16 +36,11 @@ def homepage(request):
 # TODO
 def create_booking_form(request):
 
-    print(6400, Common.OUTBOUND_TIME_OPTIONS1,  Common.flight_info)
-    print(6401,Common.OUTBOUND_TIME_OPTIONS1,Common.OUTBOUND_TIME_OPTIONS2)
-    print(Common.OUTBOUND_TIME_OPTIONS1, 6600, Common.flight_info)
-    print(Flight.objects.count(), Common.initialised)
     if not Common.initialised:
         Common.initialisation()
-    print(602,Flight.objects.count(), Common.initialised, Common.OUTBOUND_TIME_OPTIONS1,Common.OUTBOUND_TIME_OPTIONS2)
 
     form = CreateBookingForm(request.POST or None)
-    
+
     # form = CreateBookingForm1()
     # context = {'form': form}
 
@@ -71,8 +66,8 @@ def create_booking_form(request):
     #            kwargs={'id': new_employer.pk}))
 
     if request.method == "POST":
-        # create a form instance and populate it with data from the request:
-        #form = CreateBookingForm(request.POST)
+        #  create a form instance and populate it with data from the request:
+        #  form = CreateBookingForm(request.POST)
         # check whether it"s valid:
         # TODO
         if form.is_valid():
@@ -114,19 +109,18 @@ def create_booking_form(request):
 
         else:
             # TODO
-            #for field in form.errors:
-                for field in form.errors:
-                    print(request.POST.get('departing_date'))
-                    #print(form)
-                    print(form.errors)
-                    for item in form.errors[field]:
-                        message_string = Common.format_error(f"{field} - {item}")
-                        messages.add_message(request, messages.ERROR,
-                                             message_string)
+            for field in form.errors:
+                print(request.POST.get('departing_date'))
+                #  print(form)
+                print(form.errors)  # TODO
+                for item in form.errors[field]:
+                    message_string = Common.format_error(f"{field} - {item}")
+                    messages.add_message(request, messages.ERROR,
+                                         message_string)
 
     else:
-        #form = CreateBookingForm()
-        pass
+        # form = CreateBookingForm()
+        pass  # TODO
 
     context = {"form": form}
     return render(request, "booking/create-booking-form.html", context)
@@ -148,7 +142,7 @@ def view_booking(request, id):
         print(type(pax_record))
         print(pax_record.pax_type, pax_record.pax_order_number)
         passenger_list.append(pax_record)
-    print(type(passenger_list))
+    #  print(type(passenger_list)) #  TODO
     context = {"booking": booking, "passengers": passenger_list}
     # print(pax.title, pax.first_name, pax.last_name) TODO
     return render(request, "booking/view-booking.html", context)
@@ -307,8 +301,6 @@ def create_records(request):
     booking.departure_time = "0800"
     booking.arrival_time = "0930"
     booking.remarks = ""  # TODO
-    print(100,booking)  # TODO
-    print(101, pnr)
     # TODO
     # Booking.objects.filter(pk=1).delete()
     booking.save()

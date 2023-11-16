@@ -49,6 +49,29 @@ class CreateBookingForm(forms.Form):
             help_text_html=u"<br><span class='helptext'>%s</span>",
             errors_on_separate_row=True)
 
+    def clean_departing_date(self):
+        departing_date = self.cleaned_data.get("departing_date")
+        if departing_date < datetime.date.today():
+            raise forms.ValidationError("This date cannot be in the past")
+
+        return departing_date
+
+    def clean_returning_date(self):
+        returning_date = self.cleaned_data.get("returning_date")
+        departing_date = self.cleaned_data.get("departing_date")
+        if self.cleaned_data.get("departing_date") == "Y":
+            if returning_date < departing_date:
+                raise forms.ValidationError(
+                        "This date cannot be earlier than the Departing date")
+            datediff = returning_date - departing_date
+            days = datediff.days
+            if days > 180:
+                raise forms.ValidationError(
+                        "This date cannot be more than 180 "
+                        "days later than the Departing date")
+
+        return returning_date
+
     RETURN = "Y"
     ONE_WAY = "N"
     RETURN_CHOICE = [
@@ -78,26 +101,6 @@ class CreateBookingForm(forms.Form):
     adults = forms.IntegerField(initial=1, min_value=0, max_value=20)
     children = forms.IntegerField(initial=0, min_value=0, max_value=20)
     infants = forms.IntegerField(initial=0, min_value=0, max_value=20)
-
-    def clean_departing_date(self):
-        departing_date = self.cleaned_data.get("departing_date")
-        if departing_date < datetime.date.today():
-            raise forms.ValidationError("This date cannot be in the past")
-        return departing_date
-
-    def clean_returning_date(self):
-        returning_date = self.cleaned_data.get("returning_date")
-        departing_date = self.cleaned_data.get("departing_date")
-        if returning_date < departing_date:
-            raise forms.ValidationError(
-                        "This date cannot be earlier than the Departing date")
-        datediff = returning_date - departing_date
-        days = datediff.days
-        if days > 180:
-            raise forms.ValidationError(
-                        "This date cannot be more than 180 "
-                        "days later than the Departing date")
-        return returning_date
 
 
 class PassengerDetailsForm(forms.Form):  # TODO
