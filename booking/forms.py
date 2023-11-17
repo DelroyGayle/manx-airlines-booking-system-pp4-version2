@@ -171,7 +171,27 @@ class BasePaxFormSet(BaseFormSet):
     #     super().add_fields(form, index)
     #     form.fields["body"] = forms.CharField()
 
+
     def clean(self):
+        print(type(self))
+        #print("CLEANEDbase", self.cleaned_data)
+        print("SE", self.errors)
+        print("SF", self.forms)
+        #cleaned_data = self.cleaned_data
+        if any(self.errors):
+            # Errors found - proceed no further
+            return
+        theforms = self.forms
+        if not theforms[0].has_changed():
+            raise forms.ValidationError("bb Please enter the details regarding "
+                                        "the passengers for this booking.")
+        # if not any(self.cleaned_data):
+        #     # Errors found - proceed no further
+        #     return
+        print("OKKK")
+        return
+
+    def clean1(self):
         """
         Validation of the Adult, Children and Infants Formsets
         These formsets represent the Passenger Details Form
@@ -180,10 +200,10 @@ class BasePaxFormSet(BaseFormSet):
         if any(self.errors):
             # Errors found - proceed no further
             return
-        print(2000)
+        print(2000, self.forms)
         theforms = self.forms
         if not theforms or not theforms[0].has_changed():
-            raise forms.ValidationError("Please enter the details regarding "
+            raise forms.ValidationError("xxPlease enter the details regarding "
                                         "the passengers for this booking.")
         count = 0
         for form in theforms:
@@ -270,17 +290,42 @@ class AdultsForm(forms.Form):
 
     def clean_first_name(self):
         """ First Name Validation """
-        first_name = trim(self.cleaned_data.get("first_name")).upper()
+        first_name = self.cleaned_data.get("first_name").strip()
         print("FN", first_name)
         if not first_name:
             raise forms.ValidationError(
                         "Passenger Name required. "
-                        "Enter the first last name as on the passport")
+                        "Enter the first name as on the passport")
 
         return first_name
 
+    def clean_last_name1(self):
+        """ Last Name Validation """
+        last_name = self.cleaned_data.get("last_name").strip()
+        print("FN2", last_name, self.cleaned_data)
+        if not last_name:
+            raise forms.ValidationError(
+                        "Passenger Name required. "
+                        "Enter the last name as on the passport")
+
+        return last_name
+
     def clean(self):
         print(type(self))
+        print("CLEANEDxxx", self.cleaned_data)
+        cleaned_data = self.cleaned_data
+        ### print(self)
+        # print("TESTING adult-TOTAL_FORMS", self['adult-TOTAL_FORMS'])
+        return
+        if 'first_name' not in cleaned_data:
+            raise forms.ValidationError(
+                        "Passenger Name required. "
+                        "Enter the first name as on the passport")
+        if 'last_name' not in cleaned_data:
+            raise forms.ValidationError(
+                        "Passenger Name required. "
+                        "Enter the last name as on the passport")
+        return cleaned_data
 #       cleaned_data = super(BasePaxFormSet, self).clean()
 #       print("CD", cleaned_data)
 #       return cleaned_data
@@ -291,7 +336,7 @@ class AdultsForm(forms.Form):
             print("FORM>", form)
         print(self.errors)
         return
-        first_name = trim(self.cleaned_data.get("first_name")).upper()
+        first_name = self.cleaned_data.get("first_name").strip()
         print("FN", first_name)
         if not first_name:
             raise forms.ValidationError(
@@ -314,3 +359,26 @@ class MinorsForm(forms.Form):
                                     attrs=dict(type="date")))
     wheelchair_ssr = forms.CharField(max_length=1)
     wheelchair_type = forms.CharField(max_length=1)
+
+
+class AdultsFormSet(BaseFormSet):
+    def clean(self):
+        """
+        Adds validation to check that no two links have the same anchor or URL
+        and that all links have both an anchor and URL.
+        """
+        print(9999)
+        if any(self.errors):
+            return
+        print(1000)
+
+class AdultsFormFormSet(BaseFormSet):
+    def clean(self):
+        """
+        Adds validation to check that no two links have the same anchor or URL
+        and that all links have both an anchor and URL.
+        """
+        print(9999)
+        if any(self.errors):
+            return
+        print(1000)

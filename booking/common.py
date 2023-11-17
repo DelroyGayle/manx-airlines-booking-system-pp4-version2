@@ -131,5 +131,5 @@ class Common:
 
     def format_error(text):
         """ Convert any underscores to spaces and capitalise the text. """
-        text = text.replace("_", " ")
+        text = text.replace("_", " ").replace("ssr","SSR",1)
         return f"{text[0].capitalize()}{text[1:]}"
