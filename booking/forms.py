@@ -24,13 +24,13 @@ class CreateBookingForm(forms.Form):
         # https://stackoverflow.com/questions/24877686/update-django-choice-field-with-database-results
         the_choices = list(zip(Common.OUTBOUND_TIME_OPTIONS1,
                                Common.OUTBOUND_TIME_OPTIONS2))
-        self.fields['departing_time'] = forms.ChoiceField(
+        self.fields["departing_time"] = forms.ChoiceField(
                     initial=Common.OUTBOUND_TIME_OPTIONS1[0],
                     choices=the_choices, widget=forms.RadioSelect)
 
         the_choices = list(zip(Common.INBOUND_TIME_OPTIONS1,
                                Common.INBOUND_TIME_OPTIONS2))
-        self.fields['returning_time'] = forms.ChoiceField(
+        self.fields["returning_time"] = forms.ChoiceField(
                     initial=Common.INBOUND_TIME_OPTIONS1[0],
                     choices=the_choices, widget=forms.RadioSelect)
 
@@ -138,14 +138,14 @@ class CreateBookingForm(forms.Form):
     departing_date = forms.DateField(initial=datetime.date.today(),
                                      help_text="Format: DD/MM/YYYY",
                                      widget=forms.DateInput(
-                                                 attrs=dict(type='date')))
+                                                 attrs=dict(type="date")))
 
     departing_time = forms.ChoiceField(widget=forms.RadioSelect)
 
     returning_date = forms.DateField(initial=datetime.date.today(),
                                      help_text="Format: DD/MM/YYYY",
                                      widget=forms.DateInput(
-                                                  attrs=dict(type='date')))
+                                                  attrs=dict(type="date")))
 
     returning_time = forms.ChoiceField(widget=forms.RadioSelect)
 
@@ -164,11 +164,11 @@ class PaxForm(forms.Form):
 
 
 class BasePaxFormSet(BaseFormSet):
-# TODO
+    #  TODO
     # def add_fields(self, form, index):
     #     super().add_fields(form, index)
     #     form.fields["body"] = forms.CharField()
-    
+
     def clean(self):
         """
         Validation of the Adult, Children and Infants Formsets
@@ -176,19 +176,26 @@ class BasePaxFormSet(BaseFormSet):
         """
 
         if any(self.errors):
-         # Errors found - proceed no further
+            # Errors found - proceed no further
             return
+        theforms = self.forms
+        if not theforms or not theforms[0].has_changed():
+            raise forms.ValidationError("Please enter the details regarding "
+                                        "the passengers for this booking.")
 
-        for form in self.forms:
+        for form in theforms:
             # First Name Validation
-            print(form.cleaned_data,"CLEAN")
-            first_name = form.cleaned_data.get("first_name", "").strip().upper()
+            print(form.cleaned_data, "CLEAN")
+            first_name = (form.cleaned_data.get("first_name", "")
+                              .strip().upper())
             print("FN", first_name)
             if not first_name:
                 raise forms.ValidationError(
-                        "Passenger Name required. Enter the First Name as on the passport")
+                        "Passenger Name required. "
+                        "Enter the First Name as on the passport")
 
             return
+
 
 class HiddenForm(forms.Form):
     return_option = forms.CharField(max_length=1, widget=forms.HiddenInput())
@@ -206,7 +213,7 @@ class HiddenForm(forms.Form):
 class AdultsForm(forms.Form):
     title = forms.CharField(max_length=4,
                             widget=forms.Select(choices=Common.TITLE_CHOICES),
-                            initial='MR',)
+                            initial="MR",)
     first_name = forms.CharField(max_length=40, required=True)
     last_name = forms.CharField(max_length=40, required=True)
     contact_number = forms.CharField(max_length=40)
@@ -222,9 +229,10 @@ class AdultsForm(forms.Form):
         print("FN", first_name)
         if not first_name:
             raise forms.ValidationError(
-                        "Passenger Name required. Enter the first last name as on the passport")
+                        "Passenger Name required. "
+                        "Enter the first last name as on the passport")
 
-        return(first_name)
+        return first_name
 
     def clean(self):
         """ First Name Validation """
@@ -236,20 +244,22 @@ class AdultsForm(forms.Form):
         print("FN", first_name)
         if not first_name:
             raise forms.ValidationError(
-                        "Passenger Name required. Enter the first last name as on the passport")
+                        "Passenger Name required. "
+                        "Enter the first last name as on the passport")
 
-        return(first_name)
+        return first_name
+
 
 # For Children and Infants
 class MinorsForm(forms.Form):
     title = forms.CharField(max_length=4,
                             widget=forms.Select(choices=Common.TITLE_CHOICES),
-                            initial='MR',)
+                            initial="MR",)
     first_name = forms.CharField(max_length=40, required=True)
     last_name = forms.CharField(max_length=40, required=True)
     date_of_birth = forms.DateField(initial=datetime.date.today(),
-                                     help_text="Format: DD/MM/YYYY",
-                                     widget=forms.DateInput(
-                                    attrs=dict(type='date')))
+                                    help_text="Format: DD/MM/YYYY",
+                                    widget=forms.DateInput(
+                                    attrs=dict(type="date")))
     wheelchair_ssr = forms.CharField(max_length=1)
     wheelchair_type = forms.CharField(max_length=1)

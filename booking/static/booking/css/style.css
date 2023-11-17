@@ -58,9 +58,12 @@ ul.errorlist {display:none;}
     width: 25%;
 }
 
-
 @media only screen and (max-width: 640px) {
     .ui.form select {
         width: 45%;
     } 
+}
+
+#id_return_option {
+    width: 60%;
 }
