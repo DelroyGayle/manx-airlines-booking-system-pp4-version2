@@ -18,6 +18,20 @@ class Common:
     OUTBOUND_TIME_OPTIONS1 = None
     OUTBOUND_TIME_OPTIONS2 = None
 
+    TITLE_CHOICES = [
+    ("DR", "DOCTOR"),
+    ("LADY", "LADY"),
+    ("LORD", "LORD"),
+    ("MSTR", "MASTER"),
+    ("MISS", "MISS"),
+    ("MR", "MR"),
+    ("MRS", "MRS"),
+    ("MS", "MS"),
+    ("PROF", "PROFESSOR"),
+    ("SIR", "SIR"),
+    ("SIS", "SISTER"),
+    ]    
+
     def __init__(self):
         pass
 

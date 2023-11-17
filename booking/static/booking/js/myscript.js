@@ -11,7 +11,7 @@
     }
 }
 
-function checkAddress() {
+function checkURL() {
     let currentURL = window.location.href;
     if (currentURL.endsWith("create/")){
         returnCheck();
@@ -51,9 +51,7 @@ const openNoAdultsModal = () => {
     $('.ui.modal.no_adults').modal('show');
 }
 
-// window.onload = codeAddress;
-
 $(document).ready(function(){
     // your code
-    checkAddress()
+    checkURL()
 });

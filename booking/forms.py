@@ -162,10 +162,10 @@ class PaxForm(forms.Form):
 
 
 # TODO
-class BasePaxFormSet(BaseFormSet):
-    def add_fields(self, form, index):
-        super().add_fields(form, index)
-        form.fields["body"] = forms.CharField()
+# class BasePaxFormSet(BaseFormSet):
+#     def add_fields(self, form, index):
+#         super().add_fields(form, index)
+#         form.fields["body"] = forms.CharField()
 
 
 class HiddenForm(forms.Form):
@@ -182,7 +182,10 @@ class HiddenForm(forms.Form):
 
 
 class AdultsForm(forms.Form):
-    title = forms.CharField()
+    title = forms.CharField(max_length=4,
+                            widget=forms.Select(choices=Common.TITLE_CHOICES),
+                            initial='MR',
+                           )
     first_name = forms.CharField(max_length=40)
     last_name = forms.CharField(max_length=40)
     contact_number = forms.CharField(max_length=40)
@@ -193,7 +196,10 @@ class AdultsForm(forms.Form):
 
 # For Children and Infants
 class MinorsForm(forms.Form):
-    title = forms.CharField()
+    title = forms.CharField(max_length=4,
+                            widget=forms.Select(choices=Common.TITLE_CHOICES),
+                            initial='MR',
+                           )
     first_name = forms.CharField(max_length=40)
     last_name = forms.CharField(max_length=40)
     date_of_birth = forms.DateField()

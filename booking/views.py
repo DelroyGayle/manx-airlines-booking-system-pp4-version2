@@ -11,7 +11,8 @@ from .forms import BookingForm, CreateBookingForm, PassengerDetailsForm
 # TODO PaxForm?
 from .forms import AdultsForm, MinorsForm, PaxForm
 # TODO BasePaxFormSet?
-from .forms import BasePaxFormSet, HiddenForm
+# from .forms import BasePaxFormSet
+from .forms import HiddenForm
 from .common import Common
 from datetime import datetime
 from datetime import date  # TODO
@@ -71,20 +72,21 @@ def create_booking_form(request):
         # check whether it"s valid:
         # TODO
         if form.is_valid():
-            PaxFormSet = formset_factory(PaxForm, formset=BasePaxFormSet,
-                                         extra=0)
+            PaxFormSet = formset_factory(PaxForm, extra=0)
             formset = PaxFormSet()
             # TODO "form"
             print("CLEANED", form.cleaned_data)
+            print(100, formset)
             context = {"booking": form.cleaned_data, "form": form.cleaned_data,
+                       "booking_cleaned_data": form.cleaned_data,
                        "range3": range(3),
                        "formset": formset}
             # TODO
-            AdultsFormSet = formset_factory(AdultsForm)
+            AdultsFormSet = formset_factory(AdultsForm, extra=2)
             adults_formset = AdultsFormSet(prefix="adult")
             # for form in adults_formset:
             #      print(form.as_p()) # TODO
-            ChildrenFormSet = formset_factory(MinorsForm)
+            ChildrenFormSet = formset_factory(MinorsForm, extra=2)
             children_formset = ChildrenFormSet(prefix="child")
             # for form in children_formset:
             #      print(form.as_p()) # TODO
@@ -101,6 +103,7 @@ def create_booking_form(request):
             context["children_formset"] = children_formset
             context["hidden_form"] = hiddenForm
 
+            print("CONTEXT", context)
             return render(request, "booking/passenger-details-form.html",
                           context)
 
@@ -120,7 +123,7 @@ def create_booking_form(request):
         # form = CreateBookingForm()
         pass  # TODO
 
-    context = {"form": form, "numberof_oneway": Common.flight_info["numberof_oneway_flights"]}
+    context = {"form": form}
     return render(request, "booking/create-booking-form.html", context)
 
 

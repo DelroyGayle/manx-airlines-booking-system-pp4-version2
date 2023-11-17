@@ -53,3 +53,14 @@ ul.errorlist {display:none;}
     color: green;
     font-weight: bold;
 }
+
+.ui.form select {
+    width: 25%;
+}
+
+
+@media only screen and (max-width: 640px) {
+    .ui.form select {
+        width: 45%;
+    } 
+}
