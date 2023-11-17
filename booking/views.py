@@ -11,7 +11,7 @@ from .forms import BookingForm, CreateBookingForm, PassengerDetailsForm
 # TODO PaxForm?
 from .forms import AdultsForm, MinorsForm, PaxForm
 # TODO BasePaxFormSet?
-# from .forms import BasePaxFormSet
+from .forms import BasePaxFormSet
 from .forms import HiddenForm
 from .common import Common
 from datetime import datetime
@@ -82,7 +82,7 @@ def create_booking_form(request):
                        "range3": range(3),
                        "formset": formset}
             # TODO
-            AdultsFormSet = formset_factory(AdultsForm, extra=2)
+            AdultsFormSet = formset_factory(AdultsForm, extra=2, formset=BasePaxFormSet)
             adults_formset = AdultsFormSet(prefix="adult")
             # for form in adults_formset:
             #      print(form.as_p()) # TODO
@@ -111,6 +111,7 @@ def create_booking_form(request):
 
         else:
             # TODO
+            print("CONTEXT/error", context)
             for field in form.errors:
                 for item in form.errors[field]:
                     message_string = Common.format_error(f"{field} - {item}")
@@ -126,6 +127,64 @@ def create_booking_form(request):
     context = {"form": form}
     return render(request, "booking/create-booking-form.html", context)
 
+
+
+# TODO
+def passenger_details_form(request):
+    print("REQ", request.method)  # TODO
+    # form = CreateBookingForm()  # TODO
+    # context = {'form': form}
+
+    AdultsFormSet = formset_factory(AdultsForm, extra=2, formset=BasePaxFormSet)
+    ChildrenFormSet = formset_factory(MinorsForm, extra=2, formset=BasePaxFormSet)
+    adult_formset = AdultsFormSet(request.POST or None, prefix="adult")
+    children_formset = ChildrenFormSet(request.POST or None, prefix="child")
+    print("CONTEXT FETCH", request.POST)
+
+    if request.method == "POST":
+        # TODO
+        print(adult_formset.is_valid(), children_formset.is_valid(), "WELL?")
+        if adult_formset.is_valid() and children_formset.is_valid():
+            print("CLEAN A")  # TODO
+            for f in adult_formset:
+                cd = f.cleaned_data
+                print(cd)  # TODO
+            print("CLEAN C")  # TODO
+            print(children_formset.cleaned_data)
+            print("RP")  # TODO
+            print(request.POST)
+
+            create_records(request.POST)
+
+        else:
+            # TODO
+            print("SEE", adult_formset.non_form_errors())
+            for field in adult_formset.non_form_errors():
+                print("ERR", field)
+            for field in adult_formset.errors:
+                if field:
+                    print(adult_formset.errors)  # TODO
+                    message_string = adult_formset.errors
+                    messages.add_message(request, messages.ERROR,
+                                         message_string)
+            messages.add_message(request, messages.ERROR,
+                                 adult_formset.non_form_errors())
+            print("D", children_formset.errors)  # TODO
+            for field in children_formset.errors:
+                if field:
+                    message_string = children_formset.errors
+                    messages.add_message(request, messages.ERROR,
+                                         message_string)
+            messages.add_message(request, messages.ERROR,
+                                 children_formset.non_form_errors())
+
+    else:
+        # TODO
+        # form = PassengerDetailsForm(3)
+        pass
+
+    context = {"form": "form"}
+    return render(request, "booking/passenger-details-form.html", context)
 
 def view_booking(request, id):
     booking = get_object_or_404(Booking, pk=id)
@@ -329,58 +388,3 @@ def create_records(request):
 
         # RETURN TO HOME PAGE =  # TODO: SHOW MESSAGE
         return HttpResponseRedirect(reverse("home"))
-
-
-# TODO
-def passenger_details_form(request):
-    print("REQ", request.method)  # TODO
-    # form = CreateBookingForm()  # TODO
-    # context = {'form': form}
-
-    AdultsFormSet = formset_factory(AdultsForm)
-    ChildrenFormSet = formset_factory(MinorsForm)
-    adult_formset = AdultsFormSet(request.POST or None, request.FILES or None,
-                                  prefix="adult")
-    children_formset = ChildrenFormSet(request.POST or None, prefix="child")
-
-    if request.method == "POST":
-        # TODO
-        print(adult_formset.is_valid(), children_formset.is_valid(), "WELL?")
-        if adult_formset.is_valid() and children_formset.is_valid():
-            print("CLEAN A")  # TODO
-            for f in adult_formset:
-                cd = f.cleaned_data
-                print(cd)  # TODO
-            print("CLEAN C")  # TODO
-            print(children_formset.cleaned_data)
-            print("RP")  # TODO
-            print(request.POST)
-
-            create_records(request.POST)
-
-        else:
-            # TODO
-            for field in adult_formset.errors:
-                if field:
-                    print(adult_formset.errors)  # TODO
-                    message_string = adult_formset.errors
-                    messages.add_message(request, messages.ERROR,
-                                         message_string)
-            messages.add_message(request, messages.ERROR,
-                                 adult_formset.non_form_errors())
-            print("D", children_formset.errors)  # TODO
-            for field in children_formset.errors:
-                if field:
-                    message_string = children_formset.errors
-                    messages.add_message(request, messages.ERROR,
-                                         message_string)
-            messages.add_message(request, messages.ERROR,
-                                 children_formset.non_form_errors())
-
-    else:
-        # TODO
-        # form = PassengerDetailsForm(3)
-        pass
-
-    context = {"form": "form"}
-    return render(request, "booking/passenger-details-form.html", context)

@@ -49,6 +49,8 @@ class CreateBookingForm(forms.Form):
             help_text_html=u"<br><span class='helptext'>%s</span>",
             errors_on_separate_row=True)
 
+    # VALIDATION
+
     def clean_departing_date(self):
         departing_date = self.cleaned_data.get("departing_date")
         if departing_date < datetime.date.today():
@@ -161,12 +163,32 @@ class PaxForm(forms.Form):
     pass
 
 
+class BasePaxFormSet(BaseFormSet):
 # TODO
-# class BasePaxFormSet(BaseFormSet):
-#     def add_fields(self, form, index):
-#         super().add_fields(form, index)
-#         form.fields["body"] = forms.CharField()
+    # def add_fields(self, form, index):
+    #     super().add_fields(form, index)
+    #     form.fields["body"] = forms.CharField()
+    
+    def clean(self):
+        """
+        Validation of the Adult, Children and Infants Formsets
+        These formsets represent the Passenger Details Form
+        """
 
+        if any(self.errors):
+         # Errors found - proceed no further
+            return
+
+        for form in self.forms:
+            # First Name Validation
+            print(form.cleaned_data,"CLEAN")
+            first_name = form.cleaned_data.get("first_name", "").strip().upper()
+            print("FN", first_name)
+            if not first_name:
+                raise forms.ValidationError(
+                        "Passenger Name required. Enter the First Name as on the passport")
+
+            return
 
 class HiddenForm(forms.Form):
     return_option = forms.CharField(max_length=1, widget=forms.HiddenInput())
@@ -184,24 +206,50 @@ class HiddenForm(forms.Form):
 class AdultsForm(forms.Form):
     title = forms.CharField(max_length=4,
                             widget=forms.Select(choices=Common.TITLE_CHOICES),
-                            initial='MR',
-                           )
-    first_name = forms.CharField(max_length=40)
-    last_name = forms.CharField(max_length=40)
+                            initial='MR',)
+    first_name = forms.CharField(max_length=40, required=True)
+    last_name = forms.CharField(max_length=40, required=True)
     contact_number = forms.CharField(max_length=40)
     contact_email = forms.CharField(max_length=40)
     wheelchair_ssr = forms.CharField(max_length=1)
     wheelchair_type = forms.CharField(max_length=1)
 
+    # VALIDATION
+
+    def clean_first_name(self):
+        """ First Name Validation """
+        first_name = trim(self.cleaned_data.get("first_name")).upper()
+        print("FN", first_name)
+        if not first_name:
+            raise forms.ValidationError(
+                        "Passenger Name required. Enter the first last name as on the passport")
+
+        return(first_name)
+
+    def clean(self):
+        """ First Name Validation """
+        for form in self_forms:
+            print("FORM>", form)
+        print(self.errors)
+        return
+        first_name = trim(self.cleaned_data.get("first_name")).upper()
+        print("FN", first_name)
+        if not first_name:
+            raise forms.ValidationError(
+                        "Passenger Name required. Enter the first last name as on the passport")
+
+        return(first_name)
 
 # For Children and Infants
 class MinorsForm(forms.Form):
     title = forms.CharField(max_length=4,
                             widget=forms.Select(choices=Common.TITLE_CHOICES),
-                            initial='MR',
-                           )
-    first_name = forms.CharField(max_length=40)
-    last_name = forms.CharField(max_length=40)
-    date_of_birth = forms.DateField()
+                            initial='MR',)
+    first_name = forms.CharField(max_length=40, required=True)
+    last_name = forms.CharField(max_length=40, required=True)
+    date_of_birth = forms.DateField(initial=datetime.date.today(),
+                                     help_text="Format: DD/MM/YYYY",
+                                     widget=forms.DateInput(
+                                    attrs=dict(type='date')))
     wheelchair_ssr = forms.CharField(max_length=1)
     wheelchair_type = forms.CharField(max_length=1)
