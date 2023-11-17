@@ -140,7 +140,9 @@ def passenger_details_form(request):
                                     formset=BasePaxFormSet)
     ChildrenFormSet = formset_factory(MinorsForm, extra=2,
                                       formset=BasePaxFormSet)
+    print("TYPE 1", type(AdultsFormSet))
     adults_formset = AdultsFormSet(request.POST or None, prefix="adult")
+    print("TYPE 2", type(adults_formset))
     children_formset = ChildrenFormSet(request.POST or None, prefix="child")
     print("CONTEXT FETCH", request.POST)
     if request.method != "POST":
@@ -149,6 +151,7 @@ def passenger_details_form(request):
     if request.method == "POST":
         # TODO
         context = request.POST
+        print("TYPE 3", type(adults_formset))
         print(adults_formset.is_valid(), children_formset.is_valid(), "WELL?")
         if adults_formset.is_valid() and children_formset.is_valid():
             print("CLEAN A")  # TODO

@@ -3,7 +3,9 @@ from django import forms
 from django.forms import BaseFormSet
 from .models import Booking
 from .common import Common
+from django.core.validators import validate_email
 import datetime
+import re
 
 
 class BookingForm(forms.ModelForm):
@@ -178,23 +180,66 @@ class BasePaxFormSet(BaseFormSet):
         if any(self.errors):
             # Errors found - proceed no further
             return
+        print(2000)
         theforms = self.forms
         if not theforms or not theforms[0].has_changed():
             raise forms.ValidationError("Please enter the details regarding "
                                         "the passengers for this booking.")
-
+        count = 0
         for form in theforms:
-            # First Name Validation
+            count += 1
+            print("FORM>", count, form)
             print(form.cleaned_data, "CLEAN")
+
+            # First Name Validation
             first_name = (form.cleaned_data.get("first_name", "")
-                              .strip().upper())
-            print("FN", first_name)
+                              .strip().upper()) #  TODO
+            # print("FN", first_name)
             if not first_name:
                 raise forms.ValidationError(
-                        "Passenger Name required. "
-                        "Enter the First Name as on the passport")
+                        f"Adult {count} - Passenger Name required. "
+                        f"Enter the First Name as on the passport")
 
-            return
+            # Last Name Validation
+            last_name = (form.cleaned_data.get("last_name", "")
+                              .strip().upper())
+            # print("FN", first_name)
+            if not last_name:
+                raise forms.ValidationError(
+                        f"Adult {count} - Passenger Name required. "
+                        f"Enter the Last Name as on the passport")
+
+            # Contact TelNo/Email Validation
+            phone_number = (form.cleaned_data.get("contact_number", "")
+                                .strip())
+            # TODO RE strip()
+            phone_number = (form.cleaned_data.get("contact_number", "")
+                                .replace(" ", ""))
+            email = (form.cleaned_data.get("contact_email", "").strip())
+
+            if not phone_number and not email:
+                if count == 1:
+                    raise forms.ValidationError(
+                        f"Adult {count} is the Principal Passenger."
+                        "Therefore, the Contact Details are "
+                        "mandatory for this Passenger.\n"
+                        "Please enter passenger's phone number or email")
+                else:
+                    continue
+
+            if phone_number and not re.search("[0-9]{6,}", phone_number):
+                raise forms.ValidationError(
+                        f"Adult {count} - Contact number. "
+                        f"Enter a phone number of at least 6 digits")
+
+            # This solution found at https://stackoverflow.com/questions/3217682/how-to-validate-an-email-address-in-django
+            if email:
+                try:
+                    validate_email(email)
+                except ValidationError as e:
+                    raise forms.ValidationError(
+                               f"Adult {count} - Email. "
+                               "Please enter a valid email address")
 
 
 class HiddenForm(forms.Form):
@@ -235,8 +280,14 @@ class AdultsForm(forms.Form):
         return first_name
 
     def clean(self):
+        print(type(self))
+#       cleaned_data = super(BasePaxFormSet, self).clean()
+#       print("CD", cleaned_data)
+#       return cleaned_data
         """ First Name Validation """
-        for form in self_forms:
+        print(1000, type(self))
+        print(self)
+        for form in self.forms:
             print("FORM>", form)
         print(self.errors)
         return
