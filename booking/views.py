@@ -130,9 +130,66 @@ def create_booking_form(request):
     return render(request, "booking/create-booking-form.html", context)
 
 
-def formset_valid(request, adults_formset):
+def display_formset_errors(request, prefix):
+    """ Instead of showing form errors within the form
+    This routine will display any errors via the Django Messaging facility
+    """
+
+    # Use this list for testing purposes
+    errors_list = [{'last_name': ['This field is required.'], 'contact_number': ['This field is required.'], 
+                    'contact_email': ['This field is required.'], 'wheelchair_ssr': ['This field is required.'], 
+                    'wheelchair_type': ['This field is required.']}, {}]
+
+    number_of_forms = len(errors_list)
+    for form_number in range(number_of_forms):
+        prefix_number = form_number + 1
+        fields_dict = errors_list[form_number]
+        if not fields_dict: # i.e. empty {}
+            continue
+        list_of_errors =  fields_dict.items()
+        for (field, field_errors) in list_of_errors: 
+            for item in field_errors:
+                begin = f"{prefix} {prefix_number}:"
+                formatted = Common.format_error(f"{field}")
+                message_string = f"{begin} {formatted} - {item}"
+                messages.add_message(request, messages.ERROR,
+                                     message_string)
+
+
+def formset_valid(request, adults_formset, 
+                  children_included, children_formset):
+    display_formset_errors(request, "Adult")
+    return False
+    # request, adults_formset, "Adult", 
+    # print("CLEANDATA>>",adults_formset.cleaned_data)
     formset = adults_formset
-    print("CLEANDATA>>",adults_formset.cleaned_data)
+    ##print("CLEANDATA>>",adults_formset.cleaned_data)
+    if not formset.is_valid():
+        print("FORMSET ERRORS", formset.errors)
+        print("CLEANDATA>>2",adults_formset.cleaned_data)
+        print(formset)
+    print("CLEANDATA>>3",adults_formset.cleaned_data)
+
+    is_empty = False
+    print(type(adults_formset))
+    adult_cleaned_data = adults_formset.get("cleaned_data", [None])
+    if not any(cleaned_data):
+        is_empty = True
+        messages.add_message(request, messages.ERROR,
+                             "Please enter the Adult's Passenger Details "
+                             "for this booking")
+    if children_included:
+        children_cleaned_data = children_formset.get("cleaned_data", [None])
+        if not any(children_formset.cleaned_data):
+            is_empty = True
+            messages.add_message(request, messages.ERROR,
+                                 "Please enter the Children's Passenger Details "
+                                 "for this booking")
+    if is_empty:
+        return False
+
+    formset = adults_formset
+    ## print("CLEANDATA>>",adults_formset.cleaned_data)
     if not formset.is_valid():
         print("FORMSET ERRORS", formset.errors)
         print(formset)
@@ -158,6 +215,7 @@ def formset_valid(request, adults_formset):
 
 # TODO
 def passenger_details_form(request):
+    children_included = True  # TODO
     print("REQ", request.method)  # TODO
     # form = CreateBookingForm()  # TODO
     # context = {'form': form}
@@ -256,7 +314,9 @@ def passenger_details_form(request):
         # print(adults_formset.is_valid(), children_formset.is_valid(), "WELL?")
 
         if formset_valid(request, 
-                         adults_formset):
+                         adults_formset,
+                         children_included, 
+                         children_formset):
             print("CLEAN A1", adults_formset.non_form_errors())  # TODO
             print(adults_formset.total_error_count(),
                 adults_formset.has_changed())

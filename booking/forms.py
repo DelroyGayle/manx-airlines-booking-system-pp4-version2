@@ -314,10 +314,11 @@ class AdultsForm(forms.Form):
         print(type(self))
         print("CLEANEDxxx", self.cleaned_data)
         cleaned_data = self.cleaned_data
-        ### print(self)
+        ### print(self)  TODO
         # print("TESTING adult-TOTAL_FORMS", self['adult-TOTAL_FORMS'])
-        return
+        # return cleaned_data
         if 'first_name' not in cleaned_data:
+            print("SEE")
             raise forms.ValidationError(
                         "Passenger Name required. "
                         "Enter the first name as on the passport")
@@ -337,7 +338,7 @@ class AdultsForm(forms.Form):
         print(self.errors)
         return
         first_name = self.cleaned_data.get("first_name").strip()
-        print("FN", first_name)
+        print("FN2XX", first_name)
         if not first_name:
             raise forms.ValidationError(
                         "Passenger Name required. "
