@@ -7,6 +7,19 @@ from django.core.validators import validate_email
 import datetime
 import re
 
+TITLE_CHOICES = [
+        ("DR", "DOCTOR"),
+        ("LADY", "LADY"),
+        ("LORD", "LORD"),
+        ("MSTR", "MASTER"),
+        ("MISS", "MISS"),
+        ("MR", "MR"),
+        ("MRS", "MRS"),
+        ("MS", "MS"),
+        ("PROF", "PROFESSOR"),
+        ("SIR", "SIR"),
+        ("SIS", "SISTER"),
+    ]
 
 class BookingForm(forms.ModelForm):
 
@@ -277,7 +290,7 @@ class HiddenForm(forms.Form):
 
 class AdultsForm(forms.Form):
     title = forms.CharField(max_length=4,
-                            widget=forms.Select(choices=Common.TITLE_CHOICES),
+                            widget=forms.Select(choices=TITLE_CHOICES),
                             initial="MR",)
     first_name = forms.CharField(max_length=40, required=False)
     last_name = forms.CharField(max_length=40, required=False)
@@ -350,7 +363,7 @@ class AdultsForm(forms.Form):
 # For Children and Infants
 class MinorsForm(forms.Form):
     title = forms.CharField(max_length=4,
-                            widget=forms.Select(choices=Common.TITLE_CHOICES),
+                            widget=forms.Select(choices=TITLE_CHOICES),
                             initial="MR",)
     first_name = forms.CharField(max_length=40, required=True)
     last_name = forms.CharField(max_length=40, required=True)

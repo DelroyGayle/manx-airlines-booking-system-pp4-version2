@@ -26,6 +26,8 @@ class Schedule(models.Model):
     flight_date = models.DateField()
     flight_number = models.CharField(max_length=6)
     total_booked = models.PositiveSmallIntegerField()
+    # Bit String which represents the seating of passengers
+    seatmap = models.CharField(max_length=12, default="0" * 12)
 
     class Meta:
         ordering = ["flight_date", "flight_number"]
@@ -100,7 +102,6 @@ class Passenger(models.Model):
     seat_number = models.PositiveSmallIntegerField(default=0)
     # Status: HK1 for PAX 1, HK2 for PAX 2, etc
     status = models.CharField(max_length=3)
-    ticket_class = models.CharField(max_length=1, default="Y")
     # Optional Wheelchair Info
     # Blank or R for WHCR, S for WCHS, C for WCHC
     wheelchair_ssr = models.CharField(max_length=1, blank=True, default="")
@@ -114,7 +115,7 @@ class Passenger(models.Model):
             self.pnr, self.title, self.first_name, self.last_name)
 
 
-class Transactions(models.Model):
+class Transaction(models.Model):
     pnr = models.CharField(max_length=6)
     amount = models.DecimalField(max_digits=6, decimal_places=2, default=0)
     date_created = models.DateField()

@@ -5,8 +5,11 @@ from django.db.models import Q, OuterRef, Subquery
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.forms import formset_factory
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 
 from .models import Booking, Passenger
+from .models import Flight
 from .forms import BookingForm, CreateBookingForm, PassengerDetailsForm
 # TODO PaxForm?
 from .forms import AdultsForm, MinorsForm, PaxForm
@@ -14,11 +17,31 @@ from .forms import AdultsForm, MinorsForm, PaxForm
 from .forms import BasePaxFormSet
 from .forms import HiddenForm
 from .common import Common
+# TODO
+# from .constants import FIRSTNAME_BLANK
 from datetime import datetime
 from datetime import date  # TODO
+# import constants
 import random  # TODO
-from .models import Flight
+import re
+# from .helpers import test TODO
 
+# Constants
+
+NULLPAX = "Enter the details for this passenger."
+BAD_NAME = ("Names must begin and end with a letter. "
+            "Names must consist of only alphabetical characters, "
+            "apostrophes and hyphens.")
+FIRSTNAME_BLANK =  (f"Passenger Name required. "
+                    f"Enter the First Name as on the passport.")
+LASTNAME_BLANK =   (f"Passenger Name required. "
+                    f"Enter the Last Name as on the passport.")
+CONTACTS_BLANK = ("Adult 1 is the Principal Passenger. "
+                  "Contact Details are "
+                  "mandatory for this Passenger.\n"
+                  "Enter passenger's phone number and/or email.")
+BAD_TELNO = "Enter a phone number of at least six digits."
+BAD_EMAIL = "Enter a valid email address."
 
 # Create your views here.
 
@@ -77,6 +100,7 @@ def create_booking_form(request):
             # TODO "form"
             print("CLEANED", form.cleaned_data)
             print(100, form.cleaned_data["adults"], formset)
+            # print("TEST", test()) TODO
             context = {"booking": form.cleaned_data, "form": form.cleaned_data,
                        "booking_cleaned_data": form.cleaned_data,
                        "range3": range(3),
@@ -176,24 +200,59 @@ def adults_formset_validated(cleaned_data, request):
     formset_errors = [] # Hopefully ths will remain empty
     errors_found = False
     number_of_forms = len(cleaned_data)
-    print("LEN=", number_of_forms)
     for form_number in range(number_of_forms):
         accum_dict = {}
         prefix_number = form_number + 1
         fields_dict = cleaned_data[form_number]
-        print(1, form_number, cleaned_data, fields_dict)
-        if not fields_dict: # i.e. empty {}
+
+        # Blank Form?
+        if not fields_dict: # i.e. empty {} which indicates a blank form
             errors_found = True
-            print(type(Common.save_context))
-            print(type(Common.NULLPAX))
-            print(Common.NULLPAX,99)
-            # accum_dict.update({"first_name": [Common.NULLPAX]})
-            accum_dict = append_to_dict(accum_dict, "first_name", Common.NULLPAX)
+            accum_dict = append_to_dict(accum_dict, "first_name", NULLPAX)
+            formset_errors.append(accum_dict)
+            continue
         
-        elif fields_dict.get("first_name", "").strip() != "WWW":
+        # First Name Validation
+        temp_field = fields_dict.get("first_name", "").replace(" ", "")
+        if temp_field == "":
             errors_found = True
-            # accum_dict.update({"first_name": ["TEST ERROR"]})
-            accum_dict = append_to_dict(accum_dict, "first_name", "TEST ERROR")
+            accum_dict = append_to_dict(accum_dict, "first_name", 
+                                        FIRSTNAME_BLANK)
+        elif not re.search("^[A-Z]$|^[A-Z][A-Za-z'-]*[A-Z]$", temp_field, re.IGNORECASE):
+            errors_found = True
+            accum_dict = append_to_dict(accum_dict, "first_name", BAD_NAME)
+
+        # Last Name Validation
+        temp_field = fields_dict.get("last_name", "").replace(" ", "")
+        if temp_field == "":
+            errors_found = True
+            accum_dict = append_to_dict(accum_dict, "last_name", 
+                                        LASTNAME_BLANK)
+        elif not re.search("^[A-Z][A-Za-z'-]*[A-Z]$", temp_field, re.IGNORECASE):
+            errors_found = True
+            accum_dict = append_to_dict(accum_dict, "last_name", BAD_NAME)
+
+        # Contact Number/Email Validation can be null except for Adult 1
+        telephone = fields_dict.get("contact_number", "").replace(" ", "")
+        email = fields_dict.get("contact_email", "").replace(" ", "")
+        # These can be null except for Adult 1
+        both_blank = telephone == "" and email == ""
+        if both_blank and prefix_number == 1:
+            errors_found = True
+            accum_dict = append_to_dict(accum_dict, "contact_number", CONTACTS_BLANK)
+
+        if not both_blank:
+            if telephone != "" and not re.search("[0-9]{6,}", telephone):
+                errors_found = True
+                accum_dict = append_to_dict(accum_dict, "contact_number", BAD_TELNO)
+
+            # This solution found at https://stackoverflow.com/questions/3217682/how-to-validate-an-email-address-in-django
+            if email:
+                try:
+                    validate_email(email)
+                except ValidationError as e:
+                    errors_found = True
+                    accum_dict = append_to_dict(accum_dict, "contact_email", BAD_EMAIL)
         
         formset_errors.append(accum_dict)
         print("ACC", accum_dict, formset_errors)
@@ -201,7 +260,10 @@ def adults_formset_validated(cleaned_data, request):
     if errors_found:
         ## Message the errors that were found
         print("OKAY", formset_errors)
-        display_formset_errors(request, "Adult", formset_errors)        
+        display_formset_errors(request, "Adult", formset_errors)
+        return False
+
+    return True       
 
 
 
@@ -234,14 +296,14 @@ def is_formset_valid(request, adults_formset,
     if not any(cleaned_data):
         is_empty = True
         messages.add_message(request, messages.ERROR,
-                             "Please enter the Adult's Passenger Details "
+                             "Enter the Adult's Passenger Details "
                              "for this booking.")
     if children_included:
         cleaned_data = children_formset.cleaned_data
         if not any(children_formset.cleaned_data):
             is_empty = True
             messages.add_message(request, messages.ERROR,
-                                 "Please enter the Children's Passenger Details "
+                                 "Enter the Children's Passenger Details "
                                  "for this booking.")
     if is_empty:
         return False
@@ -270,7 +332,7 @@ def is_formset_valid(request, adults_formset,
 
     if not formset.has_changed():
         messages.add_message(request, messages.ERROR,
-                             "Please enter the Passenger Details "
+                             "Enter the Passenger Details "
                              "for this booking.")
         return False
 
@@ -361,7 +423,7 @@ def passenger_details_form(request):
             print(type(Common.save_context))
             print("TT", Common.save_context)
             context["hidden_form"] = Common.save_context["hidden_form"]
-            print("AF3", adults_formset)
+            print("AF3", adults_formset.cleaned_data)
             print("CON", context)
             print("SAVED_CONTEXT", Common.save_context)
 
@@ -401,7 +463,7 @@ def view_booking(request, id):
         passenger_list.append(pax_record)
     #  print(type(passenger_list)) #  TODO
     context = {"booking": booking, "passengers": passenger_list}
-    # print(pax.title, pax.first_name, pax.last_name) TODO
+    # print(pax.title, pax.last_name, pax.last_name) TODO
     return render(request, "booking/view-booking.html", context)
 
 

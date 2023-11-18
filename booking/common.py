@@ -3,10 +3,8 @@
 from .models import Flight
 from django.shortcuts import get_list_or_404
 
-
 class Common:
-    """
-    I use this class as the repository of global variables, settings
+    """I use this class as the repository of global variables, settings
     and methods needed throughout this App.
     """
 
@@ -18,24 +16,6 @@ class Common:
     save_context = None
     OUTBOUND_TIME_OPTIONS1 = None
     OUTBOUND_TIME_OPTIONS2 = None
-
-    # CONSTANTS
-    TITLE_CHOICES = [
-        ("DR", "DOCTOR"),
-        ("LADY", "LADY"),
-        ("LORD", "LORD"),
-        ("MSTR", "MASTER"),
-        ("MISS", "MISS"),
-        ("MR", "MR"),
-        ("MRS", "MRS"),
-        ("MS", "MS"),
-        ("PROF", "PROFESSOR"),
-        ("SIR", "SIR"),
-        ("SIS", "SISTER"),
-    ]
-
-    NULLPAX = "Please enter the details for this passenger."
-    print(type(NULLPAX))
 
     def __init__(self):
         pass
@@ -59,7 +39,7 @@ class Common:
                 f"{flight_to}")
 
     def initialisation():
-        """ Fetch the contents of the Flights Database
+        """Fetch the contents of the Flights Database
         which holds the available flights' times, routes and capacity
         information and set them up in variables to be accessed by this App.
         """
