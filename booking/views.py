@@ -76,19 +76,21 @@ def create_booking_form(request):
             formset = PaxFormSet()
             # TODO "form"
             print("CLEANED", form.cleaned_data)
-            print(100, formset)
+            print(100, form.cleaned_data["adults"], formset)
             context = {"booking": form.cleaned_data, "form": form.cleaned_data,
                        "booking_cleaned_data": form.cleaned_data,
                        "range3": range(3),
                        "formset": formset}
             # TODO
-            AdultsFormSet = formset_factory(AdultsForm, extra=2,
-                                            formset=BasePaxFormSet)
+            number_of_adults = form.cleaned_data["adults"]
+            AdultsFormSet = formset_factory(AdultsForm, 
+                                            extra=number_of_adults)  ## TODO
             adults_formset = AdultsFormSet(prefix="adult")
             # for form in adults_formset:
             #      print(form.as_p()) # TODO
-            ChildrenFormSet = formset_factory(MinorsForm, extra=2)
-            children_formset = ChildrenFormSet(prefix="child")
+            # ChildrenFormSet = formset_factory(MinorsForm, extra=2)
+            # children_formset = ChildrenFormSet(prefix="child")
+            children_formset = []  ## TODO
             # for form in children_formset:
             #      print(form.as_p()) # TODO
 
@@ -129,16 +131,18 @@ def create_booking_form(request):
     context = {"form": form}
     return render(request, "booking/create-booking-form.html", context)
 
-
-def display_formset_errors(request, prefix):
-    """ Instead of showing form errors within the form
+def display_formset_errors(request, prefix, errors_list):
+    """Instead of showing form errors within the form
     This routine will display any errors via the Django Messaging facility
+    
+    Sample 'errors_list'
+    [{'last_name': ['This field is required.'],
+      'last_name': ['This field is required.'],
+      'contact_number': ['This field is required.'], 
+      'contact_email': ['This field is required.'], 
+      'wheelchair_ssr': ['This field is required.'], 
+      'wheelchair_type': ['This field is required.']}, {}]
     """
-
-    # Use this list for testing purposes
-    errors_list = [{'last_name': ['This field is required.'], 'contact_number': ['This field is required.'], 
-                    'contact_email': ['This field is required.'], 'wheelchair_ssr': ['This field is required.'], 
-                    'wheelchair_type': ['This field is required.']}, {}]
 
     number_of_forms = len(errors_list)
     for form_number in range(number_of_forms):
@@ -155,43 +159,102 @@ def display_formset_errors(request, prefix):
                 messages.add_message(request, messages.ERROR,
                                      message_string)
 
+def append_to_dict(dict, key, item):
+    """This dictionary should be of the form
+    {item: [ ... , ... , ...]}
+    Create a list if one does not exist before appending item
+    """
 
-def formset_valid(request, adults_formset, 
-                  children_included, children_formset):
-    display_formset_errors(request, "Adult")
-    return False
-    # request, adults_formset, "Adult", 
-    # print("CLEANDATA>>",adults_formset.cleaned_data)
+    if item not in dict:
+        dict[key] = [item]
+    else:
+        dict[key] = dict[key] + [item]
+    return dict
+
+def adults_formset_validated(cleaned_data, request):
+    """ Carry out Custom Validation of the Adults Formset """
+    formset_errors = [] # Hopefully ths will remain empty
+    errors_found = False
+    number_of_forms = len(cleaned_data)
+    print("LEN=", number_of_forms)
+    for form_number in range(number_of_forms):
+        accum_dict = {}
+        prefix_number = form_number + 1
+        fields_dict = cleaned_data[form_number]
+        print(1, form_number, cleaned_data, fields_dict)
+        if not fields_dict: # i.e. empty {}
+            errors_found = True
+            print(type(Common.save_context))
+            print(type(Common.NULLPAX))
+            print(Common.NULLPAX,99)
+            # accum_dict.update({"first_name": [Common.NULLPAX]})
+            accum_dict = append_to_dict(accum_dict, "first_name", Common.NULLPAX)
+        
+        elif fields_dict.get("first_name", "").strip() != "WWW":
+            errors_found = True
+            # accum_dict.update({"first_name": ["TEST ERROR"]})
+            accum_dict = append_to_dict(accum_dict, "first_name", "TEST ERROR")
+        
+        formset_errors.append(accum_dict)
+        print("ACC", accum_dict, formset_errors)
+
+    if errors_found:
+        ## Message the errors that were found
+        print("OKAY", formset_errors)
+        display_formset_errors(request, "Adult", formset_errors)        
+
+
+
+def is_formset_valid(request, adults_formset, 
+                     children_included, children_formset):
     formset = adults_formset
-    ##print("CLEANDATA>>",adults_formset.cleaned_data)
-    if not formset.is_valid():
-        print("FORMSET ERRORS", formset.errors)
-        print("CLEANDATA>>2",adults_formset.cleaned_data)
-        print(formset)
-    print("CLEANDATA>>3",adults_formset.cleaned_data)
+    errors_found = False
+    print("INB", adults_formset.is_bound, adults_formset.has_changed())
 
+# Are there any Django Validations to begin with?
+    if not adults_formset.is_valid():
+        errors_found = True
+        display_formset_errors(request, "Adult", adults_formset.errors)
+    if children_included and not children_formset.is_valid():
+        errors_found = True
+        display_formset_errors(request, "Child", children_formset.errors)
+    if errors_found:
+            return False
+# TODO INF
+
+
+#    print("FS", adults_formset)
+#    print("AGAIN", adults_formset.is_valid())
+    print("CLEANDATA>>2",adults_formset.cleaned_data)
+    cleaned_data = adults_formset.cleaned_data
+
+    # Are the forms blank?
     is_empty = False
-    print(type(adults_formset))
-    adult_cleaned_data = adults_formset.get("cleaned_data", [None])
+#    print(type(adults_formset))  TODO
     if not any(cleaned_data):
         is_empty = True
         messages.add_message(request, messages.ERROR,
                              "Please enter the Adult's Passenger Details "
-                             "for this booking")
+                             "for this booking.")
     if children_included:
-        children_cleaned_data = children_formset.get("cleaned_data", [None])
+        cleaned_data = children_formset.cleaned_data
         if not any(children_formset.cleaned_data):
             is_empty = True
             messages.add_message(request, messages.ERROR,
                                  "Please enter the Children's Passenger Details "
-                                 "for this booking")
+                                 "for this booking.")
     if is_empty:
         return False
+# TODO INF
 
+    if not adults_formset_validated(adults_formset.cleaned_data, request):
+        return False
+
+    return True
     formset = adults_formset
     ## print("CLEANDATA>>",adults_formset.cleaned_data)
     if not formset.is_valid():
-        print("FORMSET ERRORS", formset.errors)
+        print("FORMSET ERRORS2", formset.errors)
         print(formset)
     
         for each_dict in formset.errors:
@@ -208,7 +271,7 @@ def formset_valid(request, adults_formset,
     if not formset.has_changed():
         messages.add_message(request, messages.ERROR,
                              "Please enter the Passenger Details "
-                             "for this booking")
+                             "for this booking.")
         return False
 
     return True  # TODO
@@ -222,90 +285,16 @@ def passenger_details_form(request):
 
     AdultsFormSet = formset_factory(AdultsForm, extra=2)
                                     ##formset=BasePaxFormSet)
-    ChildrenFormSet = formset_factory(MinorsForm, extra=2)
+    # ChildrenFormSet = formset_factory(MinorsForm, extra=2)
                                       ##formset=BasePaxFormSet)
     print("TYPE 1", type(AdultsFormSet))
     adults_formset = AdultsFormSet(request.POST or None, prefix="adult")
     print("TYPE 2", type(adults_formset))
-    children_formset = ChildrenFormSet(request.POST or None, prefix="child")
+    # children_formset = ChildrenFormSet(request.POST or None, prefix="child")
+    children_formset = []  # TODO
     print(request.method, "CONTEXT FETCH", request.POST)
     if request.method != "POST":
         context = {}
-
-    if request.method == "XPOST":
-        # TODO
-        context = request.POST
-        print("TYPE 3", type(adults_formset))
-        # print(adults_formset.is_valid(), children_formset.is_valid(), "WELL?")
-        if not adults_formset.is_valid():
-            print(adults_formset.errors)
-            for each_dict in adults_formset.errors:
-                if not each_dict:
-                    continue
-                list_of_errors =  each_dict.items()
-                for (field, field_errors) in list_of_errors: 
-                    for item in field_errors:
-                        message_string = Common.format_error(f"{field} - {item}")
-                        messages.add_message(request, messages.ERROR,
-                                         message_string)
-            adults_formset = AdultsFormSet(request.POST or None,
-                                           prefix="adult")
-            children_formset = ChildrenFormSet(request.POST or None,
-                                               prefix="child")
-            context = {}
-            context["adults_formset"] = adults_formset
-            context["children_formset"] = children_formset
-            print(type(Common.save_context))
-            print("TTa", Common.save_context)
-            context["hidden_form"] = Common.save_context["hidden_form"]
-            print("AFa", adults_formset)
-            print("CONa", context)
-            print("SAVED_CONTEXTa", Common.save_context)
-
-        elif adults_formset.is_valid() and children_formset.is_valid():
-            print("CLEAN A")  # TODO
-            for f in adults_formset:
-                cd = f.cleaned_data
-                print(cd)  # TODO
-            print("CLEAN C")  # TODO
-            print(children_formset.cleaned_data)
-            print("RP")  # TODO
-            print(request.POST)
-            return render(request, "booking/index.html")   # TODO
-            create_records(request.POST)
-
-        else:
-            # TODO
-            fetch_all_errors = adults_formset.non_form_errors()
-            for each_error in fetch_all_errors:
-                print("ERR", each_error)
-                messages.add_message(request, messages.ERROR,
-                                     each_error)
-            print("D", children_formset.errors,
-                  children_formset.non_form_errors())  # TODO
-            fetch_all_errors = children_formset.non_form_errors()
-            for each_error in fetch_all_errors:
-                print("ERR", each_error)
-                messages.add_message(request, messages.ERROR,
-                                     each_error)
-            adults_formset = AdultsFormSet(request.POST or None,
-                                           prefix="adult")
-            children_formset = ChildrenFormSet(request.POST or None,
-                                               prefix="child")
-            context = {}
-            context["adults_formset"] = adults_formset
-            context["children_formset"] = children_formset
-            print(type(Common.save_context))
-            print("TT", Common.save_context)
-            context["hidden_form"] = Common.save_context["hidden_form"]
-            print("AF", adults_formset)
-            print("CON", context)
-            print("SAVED_CONTEXT", Common.save_context)
-
-    else:
-        # TODO
-        # form = PassengerDetailsForm(3)
-        pass
 
     if request.method == "POST":
         # TODO
@@ -313,7 +302,8 @@ def passenger_details_form(request):
         print("TYPE 3", type(adults_formset))
         # print(adults_formset.is_valid(), children_formset.is_valid(), "WELL?")
 
-        if formset_valid(request, 
+        children_included = None ## TODO
+        if is_formset_valid(request, 
                          adults_formset,
                          children_included, 
                          children_formset):
@@ -325,7 +315,7 @@ def passenger_details_form(request):
                 cd = f.cleaned_data
                 print(cd)  # TODO
             print("CLEAN C")  # TODO
-            print(children_formset.cleaned_data)
+            # print(children_formset.cleaned_data)
             print("RP")  # TODO
             print(request.POST)
             return render(request, "booking/index.html")   # TODO
@@ -341,7 +331,7 @@ def passenger_details_form(request):
                 cd = f.cleaned_data
                 print(cd)  # TODO
             print("CLEAN C")  # TODO
-            print(children_formset.cleaned_data)
+            #print(children_formset.cleaned_data)
             print("RP")  # TODO
             print(request.POST)
             return render(request, "booking/index.html")   # TODO
@@ -354,17 +344,17 @@ def passenger_details_form(request):
                 print("ERR", each_error)
                 messages.add_message(request, messages.ERROR,
                                      each_error)
-            print("D", children_formset.errors,
-                  children_formset.non_form_errors())  # TODO
-            fetch_all_errors = children_formset.non_form_errors()
+            #print("D", children_formset.errors,
+             #     children_formset.non_form_errors())  # TODO
+            # fetch_all_errors = children_formset.non_form_errors()
             for each_error in fetch_all_errors:
                 print("ERR", each_error)
                 messages.add_message(request, messages.ERROR,
                                      each_error)
             adults_formset = AdultsFormSet(request.POST or None,
                                            prefix="adult")
-            children_formset = ChildrenFormSet(request.POST or None,
-                                               prefix="child")
+            # children_formset = ChildrenFormSet(request.POST or None,
+            #                                    prefix="child")
             context = {}
             context["adults_formset"] = adults_formset
             context["children_formset"] = children_formset
@@ -376,10 +366,14 @@ def passenger_details_form(request):
             print("SAVED_CONTEXT", Common.save_context)
 
     else:
+        print("EX",Common.save_context.booking.adults)
+        number_of_adults = Common.save_context.booking.adults
         adults_formset = AdultsFormSet(request.POST or None,
-                                           prefix="adult")
-        children_formset = ChildrenFormSet(request.POST or None,
-                                               prefix="child")
+                                           prefix="adult",
+                                           extra = number_of_adults)
+        # children_formset = ChildrenFormSet(request.POST or None,
+        #                                        prefix="child")
+        children_formset = []
 
         # TODO
         # form = PassengerDetailsForm(3)

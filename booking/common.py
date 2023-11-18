@@ -19,6 +19,7 @@ class Common:
     OUTBOUND_TIME_OPTIONS1 = None
     OUTBOUND_TIME_OPTIONS2 = None
 
+    # CONSTANTS
     TITLE_CHOICES = [
         ("DR", "DOCTOR"),
         ("LADY", "LADY"),
@@ -32,6 +33,9 @@ class Common:
         ("SIR", "SIR"),
         ("SIS", "SISTER"),
     ]
+
+    NULLPAX = "Please enter the details for this passenger."
+    print(type(NULLPAX))
 
     def __init__(self):
         pass

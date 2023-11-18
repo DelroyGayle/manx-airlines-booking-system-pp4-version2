@@ -15,11 +15,15 @@
         {% csrf_token %}
 
         {{ adults_formset.management_form }}
-        {{ children_formset.management_form }}
+        {% if children_formset %}
+            {{ children_formset.management_form }}
+        {% endif %}
         MF
         {{ adults_formset.as_p }}
         MF2
-        {{ children_formset.as_p }}
+        {% if children_formset %}
+            {{ children_formset.as_p }}
+        {% endif %}
         HIDDEN
         {{ hidden_form }}
      

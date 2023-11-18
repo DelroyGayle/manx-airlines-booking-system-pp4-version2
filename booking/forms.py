@@ -56,14 +56,14 @@ class CreateBookingForm(forms.Form):
     def clean_departing_date(self):
         departing_date = self.cleaned_data.get("departing_date")
         if departing_date < datetime.date.today():
-            raise forms.ValidationError("This date cannot be in the past")
+            raise forms.ValidationError("This date cannot be in the past.")
 
         datediff = departing_date - datetime.date.today()
         days = datediff.days
         if days > 180:
             raise forms.ValidationError(
                         "This date cannot be more than 180 "
-                        "days later than the Current Date")
+                        "days later than the Current Date.")
 
         return departing_date
 
@@ -80,14 +80,14 @@ class CreateBookingForm(forms.Form):
 
         if returning_date < departing_date:
             raise forms.ValidationError(
-                        "This date cannot be earlier than the Departing date")
+                        "This date cannot be earlier than the Departing date.")
 
         datediff = returning_date - departing_date
         days = datediff.days
         if days > 180:
             raise forms.ValidationError(
                         "This date cannot be more than 180 "
-                        "days later than the Departing date")
+                        "days later than the Departing date.")
 
         return returning_date
 
@@ -101,7 +101,7 @@ class CreateBookingForm(forms.Form):
         number_of_adults = self.cleaned_data.get("adults")
         if number_of_adults <= 0:
             raise forms.ValidationError(
-                        "There must be at least one adult per booking")
+                        "There must be at least one adult per booking.")
 
         return number_of_adults
 
@@ -119,7 +119,7 @@ class CreateBookingForm(forms.Form):
             return number_of_infants
         if number_of_infants > number_of_adults:
             raise forms.ValidationError(
-                        "You cannot travel with more infants than adults")
+                        "You cannot travel with more infants than adults.")
 
         return number_of_infants
 
@@ -218,7 +218,7 @@ class BasePaxFormSet(BaseFormSet):
             if not first_name:
                 raise forms.ValidationError(
                         f"Adult {count} - Passenger Name required. "
-                        f"Enter the First Name as on the passport")
+                        f"Enter the First Name as on the passport.")
 
             # Last Name Validation
             last_name = (form.cleaned_data.get("last_name", "")
@@ -227,7 +227,7 @@ class BasePaxFormSet(BaseFormSet):
             if not last_name:
                 raise forms.ValidationError(
                         f"Adult {count} - Passenger Name required. "
-                        f"Enter the Last Name as on the passport")
+                        f"Enter the Last Name as on the passport.")
 
             # Contact TelNo/Email Validation
             phone_number = (form.cleaned_data.get("contact_number", "")
@@ -243,14 +243,14 @@ class BasePaxFormSet(BaseFormSet):
                         f"Adult {count} is the Principal Passenger."
                         "Therefore, the Contact Details are "
                         "mandatory for this Passenger.\n"
-                        "Please enter passenger's phone number or email")
+                        "Please enter passenger's phone number or email.")
                 else:
                     continue
 
             if phone_number and not re.search("[0-9]{6,}", phone_number):
                 raise forms.ValidationError(
                         f"Adult {count} - Contact number. "
-                        f"Enter a phone number of at least 6 digits")
+                        f"Enter a phone number of at least 6 digits.")
 
             # This solution found at https://stackoverflow.com/questions/3217682/how-to-validate-an-email-address-in-django
             if email:
@@ -259,7 +259,7 @@ class BasePaxFormSet(BaseFormSet):
                 except ValidationError as e:
                     raise forms.ValidationError(
                                f"Adult {count} - Email. "
-                               "Please enter a valid email address")
+                               "Please enter a valid email address.")
 
 
 class HiddenForm(forms.Form):
@@ -279,23 +279,23 @@ class AdultsForm(forms.Form):
     title = forms.CharField(max_length=4,
                             widget=forms.Select(choices=Common.TITLE_CHOICES),
                             initial="MR",)
-    first_name = forms.CharField(max_length=40, required=True)
-    last_name = forms.CharField(max_length=40, required=True)
-    contact_number = forms.CharField(max_length=40)
-    contact_email = forms.CharField(max_length=40)
-    wheelchair_ssr = forms.CharField(max_length=1)
-    wheelchair_type = forms.CharField(max_length=1)
+    first_name = forms.CharField(max_length=40, required=False)
+    last_name = forms.CharField(max_length=40, required=False)
+    contact_number = forms.CharField(max_length=40, required=False)
+    contact_email = forms.CharField(max_length=40, required=False)
+    wheelchair_ssr = forms.CharField(max_length=1, required=False)
+    wheelchair_type = forms.CharField(max_length=1, required=False)
 
-    # VALIDATION
+    # VALIDATION  TODO REMOVE
 
-    def clean_first_name(self):
+    def clean_first_name1(self):
         """ First Name Validation """
         first_name = self.cleaned_data.get("first_name").strip()
         print("FN", first_name)
         if not first_name:
             raise forms.ValidationError(
                         "Passenger Name required. "
-                        "Enter the first name as on the passport")
+                        "Enter the first name as on the passport.")
 
         return first_name
 
@@ -306,7 +306,7 @@ class AdultsForm(forms.Form):
         if not last_name:
             raise forms.ValidationError(
                         "Passenger Name required. "
-                        "Enter the last name as on the passport")
+                        "Enter the last name as on the passport.")
 
         return last_name
 
@@ -317,15 +317,15 @@ class AdultsForm(forms.Form):
         ### print(self)  TODO
         # print("TESTING adult-TOTAL_FORMS", self['adult-TOTAL_FORMS'])
         # return cleaned_data
-        if 'first_name' not in cleaned_data:
+        if False and 'first_name' not in cleaned_data:
             print("SEE")
             raise forms.ValidationError(
                         "Passenger Name required. "
-                        "Enter the first name as on the passport")
-        if 'last_name' not in cleaned_data:
+                        "Enter the first name as on the passport.")
+        if False and 'last_name' not in cleaned_data:
             raise forms.ValidationError(
                         "Passenger Name required. "
-                        "Enter the last name as on the passport")
+                        "Enter the last name as on the passport.")
         return cleaned_data
 #       cleaned_data = super(BasePaxFormSet, self).clean()
 #       print("CD", cleaned_data)
@@ -342,7 +342,7 @@ class AdultsForm(forms.Form):
         if not first_name:
             raise forms.ValidationError(
                         "Passenger Name required. "
-                        "Enter the first last name as on the passport")
+                        "Enter the first last name as on the passport.")
 
         return first_name
 
