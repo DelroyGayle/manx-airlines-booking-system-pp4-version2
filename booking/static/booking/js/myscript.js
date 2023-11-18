@@ -1,8 +1,8 @@
 // Hide/Show elements depending on '#theReturn'
 
 function hide_returning_option() {
-    $("span:contains('DD/');:nth-of-type(2);").hide();
-    $("label:contains('Returning');:nth-of-type(2);").hide();
+    $("span:contains('DD/'):nth-of-type(2)").hide();
+    $("label:contains('Returning'):nth-of-type(2)").hide();
     $('label[for="id_returning_date"]').hide();
     $("#id_returning_date").hide();
     $('label[for="id_returning_time_0"]').hide();
@@ -10,8 +10,8 @@ function hide_returning_option() {
 }
 
 function show_returning_option() {
-    $("span:contains('DD/');:nth-of-type(2);").show();
-    $("label:contains('Returning');:nth-of-type(2);").show();
+    $("span:contains('DD/'):nth-of-type(2)").show();
+    $("label:contains('Returning'):nth-of-type(2)").show();
     $('label[for="id_returning_date"]').show();
     $("#id_returning_date").show();
     $('label[for="id_returning_time_0"]').show();
