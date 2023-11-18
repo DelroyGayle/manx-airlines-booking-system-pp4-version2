@@ -117,7 +117,7 @@ def adults_formset_validated(cleaned_data, request):
             errors_found = True
             accum_dict = append_to_dict(accum_dict, "last_name",
                                         LASTNAME_BLANK)
-        elif not re.search("^[A-Z][A-Za-z'-]*[A-Z]$",
+        elif not re.search("^[A-Z]$|^[A-Z][A-Za-z'-]*[A-Z]$",
                            temp_field, re.IGNORECASE):
             errors_found = True
             accum_dict = append_to_dict(accum_dict, "last_name", BAD_NAME)
@@ -181,14 +181,19 @@ def is_formset_valid(request, adults_formset,
     #     return False
 
     # TODO
-    print("A1",adults_formset.is_valid())
+    print("A1", adults_formset.data)
+    if adults_formset.is_valid():
+        pass
+    else:
+        print("ERRORS", adults_formset.errors)
+    
     if children_included:
         children_formset.is_valid()
 
 # TODO INF
 
     # TODO
-    print(adults_formset)
+    # print(adults_formset)
     print("CLEANDATA>>2", adults_formset.cleaned_data)
     cleaned_data = adults_formset.cleaned_data
 

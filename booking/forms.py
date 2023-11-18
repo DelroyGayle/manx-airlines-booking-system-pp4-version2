@@ -208,10 +208,10 @@ class AdultsForm(forms.Form):
     last_name = forms.CharField(max_length=40, required=False)
     contact_number = forms.CharField(max_length=40, required=False)
     contact_email = forms.CharField(max_length=40, required=False)
-    wheelchair_ssr = forms.CharField(max_length=1,
+    wheelchair_ssr = forms.CharField(max_length=1,  required=False,
                                      widget=forms.Select(choices=PRM_CHOICES),
                                      initial="")
-    wheelchair_type = forms.CharField(max_length=1,
+    wheelchair_type = forms.CharField(max_length=1, required=False,
                                       widget=forms.Select(choices=WCH_CHOICES),
                                       initial="")
 
@@ -233,6 +233,7 @@ class AdultsForm(forms.Form):
             raise forms.ValidationError(
                         "Passenger Name required. "
                         "Enter the last name as on the passport.")
+        print("RETURNED", cleaned_data)  # TODO
         return cleaned_data
 
 

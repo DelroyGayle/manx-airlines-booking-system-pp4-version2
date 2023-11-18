@@ -67,3 +67,7 @@ ul.errorlist {display:none;}
 #id_return_option {
     width: 60%;
 }
+
+.ui.form input[type=text] {
+    text-transform: uppercase;
+}
