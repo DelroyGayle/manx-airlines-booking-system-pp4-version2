@@ -7,20 +7,6 @@ from django.core.validators import validate_email
 import datetime
 import re
 
-TITLE_CHOICES = [
-        ("DR", "DOCTOR"),
-        ("LADY", "LADY"),
-        ("LORD", "LORD"),
-        ("MSTR", "MASTER"),
-        ("MISS", "MISS"),
-        ("MR", "MR"),
-        ("MRS", "MRS"),
-        ("MS", "MS"),
-        ("PROF", "PROFESSOR"),
-        ("SIR", "SIR"),
-        ("SIS", "SISTER"),
-    ]
-
 class BookingForm(forms.ModelForm):
 
     class Meta:
@@ -288,16 +274,51 @@ class HiddenForm(forms.Form):
     infants = forms.IntegerField(widget=forms.HiddenInput())
 
 
+TITLE_CHOICES = [
+        ("DR", "DOCTOR"),
+        ("LADY", "LADY"),
+        ("LORD", "LORD"),
+        ("MSTR", "MASTER"),
+        ("MISS", "MISS"),
+        ("MR", "MR"),
+        ("MRS", "MRS"),
+        ("MS", "MS"),
+        ("PROF", "PROFESSOR"),
+        ("SIR", "SIR"),
+        ("SIS", "SISTER"),
+    ]
+
+
+PRM_CHOICES = ( 
+    ("", "No"), 
+    ("R", "WCHR"), 
+    ("S", "WCHS"), 
+    ("C", "WCHC"),
+)
+
+WCH_CHOICES = ( 
+    ("", "None"), 
+    ("M", "WCMP"), 
+    ("L", "WCLB"), 
+    ("D", "WCBD"),
+    ("W", "WCBW"),
+)
+
 class AdultsForm(forms.Form):
     title = forms.CharField(max_length=4,
                             widget=forms.Select(choices=TITLE_CHOICES),
-                            initial="MR",)
+                            initial="MR")
     first_name = forms.CharField(max_length=40, required=False)
     last_name = forms.CharField(max_length=40, required=False)
     contact_number = forms.CharField(max_length=40, required=False)
     contact_email = forms.CharField(max_length=40, required=False)
-    wheelchair_ssr = forms.CharField(max_length=1, required=False)
-    wheelchair_type = forms.CharField(max_length=1, required=False)
+    wheelchair_ssr = forms.CharField(max_length=1,
+                                     widget=forms.Select(choices=PRM_CHOICES),
+                                     initial="")
+    wheelchair_type = forms.CharField(max_length=1,
+                                     widget=forms.Select(choices=WCH_CHOICES),
+                                     initial="")
+
 
     # VALIDATION  TODO REMOVE
 
