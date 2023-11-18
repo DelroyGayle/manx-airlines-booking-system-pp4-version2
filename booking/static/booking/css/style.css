@@ -62,6 +62,10 @@ ul.errorlist {display:none;}
     .ui.form select {
         width: 45%;
     } 
+
+    #id_departing_time, #id_returning_time {
+        font-size: 90%;
+    }
 }
 
 #id_return_option {

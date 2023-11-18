@@ -236,6 +236,45 @@ def homepage(request):
     return render(request, "booking/index.html")
 
 
+def message_error(message_string, request):
+    messages.add_message(request, messages.ERROR, message_string)
+
+
+def is_booking_form_valid(form, request):
+    if not form.is_valid():
+        print("CONTEXT/error", context)
+        for field in form.errors:
+            for item in form.errors[field]:
+                    message_string = Common.format_error(f"{field} - {item}")
+                    message_error(message_string, request)
+        return False
+
+    print("CLEANED", form.cleaned_data)
+    print(100, form.cleaned_data["adults"])
+    # print("TEST", test()) TODO
+
+    # FURTHER VALIDATION NEEDED
+    # Check Dates and Flight Availability
+    cleaned_data = form.cleaned_data
+    if (cleaned_data["return_option"] == "Y" and 
+        cleaned_data["returning_date"] == cleaned_data["departing_date"]):
+        # Same Day Travel - Is there enough time between journey times?
+            departPos = Common.OUTBOUND_TIME_OPTIONS1.index(cleaned_data["departing_time"])
+            returnPos = Common.INBOUND_TIME_OPTIONS1.index(cleaned_data["returning_time"])
+            if departPos > returnPos:
+                message_error("The time of the return flight cannot be in the past.",
+                              request)
+                return False
+
+            if departPos == returnPos:
+                message_error("The interval between flights cannot be "
+                              "less than 90 minutes.", request)
+                return False
+
+    # The Form's contents had passed all validation checks!
+    return True
+
+
 # TODO
 def create_booking_form(request):
 
@@ -246,13 +285,9 @@ def create_booking_form(request):
 
     if request.method == "POST":
         #  create a form instance and populate it with data from the request:
-        # check whether it"s valid:
+        # check whether it is valid:
         # TODO
-        if form.is_valid():
-            # TODO "form"
-            print("CLEANED", form.cleaned_data)
-            print(100, form.cleaned_data["adults"])
-            # print("TEST", test()) TODO
+        if is_booking_form_valid(form, request):
             context = {"booking": form.cleaned_data, "form": form.cleaned_data,
                        # TODO HAVE IT TWICE?
                        "booking_cleaned_data": form.cleaned_data,
@@ -286,14 +321,9 @@ def create_booking_form(request):
             # CREATE MESSAGE TODO
 
         else:
+            # Form had failed validation
             # TODO
-            print("CONTEXT/error", context)
-            for field in form.errors:
-                for item in form.errors[field]:
-                    message_string = Common.format_error(f"{field} - {item}")
-                    messages.add_message(request, messages.ERROR,
-                                         message_string)
-            # RERENDER
+            # RE-RENDER
             form = CreateBookingForm(request.POST)
 
     context = {"form": form}
