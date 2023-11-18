@@ -3,6 +3,7 @@
 from .models import Flight
 from django.shortcuts import get_list_or_404
 
+
 class Common:
     """I use this class as the repository of global variables, settings
     and methods needed throughout this App.
@@ -115,5 +116,5 @@ class Common:
 
     def format_error(text):
         """ Convert any underscores to spaces and capitalise the text. """
-        text = text.replace("_", " ").replace("ssr","SSR",1)
+        text = text.replace("_", " ").replace("ssr", "SSR", 1)
         return f"{text[0].capitalize()}{text[1:]}"

@@ -7,6 +7,7 @@ from django.core.validators import validate_email
 import datetime
 import re
 
+
 class BookingForm(forms.ModelForm):
 
     class Meta:
@@ -155,112 +156,6 @@ class CreateBookingForm(forms.Form):
     infants = forms.IntegerField(initial=0, min_value=0, max_value=20)
 
 
-class PassengerDetailsForm(forms.Form):  # TODO
-    pass
-
-
-# TODO
-class PaxForm(forms.Form):
-    pass
-
-
-class BasePaxFormSet(BaseFormSet):
-    #  TODO
-    # def add_fields(self, form, index):
-    #     super().add_fields(form, index)
-    #     form.fields["body"] = forms.CharField()
-
-
-    def clean(self):
-        print(type(self))
-        #print("CLEANEDbase", self.cleaned_data)
-        print("SE", self.errors)
-        print("SF", self.forms)
-        #cleaned_data = self.cleaned_data
-        if any(self.errors):
-            # Errors found - proceed no further
-            return
-        theforms = self.forms
-        if not theforms[0].has_changed():
-            raise forms.ValidationError("bb Please enter the details regarding "
-                                        "the passengers for this booking.")
-        # if not any(self.cleaned_data):
-        #     # Errors found - proceed no further
-        #     return
-        print("OKKK")
-        return
-
-    def clean1(self):
-        """
-        Validation of the Adult, Children and Infants Formsets
-        These formsets represent the Passenger Details Form
-        """
-
-        if any(self.errors):
-            # Errors found - proceed no further
-            return
-        print(2000, self.forms)
-        theforms = self.forms
-        if not theforms or not theforms[0].has_changed():
-            raise forms.ValidationError("xxPlease enter the details regarding "
-                                        "the passengers for this booking.")
-        count = 0
-        for form in theforms:
-            count += 1
-            print("FORM>", count, form)
-            print(form.cleaned_data, "CLEAN")
-
-            # First Name Validation
-            first_name = (form.cleaned_data.get("first_name", "")
-                              .strip().upper()) #  TODO
-            # print("FN", first_name)
-            if not first_name:
-                raise forms.ValidationError(
-                        f"Adult {count} - Passenger Name required. "
-                        f"Enter the First Name as on the passport.")
-
-            # Last Name Validation
-            last_name = (form.cleaned_data.get("last_name", "")
-                              .strip().upper())
-            # print("FN", first_name)
-            if not last_name:
-                raise forms.ValidationError(
-                        f"Adult {count} - Passenger Name required. "
-                        f"Enter the Last Name as on the passport.")
-
-            # Contact TelNo/Email Validation
-            phone_number = (form.cleaned_data.get("contact_number", "")
-                                .strip())
-            # TODO RE strip()
-            phone_number = (form.cleaned_data.get("contact_number", "")
-                                .replace(" ", ""))
-            email = (form.cleaned_data.get("contact_email", "").strip())
-
-            if not phone_number and not email:
-                if count == 1:
-                    raise forms.ValidationError(
-                        f"Adult {count} is the Principal Passenger."
-                        "Therefore, the Contact Details are "
-                        "mandatory for this Passenger.\n"
-                        "Please enter passenger's phone number or email.")
-                else:
-                    continue
-
-            if phone_number and not re.search("[0-9]{6,}", phone_number):
-                raise forms.ValidationError(
-                        f"Adult {count} - Contact number. "
-                        f"Enter a phone number of at least 6 digits.")
-
-            # This solution found at https://stackoverflow.com/questions/3217682/how-to-validate-an-email-address-in-django
-            if email:
-                try:
-                    validate_email(email)
-                except ValidationError as e:
-                    raise forms.ValidationError(
-                               f"Adult {count} - Email. "
-                               "Please enter a valid email address.")
-
-
 class HiddenForm(forms.Form):
     return_option = forms.CharField(max_length=1, widget=forms.HiddenInput())
     departing_date = forms.DateField(input_formats=["%d/%m/%Y"],
@@ -289,20 +184,21 @@ TITLE_CHOICES = [
     ]
 
 
-PRM_CHOICES = ( 
-    ("", "No"), 
-    ("R", "WCHR"), 
-    ("S", "WCHS"), 
+PRM_CHOICES = (
+    ("", "No"),
+    ("R", "WCHR"),
+    ("S", "WCHS"),
     ("C", "WCHC"),
 )
 
-WCH_CHOICES = ( 
-    ("", "None"), 
-    ("M", "WCMP"), 
-    ("L", "WCLB"), 
+WCH_CHOICES = (
+    ("", "None"),
+    ("M", "WCMP"),
+    ("L", "WCLB"),
     ("D", "WCBD"),
     ("W", "WCBW"),
 )
+
 
 class AdultsForm(forms.Form):
     title = forms.CharField(max_length=4,
@@ -316,39 +212,16 @@ class AdultsForm(forms.Form):
                                      widget=forms.Select(choices=PRM_CHOICES),
                                      initial="")
     wheelchair_type = forms.CharField(max_length=1,
-                                     widget=forms.Select(choices=WCH_CHOICES),
-                                     initial="")
-
+                                      widget=forms.Select(choices=WCH_CHOICES),
+                                      initial="")
 
     # VALIDATION  TODO REMOVE
-
-    def clean_first_name1(self):
-        """ First Name Validation """
-        first_name = self.cleaned_data.get("first_name").strip()
-        print("FN", first_name)
-        if not first_name:
-            raise forms.ValidationError(
-                        "Passenger Name required. "
-                        "Enter the first name as on the passport.")
-
-        return first_name
-
-    def clean_last_name1(self):
-        """ Last Name Validation """
-        last_name = self.cleaned_data.get("last_name").strip()
-        print("FN2", last_name, self.cleaned_data)
-        if not last_name:
-            raise forms.ValidationError(
-                        "Passenger Name required. "
-                        "Enter the last name as on the passport.")
-
-        return last_name
 
     def clean(self):
         print(type(self))
         print("CLEANEDxxx", self.cleaned_data)
         cleaned_data = self.cleaned_data
-        ### print(self)  TODO
+        # ## print(self)  TODO
         # print("TESTING adult-TOTAL_FORMS", self['adult-TOTAL_FORMS'])
         # return cleaned_data
         if False and 'first_name' not in cleaned_data:
@@ -361,24 +234,6 @@ class AdultsForm(forms.Form):
                         "Passenger Name required. "
                         "Enter the last name as on the passport.")
         return cleaned_data
-#       cleaned_data = super(BasePaxFormSet, self).clean()
-#       print("CD", cleaned_data)
-#       return cleaned_data
-        """ First Name Validation """
-        print(1000, type(self))
-        print(self)
-        for form in self.forms:
-            print("FORM>", form)
-        print(self.errors)
-        return
-        first_name = self.cleaned_data.get("first_name").strip()
-        print("FN2XX", first_name)
-        if not first_name:
-            raise forms.ValidationError(
-                        "Passenger Name required. "
-                        "Enter the first last name as on the passport.")
-
-        return first_name
 
 
 # For Children and Infants
@@ -394,26 +249,3 @@ class MinorsForm(forms.Form):
                                     attrs=dict(type="date")))
     wheelchair_ssr = forms.CharField(max_length=1)
     wheelchair_type = forms.CharField(max_length=1)
-
-
-class AdultsFormSet(BaseFormSet):
-    def clean(self):
-        """
-        Adds validation to check that no two links have the same anchor or URL
-        and that all links have both an anchor and URL.
-        """
-        print(9999)
-        if any(self.errors):
-            return
-        print(1000)
-
-class AdultsFormFormSet(BaseFormSet):
-    def clean(self):
-        """
-        Adds validation to check that no two links have the same anchor or URL
-        and that all links have both an anchor and URL.
-        """
-        print(9999)
-        if any(self.errors):
-            return
-        print(1000)
