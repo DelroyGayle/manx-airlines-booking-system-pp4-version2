@@ -32,8 +32,11 @@ class CreateBookingForm(forms.Form):
 
         the_choices = list(zip(Common.INBOUND_TIME_OPTIONS1,
                                Common.INBOUND_TIME_OPTIONS2))
+    # Common.INBOUND_TIME_OPTIONS1[0] would be an interval 
+    # of less than 90 minutes. Therefore use the next available slot
+    # i.e. Common.INBOUND_TIME_OPTIONS1[1]
         self.fields["returning_time"] = forms.ChoiceField(
-                    initial=Common.INBOUND_TIME_OPTIONS1[0],
+                    initial=Common.INBOUND_TIME_OPTIONS1[1],
                     choices=the_choices, widget=forms.RadioSelect)
 
     def as_p(self):
@@ -250,3 +253,14 @@ class MinorsForm(forms.Form):
                                     attrs=dict(type="date")))
     wheelchair_ssr = forms.CharField(max_length=1)
     wheelchair_type = forms.CharField(max_length=1)
+
+
+"""This class is used for the entry of the number of bags
+Remarks regarding the Booking
+"""
+class BagRemarks(forms.Form):
+    bags = forms.IntegerField(required=False, initial=0,
+                             min_value=0, max_value=20)
+    remarks = forms.CharField(required=False,
+                              widget=forms.Textarea(
+                                attrs={ "rows": "4" }))

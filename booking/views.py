@@ -13,6 +13,7 @@ from .models import Flight
 from .forms import BookingForm, CreateBookingForm
 from .forms import AdultsForm, MinorsForm
 from .forms import HiddenForm
+from .forms import BagRemarks
 from .common import Common
 # TODO
 # from .constants import FIRSTNAME_BLANK
@@ -309,9 +310,11 @@ def create_booking_form(request):
             # hiddenForm.adults = 10  # TODO
             print(hiddenForm)  # TODO
             # print(form.cleaned_data) TODO
+            bag_remarks_form = BagRemarks(prefix="bagrem")
             context["adults_formset"] = adults_formset
             context["children_formset"] = children_formset
             context["hidden_form"] = hiddenForm
+            context["bag_remarks_form"] = bag_remarks_form
 
             print("CONTEXT", context)
             Common.save_context = context
@@ -346,6 +349,7 @@ def passenger_details_form(request):
     print("TYPE 2", type(adults_formset))
     # children_formset = ChildrenFormSet(request.POST or None, prefix="child")
     children_formset = []  # TODO
+    bag_remarks_form = BagRemarks(request.POST or None, prefix="bagrem")
     print(request.method, "CONTEXT FETCH", request.POST)
     if request.method != "POST":
         context = {}
@@ -358,6 +362,10 @@ def passenger_details_form(request):
     # print(adults_formset.is_valid(), children_formset.is_valid(), "WELL?")
 
         children_included = None  # TODO
+        print("BAGS", bag_remarks_form)
+        if bag_remarks_form.is_valid:
+            print("YES")
+            print(bag_remarks_form.cleaned_data)
         if is_formset_valid(request,
                             adults_formset,
                             children_included,
@@ -387,10 +395,10 @@ def passenger_details_form(request):
             # print("D", children_formset.errors,
             #       children_formset.non_form_errors())  # TODO
             # fetch_all_errors = children_formset.non_form_errors()
-            for each_error in fetch_all_errors:
-                print("ERR", each_error)
-                messages.add_message(request, messages.ERROR,
-                                     each_error)
+            # for each_error in fetch_all_errors:
+            #     print("ERR", each_error)
+            #     messages.add_message(request, messages.ERROR,
+            #                          each_error)
             adults_formset = AdultsFormSet(request.POST or None,
                                            prefix="adult")
             # children_formset = ChildrenFormSet(request.POST or None,
@@ -398,6 +406,7 @@ def passenger_details_form(request):
             context = {}
             context["adults_formset"] = adults_formset
             context["children_formset"] = children_formset
+            context["bag_remarks_form"] = bag_remarks_form
             print(type(Common.save_context))
             print("TT", Common.save_context)
             context["hidden_form"] = Common.save_context["hidden_form"]
@@ -415,6 +424,7 @@ def passenger_details_form(request):
         # children_formset = ChildrenFormSet(request.POST or None,
         #                                        prefix="child")
         children_formset = []
+        bagrem_form = BagRemarks(prefix="bagrem")
 
         # TODO
         pass
