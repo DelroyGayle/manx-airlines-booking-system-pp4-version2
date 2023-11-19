@@ -11,7 +11,7 @@ from django.core.validators import validate_email
 from .models import Booking, Passenger
 from .models import Flight
 from .forms import BookingForm, CreateBookingForm
-from .forms import AdultsForm, ChildForm
+from .forms import AdultsForm, MinorsForm
 from .forms import HiddenForm
 from .forms import BagRemarks
 from .common import Common
@@ -84,6 +84,35 @@ def append_to_dict(dict, key, item):
     return dict
 
 
+def name_validation(fields_dict, accum_dict, errors_found):
+    """ Handle the Formsets' Validation of First and Last Names """
+# def adults_formset_validated(cleaned_data, request):
+
+    # First Name Validation
+    temp_field = fields_dict.get("first_name", "").replace(" ", "")
+    if temp_field == "":
+        errors_found = True
+        accum_dict = append_to_dict(accum_dict, "first_name",
+                                    FIRSTNAME_BLANK)
+    elif not re.search("^[A-Z]$|^[A-Z][A-Za-z'-]*[A-Z]$",
+                       temp_field, re.IGNORECASE):
+        errors_found = True
+        accum_dict = append_to_dict(accum_dict, "first_name", BAD_NAME)
+
+    # Last Name Validation
+    temp_field = fields_dict.get("last_name", "").replace(" ", "")
+    if temp_field == "":
+        errors_found = True
+        accum_dict = append_to_dict(accum_dict, "last_name",
+                                    LASTNAME_BLANK)
+    elif not re.search("^[A-Z]$|^[A-Z][A-Za-z'-]*[A-Z]$",
+                       temp_field, re.IGNORECASE):
+        errors_found = True
+        accum_dict = append_to_dict(accum_dict, "last_name", BAD_NAME)
+
+    return (accum_dict, errors_found)
+
+
 def adults_formset_validated(cleaned_data, request):
     """ Carry out Custom Validation of the Adults Formset """
     formset_errors = []  # Hopefully this will remain empty
@@ -101,27 +130,7 @@ def adults_formset_validated(cleaned_data, request):
             formset_errors.append(accum_dict)
             continue
 
-        # First Name Validation
-        temp_field = fields_dict.get("first_name", "").replace(" ", "")
-        if temp_field == "":
-            errors_found = True
-            accum_dict = append_to_dict(accum_dict, "first_name",
-                                        FIRSTNAME_BLANK)
-        elif not re.search("^[A-Z]$|^[A-Z][A-Za-z'-]*[A-Z]$",
-                           temp_field, re.IGNORECASE):
-            errors_found = True
-            accum_dict = append_to_dict(accum_dict, "first_name", BAD_NAME)
-
-        # Last Name Validation
-        temp_field = fields_dict.get("last_name", "").replace(" ", "")
-        if temp_field == "":
-            errors_found = True
-            accum_dict = append_to_dict(accum_dict, "last_name",
-                                        LASTNAME_BLANK)
-        elif not re.search("^[A-Z]$|^[A-Z][A-Za-z'-]*[A-Z]$",
-                           temp_field, re.IGNORECASE):
-            errors_found = True
-            accum_dict = append_to_dict(accum_dict, "last_name", BAD_NAME)
+        accum_dict, errors_found = name_validation(fields_dict, accum_dict, errors_found)
 
         # Contact Number/Email Validation can be null except for Adult 1
         telephone = fields_dict.get("contact_number", "").replace(" ", "")
@@ -134,7 +143,7 @@ def adults_formset_validated(cleaned_data, request):
                                         "contact_number", CONTACTS_BLANK)
 
         if not both_blank:
-            if telephone != "" and not re.search("[0-9]{6,}", telephone):
+            if telephone != "" and not re.search("^[0-9]{6,}$", telephone):
                 errors_found = True
                 accum_dict = append_to_dict(accum_dict,
                                             "contact_number", BAD_TELNO)
@@ -152,19 +161,29 @@ def adults_formset_validated(cleaned_data, request):
                                                 "contact_email", BAD_EMAIL)
 
         formset_errors.append(accum_dict)
-        print("ACC", accum_dict, formset_errors)  # TODO
+        print("ACC/ADULT", accum_dict, formset_errors)  # TODO
 
     if errors_found:
         # Send as a 'message' the errors that were found
-        print("OKAY", formset_errors)  # TODO
+        print("ADULT ERRORS FOUND", formset_errors)  # TODO
         display_formset_errors(request, "Adult", formset_errors)
         return False
 
     return True
 
 
-def is_formset_valid(request, adults_formset,
-                     children_included, children_formset):
+def all_formsets_valid(request, adults_formset,
+                       children_included, children_formset):
+    """Carry out validation on up to three formsets
+    1) Adults
+    2) Children
+    3) Infants
+
+    They differ slightly:
+    Adults have contact telephone/email
+    Children/Infants have the Date of Birth - no contact details
+    """
+
     formset = adults_formset
     errors_found = False
     print("INB", adults_formset.is_bound, adults_formset.has_changed())  # TODO
@@ -300,7 +319,7 @@ def create_booking_form(request):
             adults_formset = AdultsFormSet(prefix="adult")
             # for form in adults_formset:
             #      print(form.as_p()) # TODO
-            # ChildrenFormSet = formset_factory(ChildForm, extra=2)
+            # ChildrenFormSet = formset_factory(MinorsForm, extra=2)
             # children_formset = ChildrenFormSet(prefix="child")
             children_formset = []  # TODO
             # for form in children_formset:
@@ -342,7 +361,7 @@ def passenger_details_form(request):
 
     AdultsFormSet = formset_factory(AdultsForm, extra=0)
     # TODO
-    # ChildrenFormSet = formset_factory(ChildForm, extra=2)
+    # ChildrenFormSet = formset_factory(MinorsForm, extra=2)
     #                                 # formset=BasePaxFormSet)
     print("TYPE 1", type(AdultsFormSet))
     adults_formset = AdultsFormSet(request.POST or None, prefix="adult")
@@ -366,10 +385,10 @@ def passenger_details_form(request):
         if bag_remarks_form.is_valid:
             print("YES")
             print(bag_remarks_form.cleaned_data)
-        if is_formset_valid(request,
-                            adults_formset,
-                            children_included,
-                            children_formset):
+        if all_formsets_valid(request,
+                              adults_formset,
+                              children_included,
+                              children_formset):
             print("CLEAN A1", adults_formset.non_form_errors())  # TODO
             print(adults_formset.total_error_count(),
                   adults_formset.has_changed())

@@ -241,8 +241,8 @@ class AdultsForm(forms.Form):
         return cleaned_data
 
 
-# For Children
-class ChildForm(forms.Form):
+# For Children and Infants
+class MinorsForm(forms.Form):
     title = forms.CharField(max_length=4,
                             widget=forms.Select(choices=TITLE_CHOICES),
                             initial="MR",)
@@ -259,7 +259,6 @@ class ChildForm(forms.Form):
     wheelchair_type = forms.CharField(max_length=1, required=False,
                                       widget=forms.Select(choices=WCH_CHOICES),
                                       initial="")
-
 
 """This class is used for the entry of the number of bags
 Remarks regarding the Booking
