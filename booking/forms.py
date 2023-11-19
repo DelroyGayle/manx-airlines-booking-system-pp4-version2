@@ -174,6 +174,7 @@ class HiddenForm(forms.Form):
 
 TITLE_CHOICES = [
         ("DR", "DOCTOR"),
+        ("INF", "INFANT"),
         ("LADY", "LADY"),
         ("LORD", "LORD"),
         ("MSTR", "MASTER"),
@@ -240,19 +241,24 @@ class AdultsForm(forms.Form):
         return cleaned_data
 
 
-# For Children and Infants
-class MinorsForm(forms.Form):
+# For Children
+class ChildForm(forms.Form):
     title = forms.CharField(max_length=4,
                             widget=forms.Select(choices=TITLE_CHOICES),
                             initial="MR",)
-    first_name = forms.CharField(max_length=40, required=True)
-    last_name = forms.CharField(max_length=40, required=True)
-    date_of_birth = forms.DateField(initial=datetime.date.today(),
+    first_name = forms.CharField(max_length=40, required=False)
+    last_name = forms.CharField(max_length=40, required=False)
+    date_of_birth = forms.DateField(required=False,
+                                    initial=datetime.date.today(),
                                     help_text="Format: DD/MM/YYYY",
                                     widget=forms.DateInput(
                                     attrs=dict(type="date")))
-    wheelchair_ssr = forms.CharField(max_length=1)
-    wheelchair_type = forms.CharField(max_length=1)
+    wheelchair_ssr = forms.CharField(max_length=1,  required=False,
+                                     widget=forms.Select(choices=PRM_CHOICES),
+                                     initial="")
+    wheelchair_type = forms.CharField(max_length=1, required=False,
+                                      widget=forms.Select(choices=WCH_CHOICES),
+                                      initial="")
 
 
 """This class is used for the entry of the number of bags

@@ -11,7 +11,7 @@ from django.core.validators import validate_email
 from .models import Booking, Passenger
 from .models import Flight
 from .forms import BookingForm, CreateBookingForm
-from .forms import AdultsForm, MinorsForm
+from .forms import AdultsForm, ChildForm
 from .forms import HiddenForm
 from .forms import BagRemarks
 from .common import Common
@@ -300,7 +300,7 @@ def create_booking_form(request):
             adults_formset = AdultsFormSet(prefix="adult")
             # for form in adults_formset:
             #      print(form.as_p()) # TODO
-            # ChildrenFormSet = formset_factory(MinorsForm, extra=2)
+            # ChildrenFormSet = formset_factory(ChildForm, extra=2)
             # children_formset = ChildrenFormSet(prefix="child")
             children_formset = []  # TODO
             # for form in children_formset:
@@ -340,9 +340,9 @@ def passenger_details_form(request):
     # form = CreateBookingForm()  # TODO
     # context = {'form': form}
 
-    AdultsFormSet = formset_factory(AdultsForm, extra=2)
+    AdultsFormSet = formset_factory(AdultsForm, extra=0)
     # TODO
-    # ChildrenFormSet = formset_factory(MinorsForm, extra=2)
+    # ChildrenFormSet = formset_factory(ChildForm, extra=2)
     #                                 # formset=BasePaxFormSet)
     print("TYPE 1", type(AdultsFormSet))
     adults_formset = AdultsFormSet(request.POST or None, prefix="adult")

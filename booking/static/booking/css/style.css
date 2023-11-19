@@ -58,20 +58,29 @@ ul.errorlist {display:none;}
     width: 25%;
 }
 
-@media only screen and (max-width: 640px) {
-    .ui.form select {
-        width: 45%;
-    } 
-
-    #id_departing_time, #id_returning_time {
-        font-size: 90%;
-    }
-}
-
 #id_return_option {
     width: 60%;
 }
 
-.ui.form input[type=text] {
+.ui.form input[type=text],
+textarea {
     text-transform: uppercase;
+}
+
+/* MOBILE HANDLING */
+
+@media only screen and (max-width: 640px) {
+    .ui.form select {
+        width: 45%;
+    } 
+}
+
+@media only screen and (max-width: 500px) {
+    .ui.form select {
+        width: 45%;
+    } 
+
+    h2 {
+        font-size: 1.2rem;
+    }
 }
