@@ -19,10 +19,18 @@
             {{ children_formset.management_form }}
         {% endif %}
         
+        {% if infants_formset %}
+            {{ infants_formset.management_form }}
+        {% endif %}
+
         {{ adults_formset.as_p }}
         
         {% if children_formset %}
             {{ children_formset.as_p }}
+        {% endif %}
+        
+        {% if infants_formset %}
+            {{ infants_formset.as_p }}
         {% endif %}
 
         <h2 class="ui centered header">Number of Bags and Booking Remarks</h2>
