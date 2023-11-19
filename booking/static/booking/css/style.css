@@ -84,3 +84,17 @@ textarea {
         font-size: 1.2rem;
     }
 }
+
+@media only screen and (max-width: 500px) {
+    ul #id_departing_time,
+    ul #id_returning_time {
+        font-size: 83%;
+    } 
+}
+
+@media only screen and (max-width: 360px) {
+    ul #id_departing_time,
+    ul #id_returning_time {
+        font-size: 77%;
+    } 
+}
