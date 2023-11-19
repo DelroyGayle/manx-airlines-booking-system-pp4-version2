@@ -21,6 +21,7 @@ from .common import Common
 # from datetime import date  # TODO
 # KEEP THIS - TODO
 from datetime import datetime, date
+from dateutil.relativedelta import relativedelta
 # import constants
 import random  # TODO
 import re
@@ -43,6 +44,9 @@ CONTACTS_BLANK = ("Adult 1 is the Principal Passenger. "
 BAD_TELNO = "Enter a phone number of at least six digits."
 BAD_EMAIL = "Enter a valid email address."
 BAD_DATE = "Enter a valid date of birth."
+FUTURE_DATE = "Your date of birth must be in the past."
+TOO_YOUNG = ("Newly born infants younger than 14 days "
+            " on the {0} will not be accepted for travel.")
 
 
 def display_formset_errors(request, prefix, errors_list):
@@ -175,11 +179,96 @@ def adults_formset_validated(cleaned_data, request):
     return True
 
 
+def date_validation_part2(accum_dict, errors_found,
+                          date_of_birth, is_infant):
+    """ Handles the date validation for children and infants """
+
+    todays_date = datetime.now().date()
+    # datediff = date_of_birth - todays_date ## CHECK datetime.date.today()
+    
+    departing_date = Common.save_context["booking"]["departing_date"]
+    output_departing_date = departing_date.strftime("%d/%m/%Y")
+    print("DEPARTS", departing_date, output_departing_date)
+    datediff = date_of_birth - todays_date
+    days = datediff.days
+    print("DAYS/A", days)
+
+    # days > 0 caters for hours/minutes/seconds!
+    if date_of_birth > todays_date and days > 0:
+        errors_found = True
+        accum_dict = append_to_dict(accum_dict,
+                                    "date_of_birth", FUTURE_DATE)
+        return (accum_dict, errors_found)
+    
+    # if date_of_birth > todays_date then that means
+    # days == 0 i.e. identical to Today's Date
+    if days == 0:
+        errors_found = True
+        accum_dict = append_to_dict(accum_dict,
+                                    "date_of_birth", BAD_DATE)
+        return (accum_dict, errors_found)
+    
+    datediff = departing_date - date_of_birth
+    days = datediff.days
+    print("DAYS/B", days)
+    if days < 14:
+        errors_found = True
+        accum_dict = append_to_dict(accum_dict,
+                                    "date_of_birth", 
+                                    TOO_YOUNG.format(output_departing_date))
+        return (accum_dict, errors_found)
+        
+    # Calculate the difference in years as shown here
+    # https://stackoverflow.com/questions/3278999/how-can-i-compare-a-date-and-a-datetime-in-python
+    #         
+    difference_in_years = relativedelta(departing_date, date_of_birth).years
+    print("YEARS", difference_in_years)
+    if difference_in_years > 15:
+        error_message = ("A child should be at least 2 "
+                         "and under 16 "
+                         f"on the Date of Departure: {output_departing_date}\n"
+                         f"But this passenger will be {difference_in_years}.")
+        errors_found = True
+        accum_dict = append_to_dict(accum_dict,
+                                    "date_of_birth", error_message)            
+        return (accum_dict, errors_found)
+
+    if Common.save_context["booking"]["return_option"] == "N":
+        return (accum_dict, errors_found)
+
+    returning_date = Common.save_context["booking"]["returning_date"]
+    output_returning_date = returning_date.strftime("%d/%m/%Y")
+    difference_in_years = relativedelta(returning_date, date_of_birth).years
+    print("RETURNS", returning_date, output_returning_date)
+    print("DOB", date_of_birth)
+    print("YEARS/2", difference_in_years)
+    print("A", returning_date)
+    print("B", date_of_birth)
+    # print("A+16", relativedelta(years=+16, months=+11, days=+29))
+    # Get the relativedelta between two dates
+    delta = relativedelta(departing_date, date_of_birth)
+    print('Years, Months, Days between two dates is')
+    print(delta.years, 'Years,', delta.months, 'months,', delta.days, 'days')
+
+    if difference_in_years > 15:
+        error_message = ("A child should be at least 2 "
+                         "and under 16 "
+                         f"on the Returning Date: {output_departing_date}\n"
+                         f"But this passenger will be {difference_in_years}. "
+                         "Please enter a Adult Booking for this passenger.")
+        errors_found = True
+        accum_dict = append_to_dict(accum_dict,
+                                    "date_of_birth", error_message)            
+        return (accum_dict, errors_found)
+
+    return (accum_dict, errors_found)
+
 def children_formset_validated(cleaned_data, is_child_formset, request,):
     """ Carry out Custom Validation of the Children Formset """
     formset_errors = []  # Hopefully this will remain empty
     errors_found = False
     number_of_forms = len(cleaned_data)
+    todays_date = datetime.now().date()
     for form_number in range(number_of_forms):
         accum_dict = {}
         prefix_number = form_number + 1
@@ -196,15 +285,21 @@ def children_formset_validated(cleaned_data, is_child_formset, request,):
 
         # Date of Birth Validation
         # Children must be between 2 and 15
-        # Infants must be between at least 2 weeks old and under 2 years old
+        # Infants must be between at least  14 days old and under 2 years old
         
-        date_of_birth = fields_dict.get("date_of_birth", datetime.now())
-        # SHOULD BE <class 'datetime.date'>
+        date_of_birth = fields_dict.get("date_of_birth", todays_date)
+        # This field SHOULD BE <class 'datetime.date'>
         # Defensive Programming - because the 'cleaned' version ought to be a valid date
         if not isinstance(date_of_birth, date):
             errors_found = True
             accum_dict = append_to_dict(accum_dict,
-                                        "contact_number", BAD_DATE)
+                                        "date_of_birth", BAD_DATE)
+
+        else:
+            accum_dict, errors_found = date_validation_part2(accum_dict,
+                                                             errors_found,
+                                                             date_of_birth,
+                                                             False)
 
         formset_errors.append(accum_dict)
         print("ACC/CHILD", accum_dict, formset_errors)  # TODO
@@ -507,7 +602,7 @@ def passenger_details_form(request):
                                        prefix="adult",
                                        extra=number_of_adults)
         if children_included:
-            number_of_children = Common.save_context.booking.children
+            number_of_children = Common.save_context["booking"]["children"] ## Common.save_context.booking.children TODO
             print("CHN", number_of_children)
             children_formset = ChildrenFormSet(request.POST or None,
                                                prefix="child",
