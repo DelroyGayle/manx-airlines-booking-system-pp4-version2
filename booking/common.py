@@ -5,7 +5,8 @@ from django.shortcuts import get_list_or_404
 
 
 class Common:
-    """I use this class as the repository of global variables, settings
+    """
+    I use this class as the repository of global variables, settings
     and methods needed throughout this App.
     """
 
@@ -40,7 +41,8 @@ class Common:
                 f"{flight_to}")
 
     def initialisation():
-        """Fetch the contents of the Flights Database
+        """
+        Fetch the contents of the Flights Database
         which holds the available flights' times, routes and capacity
         information and set them up in variables to be accessed by this App.
         """
@@ -65,18 +67,18 @@ class Common:
 
         for each in all_flight_entries:
             newdict[each.flight_number] = {}
-            newdict[each.flight_number]["flight_from"] = each.flight_from
-            newdict[each.flight_number]["flight_to"] = each.flight_to
-            newdict[each.flight_number]["flight_STD"] = each.flight_STD
-            newdict[each.flight_number]["flight_STA"] = each.flight_STA
+            newdict[each.flight_number]["flight_from"] = each.flight_from.strip().upper()
+            newdict[each.flight_number]["flight_to"] = each.flight_to.strip().upper()
+            newdict[each.flight_number]["flight_STD"] = each.flight_STD.strip()
+            newdict[each.flight_number]["flight_STA"] = each.flight_STA.strip()
             newdict[each.flight_number]["outbound"] = each.outbound
             newdict[each.flight_number]["capacity"] = each.capacity
             if boolean_flag:
                 outbound[each.flight_number] = {}
-                outbound[each.flight_number]["flight_from"] = each.flight_from
-                outbound[each.flight_number]["flight_to"] = each.flight_to
-                outbound[each.flight_number]["flight_STD"] = each.flight_STD
-                outbound[each.flight_number]["flight_STA"] = each.flight_STA
+                outbound[each.flight_number]["flight_from"] = each.flight_from.strip().upper()
+                outbound[each.flight_number]["flight_to"] = each.flight_to.strip().upper()
+                outbound[each.flight_number]["flight_STD"] = each.flight_STD.strip()
+                outbound[each.flight_number]["flight_STA"] = each.flight_STA.strip()
                 outbound[each.flight_number]["capacity"] = each.capacity
                 out_time_options1.append(each.flight_STD)
                 out_time_options2.append(Common.format_radio_button_option(
@@ -86,10 +88,10 @@ class Common:
                                                 each.flight_to))
             else:
                 inbound[each.flight_number] = {}
-                inbound[each.flight_number]["flight_from"] = each.flight_from
-                inbound[each.flight_number]["flight_to"] = each.flight_to
-                inbound[each.flight_number]["flight_STD"] = each.flight_STD
-                inbound[each.flight_number]["flight_STA"] = each.flight_STA
+                inbound[each.flight_number]["flight_from"] = each.flight_from.strip().upper()
+                inbound[each.flight_number]["flight_to"] = each.flight_to.strip().upper()
+                inbound[each.flight_number]["flight_STD"] = each.flight_STD.strip()
+                inbound[each.flight_number]["flight_STA"] = each.flight_STA.strip()
                 inbound[each.flight_number]["capacity"] = each.capacity
                 in_time_options1.append(each.flight_STD)
                 in_time_options2.append(Common.format_radio_button_option(

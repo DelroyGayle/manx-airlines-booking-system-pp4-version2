@@ -10,21 +10,22 @@ from django.core.validators import validate_email
 
 from .models import Booking, Passenger
 from .models import Flight
+
 from .forms import BookingForm, CreateBookingForm
 from .forms import AdultsForm, MinorsForm
 from .forms import HiddenForm
 from .forms import BagRemarks
+
+from datetime import datetime, date
+from dateutil.relativedelta import relativedelta
+import random  # TODO
+import re
+
 from .common import Common
 # TODO
 # from .constants import FIRSTNAME_BLANK
-# from datetime import datetime
-# from datetime import date  # TODO
 # KEEP THIS - TODO
-from datetime import datetime, date
-from dateutil.relativedelta import relativedelta
 # import constants
-import random  # TODO
-import re
 # from .helpers import test TODO
 
 # Constants
@@ -46,7 +47,7 @@ BAD_EMAIL = "Enter a valid email address."
 BAD_DATE = "Enter a valid date of birth."
 FUTURE_DATE = "Your date of birth must be in the past."
 TOO_YOUNG = ("Newly born infants younger than 14 days "
-            " on the {0} will not be accepted for travel.")
+             " on the {0} will not be accepted for travel.")
 
 
 def display_formset_errors(request, prefix, errors_list):
@@ -139,7 +140,8 @@ def adults_formset_validated(cleaned_data, request):
             formset_errors.append(accum_dict)
             continue
 
-        accum_dict, errors_found = name_validation(fields_dict, accum_dict, errors_found)
+        accum_dict, errors_found = name_validation(fields_dict,
+                                                   accum_dict, errors_found)
 
         # Contact Number/Email Validation can be null except for Adult 1
         telephone = fields_dict.get("contact_number", "").replace(" ", "")
@@ -170,11 +172,9 @@ def adults_formset_validated(cleaned_data, request):
                                                 "contact_email", BAD_EMAIL)
 
         formset_errors.append(accum_dict)
-        print("ACC/ADULT", accum_dict, formset_errors)  # TODO
 
     if errors_found:
         # Send as 'Django Messages' the errors that were found
-        print("ADULT ERRORS FOUND", formset_errors)  # TODO
         display_formset_errors(request, "Adult", formset_errors)
         return False
 
@@ -187,13 +187,11 @@ def date_validation_part2(accum_dict, errors_found,
 
     todays_date = datetime.now().date()
     # datediff = date_of_birth - todays_date
-    
+
     departing_date = Common.save_context["booking"]["departing_date"]
     output_departing_date = departing_date.strftime("%d/%m/%Y")
-    print("DEPARTS", departing_date, output_departing_date)
     datediff = date_of_birth - todays_date
     days = datediff.days
-    print("DAYS/A", days)
 
     # days > 0 caters for hours/minutes/seconds!
     if date_of_birth > todays_date and days > 0:
@@ -201,54 +199,53 @@ def date_validation_part2(accum_dict, errors_found,
         accum_dict = append_to_dict(accum_dict,
                                     "date_of_birth", FUTURE_DATE)
         return (accum_dict, errors_found)
-    
+
     # if date_of_birth > todays_date then that means
     # days == 0 i.e. identical to Today's Date
     if days == 0:
         errors_found = True
         accum_dict = append_to_dict(accum_dict,
-                                    "date_of_birth", 
+                                    "date_of_birth",
                                     TOO_YOUNG.format(output_departing_date))
 
         return (accum_dict, errors_found)
-    
+
     datediff = departing_date - date_of_birth
     days = datediff.days
-    print("DAYS/B", days)
     if days < 14:
         errors_found = True
         accum_dict = append_to_dict(accum_dict,
-                                    "date_of_birth", 
+                                    "date_of_birth",
                                     TOO_YOUNG.format(output_departing_date))
         return (accum_dict, errors_found)
-        
+
     # Calculate the difference in years as shown here
     # https://stackoverflow.com/questions/3278999/how-can-i-compare-a-date-and-a-datetime-in-python
-    #         
     difference_in_years = relativedelta(departing_date, date_of_birth).years
-    print("YEARS", difference_in_years)
 
     if is_child:
         # CHILD
         if difference_in_years > 15:
-            error_message = ("A child should be at least 2 "
-                             "and under 16 "
-                             f"on the Date of Departure: {output_departing_date} "
-                             f"But this passenger will be {difference_in_years}.")
+            error_message = (
+                "A child should be at least 2 "
+                "and under 16 "
+                f"on the Date of Departure: {output_departing_date} "
+                f"But this passenger will be {difference_in_years}.")
             errors_found = True
             accum_dict = append_to_dict(accum_dict,
-                                        "date_of_birth", error_message)            
+                                        "date_of_birth", error_message)
             return (accum_dict, errors_found)
 
     if not is_child:
         # INFANT
         if difference_in_years >= 2:
-            error_message = ("An infant should be under 2 "
-                             f"on the Date of Departure: {output_departing_date} "
-                             f"But this passenger will be {difference_in_years}.")
+            error_message = (
+                "An infant should be under 2 "
+                f"on the Date of Departure: {output_departing_date} "
+                f"But this passenger will be {difference_in_years}.")
             errors_found = True
             accum_dict = append_to_dict(accum_dict,
-                                        "date_of_birth", error_message)            
+                                        "date_of_birth", error_message)
             return (accum_dict, errors_found)
 
     # Does this Booking have a Return Journey?
@@ -259,48 +256,44 @@ def date_validation_part2(accum_dict, errors_found,
     # Yes - Check the D.O.B. against the Return Date
     returning_date = Common.save_context["booking"]["returning_date"]
     output_returning_date = returning_date.strftime("%d/%m/%Y")
+    # Method to determine the years was found at
+    # https://stackoverflow.com/questions/4436957/pythonic-difference-between-two-dates-in-years
     difference_in_years = relativedelta(returning_date, date_of_birth).years
-    print("RETURNS", returning_date, output_returning_date)
-    print("DOB", date_of_birth)
-    print("YEARS/2", difference_in_years)
-    print("A", returning_date)
-    print("B", date_of_birth)
-    # Get the relativedelta between two dates
-    delta = relativedelta(returning_date, date_of_birth)
-    print('Years, Months, Days between two dates is')
-    print(delta.years, 'Years,', delta.months, 'months,', delta.days, 'days')
     paxtype = "an Adult" if difference_in_years > 15 else "a Child"
 
     if is_child:
         # CHILD
         if difference_in_years > 15:
-            error_message = ("A child should be at least 2 "
-                             "and under 16 "
-                             f"on the Returning Date: {output_returning_date} "
-                             f"But this passenger will be {difference_in_years}. "
-                             f"Please enter {paxtype} Booking for this passenger.")
+            error_message = (
+                "A child should be at least 2 "
+                "and under 16 "
+                f"on the Returning Date: {output_returning_date} "
+                f"But this passenger will be {difference_in_years}. "
+                f"Please enter {paxtype} Booking for this passenger.")
             errors_found = True
             accum_dict = append_to_dict(accum_dict,
-                                        "date_of_birth", error_message)            
+                                        "date_of_birth", error_message)
     if not is_child:
         # INFANT
         if difference_in_years >= 2:
-            error_message = ("An infant should be under 2 "
-                             f"on the Returning Date: {output_returning_date} "
-                             f"But this passenger will be {difference_in_years}. "
-                             f"Please enter {paxtype} Booking for this passenger.")
+            error_message = (
+                "An infant should be under 2 "
+                f"on the Returning Date: {output_returning_date} "
+                f"But this passenger will be {difference_in_years}. "
+                f"Please enter {paxtype} Booking for this passenger.")
 
             errors_found = True
             accum_dict = append_to_dict(accum_dict,
-                                        "date_of_birth", error_message)            
+                                        "date_of_birth", error_message)
 
     return (accum_dict, errors_found)
 
 
 def minors_formset_validated(cleaned_data, is_child_formset, request,):
     """
+    Formsets have been 'cleaned' at this point
     Carry out Custom Validation of the Children Formset
-    and the Infants Formset 
+    and the Infants Formset
     """
     formset_errors = []  # Hopefully this will remain empty
     errors_found = False
@@ -318,15 +311,17 @@ def minors_formset_validated(cleaned_data, is_child_formset, request,):
             formset_errors.append(accum_dict)
             continue
 
-        accum_dict, errors_found = name_validation(fields_dict, accum_dict, errors_found)
+        accum_dict, errors_found = name_validation(fields_dict, accum_dict,
+                                                   errors_found)
 
         # Date of Birth Validation
         # Children must be between 2 and 15
         # Infants must be between at least  14 days old and under 2 years old
-        
+
         date_of_birth = fields_dict.get("date_of_birth", todays_date)
         # This field SHOULD BE <class 'datetime.date'>
-        # Defensive Programming - because the 'cleaned' version ought to be a valid date
+        # Defensive Programming - because the 'cleaned' version
+        # ought to be a valid date
         if not isinstance(date_of_birth, date):
             errors_found = True
             accum_dict = append_to_dict(accum_dict,
@@ -339,11 +334,9 @@ def minors_formset_validated(cleaned_data, is_child_formset, request,):
                                                              is_child_formset)
 
         formset_errors.append(accum_dict)
-        print("ACC/CHILD", accum_dict, formset_errors)  # TODO
 
     if errors_found:
         # Send as 'Django Messages' the errors that were found
-        print("CHILDREN ERRORS FOUND", formset_errors)  # TODO
         paxtype = "Child" if is_child_formset else "Infant"
         display_formset_errors(request, paxtype, formset_errors)
         return False
@@ -365,55 +358,50 @@ def all_formsets_valid(request, adults_formset,
     Children/Infants have the Date of Birth - no contact details
     """
 
-    # TODO
     # Are there any Django Validations Errors to begin with?
+
     errors_found = False
-    print("A1", adults_formset.data)
     if adults_formset.is_valid():
         pass
     else:
         # The Adults Formset is Invalid - Report the Errors
-        print("ADULT/ERRORS", adults_formset.errors) # TODO
         errors_found = True
         display_formset_errors(request, "Adult", adults_formset.errors)
-    
+        # Are there any 'non-form errors' in the Adults Formset?
+        formset_non_form_errors = adults_formset.non_form_errors()
+        if formset_non_form_errors:
+            display_formset_errors(request,
+                                   "Adult", formset_non_form_errors)
+
     if children_included:
         if children_formset.is_valid():
             pass
         else:
             # The Children Formset is Invalid - Report the Errors
-            print("CHILDREN/ERRORS", children_formset.errors)
-            print("CHILDREN/ERRORS2", children_formset.non_form_errors)
             errors_found = True
             display_formset_errors(request, "Child", children_formset.errors)
-    
+            # Are there any 'non-form errors' in the Children Formset?
+            formset_non_form_errors = children_formset.non_form_errors()
+            if formset_non_form_errors:
+                display_formset_errors(request,
+                                       "Child", formset_non_form_errors)
+
     if infants_included:
         if infants_formset.is_valid():
             pass
         else:
             # The Infants Formset is Invalid - Report the Errors
-            print("infants/ERRORS", infants_formset.errors)
-            print("INFANT/ERRORS2", infants_formset.non_form_errors)
-            print("TEST123", "non_form_error" in infants_formset)
-            p = infants_formset.non_form_errors()
-            print("PX", p)
-            print("TEST123457", "non_form_error" in infants_formset)
-
-
             errors_found = True
             display_formset_errors(request, "Infant", infants_formset.errors)
+            # Are there any 'non-form errors' in the Infants Formset?
+            formset_non_form_errors = infants_formset.non_form_errors()
+            if formset_non_form_errors:
+                display_formset_errors(request,
+                                       "Infant", formset_non_form_errors)
 
     if errors_found:
         # Proceed no further because errors have been discovered
         return False
-
-    # TODO
-    # print(adults_formset)
-    print("CLEANDATA>>A", adults_formset.cleaned_data)
-    if children_included:
-        print("CLEANDATA>>C", children_formset.cleaned_data)
-    if infants_included:
-        print("CLEANDATA>>I", infants_formset.cleaned_data)
 
     # Are the forms blank?
     is_empty = False
@@ -452,7 +440,7 @@ def all_formsets_valid(request, adults_formset,
     if not adults_formset_validated(adults_formset.cleaned_data, request):
         return False
 
-    if (children_included and 
+    if (children_included and
         not minors_formset_validated(children_formset.cleaned_data,
                                      True, request)):
         return False
@@ -484,37 +472,36 @@ def message_error(message_string, request):
 
 def is_booking_form_valid(form, request):
     if not form.is_valid():
-        print("CONTEXT/error", context)
         for field in form.errors:
             for item in form.errors[field]:
-                    message_string = Common.format_error(f"{field} - {item}")
-                    message_error(message_string, request)
-        return False
+                message_string = Common.format_error(f"{field} - {item}")
+                message_error(message_string, request)
 
-    print("CLEANED", form.cleaned_data)
-    print(100, form.cleaned_data["adults"])
-    # print("TEST", test()) TODO
+        return False
 
     # FURTHER VALIDATION NEEDED
     # Check Dates and Flight Availability
     cleaned_data = form.cleaned_data
-    if (cleaned_data["return_option"] == "Y" and 
-        cleaned_data["returning_date"] == cleaned_data["departing_date"]):
+    if (cleaned_data["return_option"] == "Y" and
+            cleaned_data["returning_date"] == cleaned_data["departing_date"]):
         # Same Day Travel - Is there enough time between journey times?
-            departPos = Common.OUTBOUND_TIME_OPTIONS1.index(cleaned_data["departing_time"])
-            returnPos = Common.INBOUND_TIME_OPTIONS1.index(cleaned_data["returning_time"])
-            if departPos > returnPos:
-                message_error("Returning Time - The time of the return flight "
-                              "cannot be in the past.",
-                              request)
-                return False
+        thetime = cleaned_data["departing_time"]
+        departPos = Common.OUTBOUND_TIME_OPTIONS1.index(thetime)
+        thetime = cleaned_data["returning_time"]
+        returnPos = Common.INBOUND_TIME_OPTIONS1.index(thetime)
+        if departPos > returnPos:
+            message_error("Returning Time - The time of the return flight "
+                          "cannot be in the past.",
+                          request)
+            return False
 
-            if departPos == returnPos:
-                message_error("Returning Time - The interval between flights cannot be "
-                              "less than 90 minutes.", request)
-                return False
+        if departPos == returnPos:
+            message_error(
+                "Returning Time - The interval between flights cannot be "
+                "less than 90 minutes.", request)
+            return False
 
-    # The Form's contents had passed all validation checks!
+    # The Form's contents has passed all validation checks!
     return True
 
 
@@ -536,11 +523,11 @@ def create_booking_form(request):
                        # TODO HAVE IT TWICE?
                        "booking_cleaned_data": form.cleaned_data,
                        }
-            # TODO
+
             # ADULTS
             number_of_adults = form.cleaned_data["adults"]
             AdultsFormSet = formset_factory(AdultsForm,
-                                            extra=number_of_adults)  # TODO
+                                            extra=number_of_adults)
             adults_formset = AdultsFormSet(prefix="adult")
 
             # CHILDREN
@@ -552,7 +539,7 @@ def create_booking_form(request):
                 children_formset = ChildrenFormSet(prefix="child")
             else:
                 children_included = False
-                children_formset = []  # TODO
+                children_formset = []
 
             # INFANTS
             number_of_infants = form.cleaned_data["infants"]
@@ -563,12 +550,10 @@ def create_booking_form(request):
                 infants_formset = InfantsFormSet(prefix="infant")
             else:
                 infants_included = False
-                infants_formset = []  # TODO
+                infants_formset = []
 
+            # Create the 'context'
             hiddenForm = HiddenForm(form.cleaned_data)
-            # hiddenForm.adults = 10  # TODO
-            print(hiddenForm)  # TODO
-            # print(form.cleaned_data) TODO
             bag_remarks_form = BagRemarks(prefix="bagrem")
             context["adults_formset"] = adults_formset
             context["children_formset"] = children_formset
@@ -578,33 +563,33 @@ def create_booking_form(request):
             context["hidden_form"] = hiddenForm
             context["bag_remarks_form"] = bag_remarks_form
 
-            print("CONTEXT", context)
+            # Save a copy in order to fetch any values as and when needed
             Common.save_context = context
             return render(request, "booking/passenger-details-form.html",
                           context)
 
-            # CREATE MESSAGE TODO
+            # CREATE SUCCESS MESSAGE TODO
 
         else:
             # The Booking Form has failed validation
-            # TODO
-            # RE-RENDER
             form = CreateBookingForm(request.POST)
 
     context = {"form": form}
     return render(request, "booking/create-booking-form.html", context)
-    
-    
+
+
 def initialise_formset_context(request):
+    """
+    Create the 'context' to be used by the Passenger Details Template
+    Necessary preset values have been saved in 'Common.save_context'
+    """
     context = {}
-    print(Common.save_context)
 
     # ADULTS
     number_of_adults = Common.save_context["booking"]["adults"]
-    print("NA", number_of_adults)
     AdultsFormSet = formset_factory(AdultsForm,
-                                    extra=number_of_adults)  # TODO
-    adults_formset = AdultsFormSet(request.POST or None,prefix="adult")
+                                    extra=number_of_adults)
+    adults_formset = AdultsFormSet(request.POST or None, prefix="adult")
     context["adults_formset"] = adults_formset
 
     # CHILDREN
@@ -612,37 +597,31 @@ def initialise_formset_context(request):
     context["children_included"] = children_included
     if children_included:
         number_of_children = Common.save_context["booking"]["children"]
-        # TODO
-        print("CHN", number_of_children, Common.save_context["booking"]["children"])
         ChildrenFormSet = formset_factory(MinorsForm,
-                                            extra=number_of_children)  # TODO
+                                          extra=number_of_children)
         children_formset = ChildrenFormSet(request.POST or None,
                                            prefix="child")
         context["children_formset"] = children_formset
-            
+
     # INFANTS
 
     infants_included = Common.save_context["infants_included"]
     context["infants_included"] = infants_included
     if infants_included:
         number_of_infants = Common.save_context["booking"]["infants"]
-        # TODO
-        print("INF", number_of_infants, Common.save_context["booking"]["infants"])
         InfantsFormSet = formset_factory(MinorsForm,
-                                            extra=number_of_infants)  # TODO
+                                         extra=number_of_infants)
         infants_formset = InfantsFormSet(request.POST or None,
-                                           prefix="infant")
+                                         prefix="infant")
         context["infants_formset"] = infants_formset
 
     context["hidden_form"] = Common.save_context["hidden_form"]
     context["bag_remarks_form"] = Common.save_context["bag_remarks_form"]
-
-    # TODO
-    print(type(Common.save_context))
     context["hidden_form"] = Common.save_context["hidden_form"]
+    # TODO
     print("CON", context)
     print("SAVED_CONTEXT", Common.save_context)
-            
+
     return context
 
 
@@ -650,7 +629,7 @@ def initialise_formset_context(request):
 def passenger_details_form(request):
     """
     The Handling of the Passenger Details Form
-    This form consists of three formsets: 
+    This form consists of three formsets:
     1) AdultsForm - class AdultsForm
     2) ChildrenFormSet - Class MinorsForm
     2) InfantsFormSet - Class MinorsForm
@@ -670,9 +649,10 @@ def passenger_details_form(request):
     children_included = Common.save_context["children_included"]
     if children_included:
         ChildrenFormSet = formset_factory(MinorsForm, extra=0)
-        children_formset = ChildrenFormSet(request.POST or None, prefix="child")
+        children_formset = ChildrenFormSet(request.POST or None,
+                                           prefix="child")
     else:
-        children_formset = []  # TODO
+        children_formset = []
 
     # INFANTS
     infants_included = Common.save_context["infants_included"]
@@ -680,65 +660,32 @@ def passenger_details_form(request):
         InfantsFormSet = formset_factory(MinorsForm, extra=0)
         infants_formset = InfantsFormSet(request.POST or None, prefix="infant")
     else:
-        infants_formset = []  # TODO
+        infants_formset = []
 
     bag_remarks_form = BagRemarks(request.POST or None, prefix="bagrem")
-    print(request.method, "CONTEXT FETCH", children_included, request.POST)  # TODO
+    print(request.method, "CONTEXT FETCH",
+          children_included, request.POST)  # TODO
     print(context)
-    # if request.method != "POST":
-    #     context = {}  TODO
 
     if request.method == "POST":
-        # TODO
         context = request.POST
         # TODO
-        print("TYPE 3", type(infants_formset))
-        print("BAGS", bag_remarks_form)
-        if bag_remarks_form.is_valid:
-            print("YES")
-            print(bag_remarks_form.cleaned_data)
+        # if bag_remarks_form.is_valid:
+        #     print("YES")
+        #     print(bag_remarks_form.cleaned_data)
         if all_formsets_valid(request,
                               adults_formset,
                               children_included,
                               children_formset,
                               infants_included,
                               infants_formset):
-            print("CLEAN A1", adults_formset.non_form_errors())  # TODO
-            print(adults_formset.total_error_count(),
-                  adults_formset.has_changed())
-            print("CLEANDATA", adults_formset.cleaned_data)
-            # TODO REMOVE
-            print("CLEAN C")  # TODO
-            # print(children_formset.cleaned_data)
-            print("RP")  # TODO
-            print(request.POST)
-            return render(request, "booking/index.html")   # TODO
+            # TODO: CREATE THE RECORD!!
+            return render(request, "booking/index.html")
             create_records(request.POST)
 
         else:
-            # Errors have been found
-            # Any 'form errors' have already been sent via Django Messaging
-            # Are there any 'non-form errors' in the Adult Formset?
-            if "non_form_errors" in adults_formset:
-                print("ANYERRORS/Adults", adults_formset.non_form_errors) #TODO
-                display_formset_errors(request,
-                                       "Adult", adults_formset.non_form_errors)
-
-            # Are there any 'non-form errors' in the Children Formset?
-            if (children_included
-                and "non_form_errors" in children_formset):
-                print("ANYERRORS/C", children_formset.non_form_errors)
-                display_formset_errors(request,
-                                       "Child", children_formset.non_form_errors)
-
-            # Are there any 'non-form errors' in the Children Formset?
-            if (infants_included
-                and "non_form_errors" in infants_formset):
-                print("ANYERRORS/I", infants_formset.non_form_errors)
-                display_formset_errors(request,
-                                       "Infant", infants_formset.non_form_errors)
-
             context = initialise_formset_context(request)
+            #  TODO
             print(type(Common.save_context))
             print("TT", Common.save_context)
             print("CON", context)
@@ -746,17 +693,9 @@ def passenger_details_form(request):
 
     else:
         # request.method is "GET"
-        # TODO
-        print("EX", Common.save_context["booking"]["adults"])
         number_of_adults = Common.save_context["booking"]["adults"]
-        print("N/A", Common.save_context["booking"]["adults"]) # TODO
         context = initialise_formset_context(request)
-        ## bagrem_form = BagRemarks(prefix="bagrem")
 
-        # TODO
-        pass
-
-    #  #context = {"form": form} TODO
     return render(request, "booking/passenger-details-form.html", context)
 
 
@@ -898,7 +837,7 @@ def edit_booking(request, id):
         booking.save()
         return HttpResponseRedirect(reverse("view-booking",
                                             kwargs={"id": booking.pk}))
-        # CREATE MESSAGE TODO
+        # CREATE SUCCESS MESSAGE TODO
 
     return render(request, "booking/edit-booking.html", context)
 

@@ -32,7 +32,7 @@ class CreateBookingForm(forms.Form):
 
         the_choices = list(zip(Common.INBOUND_TIME_OPTIONS1,
                                Common.INBOUND_TIME_OPTIONS2))
-    # Common.INBOUND_TIME_OPTIONS1[0] would be an interval 
+    # Common.INBOUND_TIME_OPTIONS1[0] would be an interval
     # of less than 90 minutes. Therefore use the next available slot
     # i.e. Common.INBOUND_TIME_OPTIONS1[1]
         self.fields["returning_time"] = forms.ChoiceField(
@@ -40,7 +40,8 @@ class CreateBookingForm(forms.Form):
                     choices=the_choices, widget=forms.RadioSelect)
 
     def as_p(self):
-        """This method overrides the default 'as_p' behaviour
+        """
+           This method overrides the default 'as_p' behaviour
            because I did not like the way this form looked.
            This method returns this form rendered as HTML <p>s.
            Found this solution at
@@ -228,6 +229,7 @@ class AdultsForm(forms.Form):
         # ## print(self)  TODO
         # print("TESTING adult-TOTAL_FORMS", self['adult-TOTAL_FORMS'])
         # return cleaned_data
+        # TODO REMOVE
         if False and 'first_name' not in cleaned_data:
             print("SEE")
             raise forms.ValidationError(
@@ -252,7 +254,7 @@ class MinorsForm(forms.Form):
                                     initial=datetime.date.today(),
                                     help_text="Format: DD/MM/YYYY",
                                     widget=forms.DateInput(
-                                    attrs=dict(type="date")))
+                                        attrs=dict(type="date")))
     wheelchair_ssr = forms.CharField(max_length=1,  required=False,
                                      widget=forms.Select(choices=PRM_CHOICES),
                                      initial="")
@@ -260,12 +262,14 @@ class MinorsForm(forms.Form):
                                       widget=forms.Select(choices=WCH_CHOICES),
                                       initial="")
 
-"""This class is used for the entry of the number of bags
-Remarks regarding the Booking
-"""
+
 class BagRemarks(forms.Form):
+    """
+    This class is used for the entry of the number of bags
+    Remarks regarding the Booking
+    """
     bags = forms.IntegerField(required=False, initial=0,
-                             min_value=0, max_value=20)
+                              min_value=0, max_value=20)
     remarks = forms.CharField(required=False,
                               widget=forms.Textarea(
-                                attrs={ "rows": "4" }))
+                                attrs={"rows": "4"}))
