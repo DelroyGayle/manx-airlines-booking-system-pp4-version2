@@ -9,7 +9,7 @@
 
 <div class="ui centered card">
     <div class="content">
-        <form method="POST" action={% url 'home' %} class="ui form">
+        <form method="POST" action={% url 'confirm-booking-form' %} class="ui form">
             {% csrf_token %}
             <div class="ui header">
                 Booking: {{ pnr }}
@@ -41,8 +41,8 @@
             <p><small>Non-refundable. Changeable subject to fees.</small></p>
             <p><small>Prices includes all applicable taxes and fees</small></p>
 
-            <input type="submit" class="ui button positive" value="Agree and pay now">
-            <a href={% url 'passenger-details-form' %}>Cancel</a>
+            <input type="submit" name="agree" class="ui button primary" value="Agree and pay now">
+            <input type="submit" name="cancel" class="ui button red" value="Cancel">
         </form>
     </div>
 </div>

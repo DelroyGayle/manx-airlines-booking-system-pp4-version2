@@ -826,12 +826,16 @@ def passenger_details_form(request):
 
 
 def confirm_booking_form(request):
-    print("HELLO")
-    context = {"adults_total": 200,
-               "price_total_message": "HELLO WORLD"}
-        # messages.add_message(request, messages.SUCCESS,
-        #                      "Booking Deleted Successfully")
-        # return HttpResponseRedirect(reverse("home"))
+    
+    print(request.method, "RQ")
+    if request.method == "POST":
+        print("RP", request.POST)
+        if "cancel" in request.POST:
+            print("CANCEL")
+        else:
+            print("SUBMIT")
+
+        return HttpResponseRedirect(reverse("home"))
 
     return render(request, "booking/confirm-booking-form.html", context)
 
