@@ -583,6 +583,7 @@ def create_booking_form(request):
 
             # Save a copy in order to fetch any values as and when needed
             Common.save_context = context
+            print("SAVED/1", Common.save_context) # TODO
             # TODO
             return render(request, "booking/passenger-details-form.html",
                           context)
@@ -697,10 +698,19 @@ def setup_confirm_booking_context(original_context, template_variables):
     """
     Set up the Context to be rendered
     """ 
+    pax_details_context = {}
+    # Keep a copy of the context so that if the user presses 'Cancel'
+    # The Passenger Details Page can be redisplayed with
+    # the form's original contents
+    for key in original_context:
+        pax_details_context[key] = original_context[key]
+    Common.save_pax_details_context = pax_details_context
+    # TODO
+    print("COPIED", Common.save_pax_details_context)
+    print(type(Common.save_pax_details_context))
+
+    # Now set up the context for the Confirmation Form
     context = {}
-    # Keep a copy of the context so that if the user presses 'cancel'
-    # The Passenger Details Page can be redisplayed
-    context["pax_details_context"] = original_context
 
     # Add the templates variables to be displayed
     # in the Confirm Booking Form
@@ -829,11 +839,26 @@ def confirm_booking_form(request):
     
     print(request.method, "RQ")
     if request.method == "POST":
-        print("RP", request.POST)
+        # TODO
+        print("RP", request.POST, type(request.POST), type(Common.save_pax_details_context) )
+        print('adult-TOTAL_FORMS' in Common.save_pax_details_context,
+        'children_formset.management_form' in  Common.save_pax_details_context)
         if "cancel" in request.POST:
-            print("CANCEL")
+            # Redisplay the Form with its original contents
+            print(Common.save_pax_details_context)
+            # TODO
+            number_of_adults = Common.save_context["booking"]["adults"]
+            context = initialise_formset_context(request)
+
+            return render(request, "booking/passenger-details-form.html", context)
+            passenger_details_form(request)
+            # TODO
+            return render(request, "booking/passenger-details-form.html",
+    #                                   Common.save_pax_details_context)
+    request.POST)
+    # TODO
         else:
-            print("SUBMIT")
+            pass
 
         return HttpResponseRedirect(reverse("home"))
 
