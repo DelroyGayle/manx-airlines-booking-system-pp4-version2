@@ -49,6 +49,10 @@ FUTURE_DATE = "Your date of birth must be in the past."
 TOO_YOUNG = ("Newly born infants younger than 14 days "
              " on the {0} will not be accepted for travel.")
 
+ADULT_PRICE = 100   # Age > 15
+CHILDREN_PRICE = 60 # Age 2-15
+INFANT_PRICE = 30   # Age < 2
+BAG_PRICE = 30
 
 def display_formset_errors(request, prefix, errors_list):
     """
@@ -253,7 +257,7 @@ def date_validation_part2(accum_dict, errors_found,
         # No!
         return (accum_dict, errors_found)
 
-    # Yes - Check the D.O.B. against the Return Date
+    # Yes! - Check the D.O.B. against the Return Date
     returning_date = Common.save_context["booking"]["returning_date"]
     output_returning_date = returning_date.strftime("%d/%m/%Y")
     # Method to determine the years was found at
@@ -356,6 +360,8 @@ def all_formsets_valid(request, adults_formset,
     They differ slightly:
     Adults have contact telephone/email
     Children/Infants have the Date of Birth - no contact details
+
+    4) If the above are all valid, then valid the BagRemarks Form
     """
 
     # Are there any Django Validations Errors to begin with?
@@ -401,7 +407,7 @@ def all_formsets_valid(request, adults_formset,
 
     if errors_found:
         # Proceed no further because errors have been discovered
-        return False
+        return (False, None)
 
     # Are the forms blank?
     is_empty = False
@@ -423,7 +429,7 @@ def all_formsets_valid(request, adults_formset,
                                  "Enter the Child's Passenger Details "
                                  "for this booking.")
     if is_empty:
-        return False
+        return (False, None)
 
     # INFANTS
     if infants_included:
@@ -434,23 +440,32 @@ def all_formsets_valid(request, adults_formset,
                                  "Enter the Infant's Passenger Details "
                                  "for this booking.")
     if is_empty:
-        return False
+        return (False, None)
 
     # Validate all three formsets
     if not adults_formset_validated(adults_formset.cleaned_data, request):
-        return False
+        return (False, None)
 
     if (children_included and
         not minors_formset_validated(children_formset.cleaned_data,
                                      True, request)):
-        return False
+        return (False, None)
 
     if (infants_included and
         not minors_formset_validated(infants_formset.cleaned_data,
                                      False, request)):
-        return False
+        return (False, None)
 
-    return True
+    # Validate BagRemarks Form
+    if not bag_remarks_form.is_valid:
+        display_formset_errors(request, "Bag/Remarks", bag_remarks_form.errors)
+        return (False, None)
+
+    #  TODO
+    print("YES")
+    print(bag_remarks_form.cleaned_data)
+
+    return (True, bag_remarks_form.cleaned_data)
 
 # Create your views here.
 
@@ -565,6 +580,7 @@ def create_booking_form(request):
 
             # Save a copy in order to fetch any values as and when needed
             Common.save_context = context
+            # TODO
             return render(request, "booking/passenger-details-form.html",
                           context)
 
@@ -625,6 +641,66 @@ def initialise_formset_context(request):
     return context
 
 
+def calculate_total_price(context, children_included, infants_included):
+    """ 
+    Calculate the Total Price of the Booking 
+
+    Adults   - £100     Age > 15
+    Children -  £60     Age 2-15
+    Infants  -  £30     Age < 2
+    Bags     -  £30 
+    """
+
+    number_of_adults = Common.save_context["booking"]["adults"]
+    total = number_of_adults * ADULT_PRICE
+    context["adults_total"] = f"{number_of_adults} x GBP{ADULT_PRICE:.2f}"
+
+    if children_included:
+            number_of_children = Common.save_context["booking"]["children"]
+            total += number_of_children * CHILD_PRICE
+            context["children_total"] = f"{number_of_children} x GBP{CHILD_PRICE:.2f}"
+
+    if infants_included:
+            number_of_infants = Common.save_context["booking"]["infants"]
+            total += number_of_infants * INFANT_PRICE
+            context["infants_total"] = f"{number_of_infants} x GBP{CHILD_PRICE:.2f}"
+
+    # TODO context["bag_remarks_form"] = bag_remarks_form
+    print("BAGS",Common.save_context["bags"] )
+    number_of_bags = Common.save_context["bags"]
+    if number_of_bags > 0:
+        total += number_of_bags * BAG_PRICE
+        context["bags_total"] = f"{number_of_bags} x GBP{BAG_PRICE:.2f}"
+    
+    context["total_price_string"] = f"GBP{total:.2f}"
+    context["total_price"] = total
+    return context
+
+
+    
+def calculate_total_and_confirm(request,
+                                adults_formset,
+                                children_included,
+                                children_formset,
+                                infants_included,
+                                infants_formset,
+                                context):
+    """
+    Calculate the Total Price
+    Display for the Customer to confirm payment
+    If Yes, Create the Record
+    If No, Continue viewing the Passengers' Details
+    """
+
+    print("CONTEXTIN", context)
+    context = calculate_total_price(context, 
+                                    children_included, infants_included)
+
+    # Render the Booking Confirmation Form
+    print(context) # TODO
+    return render(request, "booking/confirm-booking-form.html", context)
+
+
 # TODO
 def passenger_details_form(request):
     """
@@ -673,14 +749,28 @@ def passenger_details_form(request):
         # if bag_remarks_form.is_valid:
         #     print("YES")
         #     print(bag_remarks_form.cleaned_data)
-        if all_formsets_valid(request,
-                              adults_formset,
-                              children_included,
-                              children_formset,
-                              infants_included,
-                              infants_formset):
+        (True, bag_remarks_form.cleaned_data)
+        are_forms_all_valid = all_formsets_valid(request,
+                                                 adults_formset,
+                                                 children_included,
+                                                 children_formset,
+                                                 infants_included,
+                                                 infants_formset)
+        if are_forms_all_valid[0]:
+            cleaned_data = are_forms_all_valid[1]
+            Common.save_context["bags"] = cleaned_data.get("bags")
+            Common.save_context["remarks"] = cleaned_data.get("remarks")
+            calculate_total_and_confirm(request,
+                                        adults_formset,
+                                        children_included,
+                                        children_formset,
+                                        infants_included,
+                                        infants_formset,
+                                        request.POST.copy())
             # TODO: CREATE THE RECORD!!
-            return render(request, "booking/index.html")
+            print("C1", Common.save_context["bags"])
+            print("C2", Common.save_context["remarks"])
+            return render(request, "booking/confirm-booking-form.html", context)
             create_records(request.POST)
 
         else:
@@ -698,6 +788,9 @@ def passenger_details_form(request):
 
     return render(request, "booking/passenger-details-form.html", context)
 
+
+def confirm_booking_form(request):
+    pass
 
 def view_booking(request, id):
     booking = get_object_or_404(Booking, pk=id)

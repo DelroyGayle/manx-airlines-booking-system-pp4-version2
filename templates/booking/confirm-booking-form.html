@@ -1,0 +1,50 @@
+{% extends 'includes/base.html' %}
+
+{% block title %}Confirmation of Booking{% endblock %}
+
+{% block content %}
+<h1 class="ui centered header">Please Confirm Booking</h1>
+
+{% include 'includes/messages.html' %}
+
+<div class="ui centered card">
+    <div class="content">
+        <form method="POST" action={% url 'home' %} class="ui form">
+            {% csrf_token %}
+            <div class="ui header">
+                Booking: {{ pnr }}
+            </div>
+            <div class="flex-container">
+                <div>
+                    <p>Adults</p>
+                    <p>{{ adults_total }}</p>    
+                </div>
+                <div>
+                    <p>Children</p>
+                    <p>{{ children_total }}</p>    
+                </div>
+                <div>
+                    <p>Infants</p>
+                    <p>{{ infants_total }}</p>    
+                </div>
+                <div>
+                    <p>Bags</p>
+                    <p>{{ bags_total }}</p>    
+                </div>
+                <hr>
+                <div>
+                    <p>Total</p>
+                    <p>{{ total_price_string }}</p>    
+                </div>
+            </div>
+            <h2>Total {{ total_price_string }}</h2>
+            <h6>Non-refundable. Changeable subject to fees.</h6>
+            <h6>Prices includes all applicable taxes and fees</h6>
+
+            <input type="submit" class="ui button positive" value="Agree and pay now">
+            <a href={% url 'passenger-details-form' %}>Cancel</a>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}
