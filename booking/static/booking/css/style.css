@@ -67,6 +67,16 @@ textarea {
     text-transform: uppercase;
 }
 
+.ui.form.price-flex-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+#prices, #pa {
+    display: flex;
+    justify-content: space-between;
+}
+
 /* MOBILE HANDLING */
 
 @media only screen and (max-width: 640px) {

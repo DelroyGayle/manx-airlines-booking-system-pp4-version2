@@ -14,32 +14,32 @@
             <div class="ui header">
                 Booking: {{ pnr }}
             </div>
-            <div class="flex-container">
-                <div>
+            <div id="prices">
+                <div id="pa">
                     <p>Adults</p>
                     <p>{{ adults_total }}</p>    
                 </div>
-                <div>
+                <div class="price-flex-container">
                     <p>Children</p>
                     <p>{{ children_total }}</p>    
                 </div>
-                <div>
+                <div class="price-flex-container">
                     <p>Infants</p>
                     <p>{{ infants_total }}</p>    
                 </div>
-                <div>
+                <div class="price-flex-container">
                     <p>Bags</p>
                     <p>{{ bags_total }}</p>    
                 </div>
                 <hr>
-                <div>
+                <div class="price-flex-container">
                     <p>Total</p>
                     <p>{{ total_price_string }}</p>    
                 </div>
             </div>
-            <h2>Total {{ total_price_string }}</h2>
-            <h6>Non-refundable. Changeable subject to fees.</h6>
-            <h6>Prices includes all applicable taxes and fees</h6>
+            <div class="ui medium header">Total {{ total_price_string }}</div>
+            <p><small>Non-refundable. Changeable subject to fees.</small></p>
+            <p><small>Prices includes all applicable taxes and fees</small></p>
 
             <input type="submit" class="ui button positive" value="Agree and pay now">
             <a href={% url 'passenger-details-form' %}>Cancel</a>

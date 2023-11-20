@@ -220,29 +220,6 @@ class AdultsForm(forms.Form):
                                       widget=forms.Select(choices=WCH_CHOICES),
                                       initial="")
 
-    # VALIDATION  TODO REMOVE
-
-    def clean(self):
-        print(type(self))
-        print("CLEANEDxxx", self.cleaned_data)
-        cleaned_data = self.cleaned_data
-        # ## print(self)  TODO
-        # print("TESTING adult-TOTAL_FORMS", self['adult-TOTAL_FORMS'])
-        # return cleaned_data
-        # TODO REMOVE
-        if False and 'first_name' not in cleaned_data:
-            print("SEE")
-            raise forms.ValidationError(
-                        "Passenger Name required. "
-                        "Enter the first name as on the passport.")
-        if False and 'last_name' not in cleaned_data:
-            raise forms.ValidationError(
-                        "Passenger Name required. "
-                        "Enter the last name as on the passport.")
-        print("RETURNED", cleaned_data)  # TODO
-        return cleaned_data
-
-
 # For Children and Infants
 class MinorsForm(forms.Form):
     title = forms.CharField(max_length=4,
@@ -263,7 +240,7 @@ class MinorsForm(forms.Form):
                                       initial="")
 
 
-class BagRemarks(forms.Form):
+class BagsRemarks(forms.Form):
     """
     This class is used for the entry of the number of bags
     Remarks regarding the Booking
