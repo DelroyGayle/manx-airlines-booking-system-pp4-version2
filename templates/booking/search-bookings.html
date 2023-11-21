@@ -21,14 +21,14 @@ Search Bookings
 {% for booking in page_object %}
     <div class="ui raised centered card">
         <div class="content">
-            <div class="header">{{booking.pnr}}</div>
+            <div class="header">{{ booking.pnr }}</div>
         </div>
         <div class="content">
             <div class="ui small feed">
                 <div class="event">
                     <div class="content">
                         <div class="summary">
-                            <p>{{ booking.title }} {{ booking.first_name }} {{booking.last_name}}
+                            <p>{{ booking.title }} {{ booking.first_name }} {{ booking.last_name }}
                             <p>{{ booking.outbound }} LCY IOM
                             {% if booking.inbound %}
                                 <p>{{ booking.outbound }} IOM LCY</p>

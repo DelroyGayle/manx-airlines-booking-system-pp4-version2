@@ -14,6 +14,8 @@ class Common:
     initialised = None
     outbound_flights = None
     inbound_flights = None
+    outbound_listof_flights = None # I.E. [MX465, MX475, MX485]
+    inbound_listof_flights = None  # I.E. [MX466, MX476, MX486]
     flight_info = None
     save_context = None
     OUTBOUND_TIME_OPTIONS1 = None
@@ -47,17 +49,17 @@ class Common:
         information and set them up in variables to be accessed by this App.
         """
 
-        all_flight_entries = get_list_or_404(Flight.objects.all())
+        all_flight_entries = get_list_or_404(Flight.objects
+                                             .all()
+                                             .order_by("flight_STD", "flight_STA"))
 
         # Two dictionaries for outbound and inbound
         outbound = {}
         inbound = {}
         # Nested Dictionary
         newdict = {}
-        # odd flight no.  - outbound
-        # even flight no. - inbound
-        # however use a boolean flag
-        boolean_flag = True
+        outbound_flights = []
+        inbound_flights = []
 
         # Needed to create the radio button options for each flight
         out_time_options1 = []
@@ -69,17 +71,19 @@ class Common:
             newdict[each.flight_number] = {}
             newdict[each.flight_number]["flight_from"] = each.flight_from.strip().upper()
             newdict[each.flight_number]["flight_to"] = each.flight_to.strip().upper()
-            newdict[each.flight_number]["flight_STD"] = each.flight_STD.strip()
-            newdict[each.flight_number]["flight_STA"] = each.flight_STA.strip()
+            newdict[each.flight_number]["flight_STD"] = each.flight_STD
+            newdict[each.flight_number]["flight_STA"] = each.flight_STA
             newdict[each.flight_number]["outbound"] = each.outbound
             newdict[each.flight_number]["capacity"] = each.capacity
-            if boolean_flag:
+            if each.outbound:
+            # Outbound Flight
                 outbound[each.flight_number] = {}
                 outbound[each.flight_number]["flight_from"] = each.flight_from.strip().upper()
                 outbound[each.flight_number]["flight_to"] = each.flight_to.strip().upper()
                 outbound[each.flight_number]["flight_STD"] = each.flight_STD.strip()
                 outbound[each.flight_number]["flight_STA"] = each.flight_STA.strip()
                 outbound[each.flight_number]["capacity"] = each.capacity
+                outbound_flights.append(each.flight_number)  # E.G. [MX465, MX475, MX485]
                 out_time_options1.append(each.flight_STD)
                 out_time_options2.append(Common.format_radio_button_option(
                                                 each.flight_STD,
@@ -87,12 +91,14 @@ class Common:
                                                 each.flight_STA,
                                                 each.flight_to))
             else:
+            # Inbound Flight
                 inbound[each.flight_number] = {}
                 inbound[each.flight_number]["flight_from"] = each.flight_from.strip().upper()
                 inbound[each.flight_number]["flight_to"] = each.flight_to.strip().upper()
                 inbound[each.flight_number]["flight_STD"] = each.flight_STD.strip()
                 inbound[each.flight_number]["flight_STA"] = each.flight_STA.strip()
                 inbound[each.flight_number]["capacity"] = each.capacity
+                inbound_flights.append(each.flight_number)  # I.E. [MX466, MX476, MX486]
                 in_time_options1.append(each.flight_STD)
                 in_time_options2.append(Common.format_radio_button_option(
                                                each.flight_STD,
@@ -100,9 +106,8 @@ class Common:
                                                each.flight_STA,
                                                each.flight_to))
 
-            boolean_flag = not boolean_flag
-
-        newdict["numberof_oneway_flights"] = len(all_flight_entries) // 2
+       # TODO
+       #  newdict["numberof_oneway_flights"] = len(all_flight_entries) // 2
 
         # Store the results in Class variables
         Common.flight_info = newdict
@@ -112,6 +117,8 @@ class Common:
         Common.OUTBOUND_TIME_OPTIONS2 = out_time_options2
         Common.INBOUND_TIME_OPTIONS1 = in_time_options1
         Common.INBOUND_TIME_OPTIONS2 = in_time_options2
+        Common.outbound_listof_flights = outbound_flights
+        Common.inbound_listof_flights = inbound_flights
 
         # Indicate that Initialisation has been done
         Common.initialised = True
