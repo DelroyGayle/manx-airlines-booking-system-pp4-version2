@@ -494,6 +494,7 @@ def is_booking_form_valid(form, request):
     # FURTHER VALIDATION NEEDED
     # Check Dates and Flight Availability
     cleaned_data = form.cleaned_data
+    print("CD", cleaned_data)
     if (cleaned_data["return_option"] == "Y" and
             cleaned_data["returning_date"] == cleaned_data["departing_date"]):
         # Same Day Travel - Is there enough time between journey times?
@@ -515,6 +516,8 @@ def is_booking_form_valid(form, request):
 
     # The Form's contents has passed all validation checks!
     # Save the information for later processing
+    print("CD2", cleaned_data)
+    print("CO", Common.save_context)
     Common.save_context["return_option"] = cleaned_data["return_option"]
     if Common.save_context["depart_pos"] == "Y":
         # Return Flight - Determine both flight numbers
@@ -551,7 +554,6 @@ def create_booking_form(request):
         if is_booking_form_valid(form, request):
             context = {"booking": form.cleaned_data, "form": form.cleaned_data,
                        # TODO HAVE IT TWICE?
-                       "booking_cleaned_data": form.cleaned_data,
                        }
 
             # ADULTS
@@ -1009,55 +1011,15 @@ def edit_booking(request, id):
 
     return render(request, "booking/edit-booking.html", context)
 
-def write_passenger_record(booking, paxno, passenger_type, pax_type, 
-                           contact_number="", contact_email="", 
-                           seatno=0):
-    """ Passenger Records """
-    # SEATNO TODO
-    pax = Passenger()
-    pax.pnr = booking # Foreign Key
-
-    # 'adult-0-title', 'adult-0-first_name',  'adult-0-last_name' etc
-    key = f"{passenger_type}-{paxno}-"
-    pax.title = (
-        Common.save_context["adults_formset"][f"{key}-title"]
-              .strip().upper())
-    pax.first_name = (
-     Common.save_context["adults_formset"][f"{key}-first_name"]
-                  .strip().upper())
-    pax.last_name = (
-        Common.save_context["adults_formset"][f"{key}-last_name"]
-              .strip().upper())
-    pax.pax_type=pax_type
-    pax.order_number = pax.id # AUTO #TODO
-    # Null for Adults TERNARY
-    pax.date_of_birth = date_of_birth TODO
-    # "" for Children/Infants TODO TERNARY
-    pax.contact_number = (
-            Common.save_context["adults_formset"][f"{key}-contact_number"]
-                  .strip())
-        pax.contact_email = (
-            Common.save_context["adults_formset"][f"{key}-contact_email"]
-                  .strip().upper())
-        pax.seat_number = 0 # TODO
-        pax.status=f"HK{i + 1}"
-        pax.wheelchair_ssr = handle_wch_ssr(
-            Common.save_context["adults_formset"][f"{key}-ssr"])
-        pax.wheelchair_type = handle_wch_type(
-            Common.save_context["adults_formset"][f"{key}-type"])
-        pax.save()
-
-def create_new_records():
+def create_booking_instance(pnr):
     """
-    Create the Booking Record
-    And a Passenger Record for each passenger attached to the Booking
-    There will be at least ONE Adult Passenger for each booking
-    All the information is stored in the Class Variable Common.save_context
+    Create the Booking Record instance
+    All the Booking information is stored 
+    in the Class Variable 'Common.save_context'
     """
 
     # New Instance
     booking = Booking()
-    # print("BOOKING", booking)  # TODO
     print("CONTEXT", Common.save_context)
     print(pnr)  # TODO
     booking.pnr = pnr
@@ -1102,38 +1064,144 @@ def create_new_records():
     booking.departure_time = Common.outbound[outbound_flightno]["flight_STD"]
     booking.arrival_time = Common.outbound[outbound_flightno]["flight_STA"]
     booking.remarks = Common.save_context["remarks"]
+    print("BOOKING", booking)  # TODO
     # Write the new Booking record
     booking.save()
 
-        pax.ticket_class="Y",
-                        pnr=booking)
+    # Return the Numbers of each Passenger type
+    return (number_of_adults, number_of_children, number_of_infants)
 
-            context["adults_formset"] = adults_formset
-            context["children_formset"] = children_formset
-            context["children_included"] = children_included
-            context["infants_formset"] = infants_formset
-            context["infants_included"] = infants_included
+def create_pax_instance(booking, formset, key, paxno, pax_type,
+                           order_number, 
+                           infant_status_number=1,
+                           seat_number=0): # TODO
+                           
+    """ 
+    Create the actual Passenger Record instance 
+    All the Passenger information is stored 
+    in the Class Variable 'Common.save_context'
 
+    order_number: First Pax numbered 1, 2nd 2, etc
+    infant_status_number: 
+    Infant's Status Number matches each Adult's Status Number
+    which starts at 1 i.e. Adult 1 - the Principal Passenger
+    """
 
-            # A=Adult C=Child I=Infant
-    pax_type = models.CharField(max_length=1, default="A")
-    for i in range(2):
-        # TODO
-        pax = Passenger(title="MR",
-                        first_name="JOE",
-                        last_name="BLOGGS",
-                        pax_type="A",
-                        pax_order_number=i+1,  # TODO
-                        # TODO CAN BE NULL FOR ADULTS
-                        date_of_birth=adhoc_date,
-                        contact_number="123456",
-                        contact_email="test@email.com",
-                        seat_number=i,  # TODO
-                        status=f"HK{i + 1}",
-                        ticket_class="Y",
-                        pnr=booking)
+    pax = Passenger()
+    pax.pnr = booking # Foreign Key
+    pax.title = (
+        Common.save_context[formset][f"{key}-title"]
+              .strip().upper())
+    pax.first_name = (
+        Common.save_context[formset][f"{key}-first_name"]
+              .strip().upper())
+    pax.last_name = (
+        Common.save_context[formset][f"{key}-last_name"]
+              .strip().upper())
+    pax.pax_type=pax_type
+    pax.order_number = order_number
+    # EG 'child-0-date_of_birth'
+    # Date of Birth is NULL for Adult
+    # Contact Details are "" for Non-Adult
+    if pax_type == "A":
+        pax.date_of_birth = None
+        pax.contact_number = (Common.save_context[formset][f"{key}-contact_number"]
+                                    .strip().upper())
+        pax.contact_email = (Common.save_context[formset][f"{key}-contact_email"]
+                                   .strip().upper())
+    else:
+        pax.date_of_birth = Common.save_context[formset][f"{key}-date_of_birth"]
+        pax.contact_number = ""
+        pax.contact_email = ""
+
+    pax.seat_number = seat_number
+    pax.status = (f"HK{order_number}" if pax_type == "A"
+                                      else f"HK{infant_status_number}")
+    order_number += 1
+    infant_status_number += 1
+
+    # SSR: # Blank or R for WHCR, S for WCHS, C for WCHC
+    ssr = Common.save_context[formset][f"{key}_ssr"]
+    pax.wheelchair_ssr = f"WCH{ssr}" if ssr != "" else ""
+
+    # Type: Blank or M for WCMP, L for WCLB; D for WCBD; W for WCBW
+    wchtype = Common.save_context[formset][f"{key}_type"]
+    if wchtype == "M":
+        pax.wheelchair_type = "WCMP"
+    elif wchtype == "L":
+        pax.wheelchair_type = "WCLB"
+    elif wchtype == "D":
+        pax.wheelchair_type = "WCBD"
+    elif wchtype == "W":
+        pax.wheelchair_type = "WCBW"
+    else:
+        pax.wheelchair_type = ""
+
+    return order_number
+
+def write_passenger_record(booking, passenger_type, plural, pax_type,
+                           number_of_pax_type,
+                           # First Pax numbered 1, 2nd 2, etc
+                           order_number=1):
+
+    """
+    Passenger Records 
+
+    Passenger Info are stored in
+    Common.save_context["adults_formset"] = adults_formset
+    Common.save_context["children_formset"] = children_formset
+    Common.save_context["infants_formset"] = infants_formset
+    """
+    # SEATNO TODO seat_numbers
+    formset = f"{plural}_formset" # EG "adults_formset"
+    # 'adult-0-title', 'adult-0-first_name',  'adult-0-last_name' etc
+    key = f"{passenger_type}-{paxno}-"
+    paxno = 0
+    while paxno < number_of_pax_type:
+        order_number = create_pax_instance(booking, formset, key, paxno, pax_type,
+                                           order_number)
+        print("PAX", paxno, pax)
         pax.save()
-        print("I=", i, pax)  # TODO
+        paxno += 1
+        return order_number
+
+def create_new_records():
+    """
+    Create the Booking Record
+    And a Passenger Record for each passenger attached to the Booking
+    There will be at least ONE Adult Passenger for each booking
+    All the information is stored in the Class Variable 'Common.save_context'
+    """
+
+    # New Booking Instance
+    tuple = create_booking_instance(pnr)
+    number_of_adults, number_of_children, number_of_infants = tuple
+
+    # Now create the corresponding Passenger Records
+    # Adult Passengers
+    passenger_type = "adult"
+    plural = "adults"
+    pax_type = "A"
+    order_number = write_passenger_record(booking, passenger_type, plural, pax_type,
+                                          number_of_adults)
+
+    # Child Passengers
+    if number_of_children > 0: 
+        passenger_type = "child"
+        plural = "children"
+        pax_type = "C"
+        order_number = write_passenger_record(booking, passenger_type, plural, pax_type,
+                                              number_of_children, order_number)
+
+    # Infant Passengers
+    if number_of_infants > 0: 
+        passenger_type = "infant"
+        plural = "infants"
+        pax_type = "I"
+        order_number = write_passenger_record(booking, passenger_type, plural, pax_type,
+                                              number_of_infants, order_number)
+                                                                                    
+    Common.save_context = {} # RESET!
 
         # RETURN TO HOME PAGE =  # TODO: SHOW MESSAGE
         return HttpResponseRedirect(reverse("home"))
