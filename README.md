@@ -61,7 +61,7 @@ The Daily Flight Schedules are:
 
 Throughout this document I will be using typical airline terminology when referring to certain concepts.
 Here are a sample of some of the terms used:
-* PAX - Short for Passenger(s)
+* PAX - short for Passenger(s)
 * PNR - Passenger Name Record
 * PRM - Passenger with Reduced Mobility
 * SSR - Special Service Request
@@ -388,7 +388,8 @@ This is your deployed app in operation
 + I visited [BA](https://www.britishairways.com/travel/home/public/en_gb/)'s and [EasyJet](https://www.easyjet.com/en)'s websites to get an idea of layout the forms and the phraseology of error messages.
 + The Isle of Man Logo was downloaded from [icon-icons](https://icon-icons.com/icon/isle-of-man/17195) - *Free for personal use*
 + [drawSQL](https://drawsql.app/) was used to draw the SQL tables
++ I frequently visited [Stackoverflow](https://stackoverflow.com/) to find answers to varous technical challenges that I faced
         
 ## Acknowledgements    
-
+Tutor Support for their speedy help during this project
 

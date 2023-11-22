@@ -77,12 +77,14 @@ class Common:
             newdict[each.flight_number]["capacity"] = each.capacity
             if each.outbound:
             # Outbound Flight
+                # TODO MAY BE N/A PLEASE CHECK
                 outbound[each.flight_number] = {}
                 outbound[each.flight_number]["flight_from"] = each.flight_from.strip().upper()
                 outbound[each.flight_number]["flight_to"] = each.flight_to.strip().upper()
                 outbound[each.flight_number]["flight_STD"] = each.flight_STD.strip()
                 outbound[each.flight_number]["flight_STA"] = each.flight_STA.strip()
                 outbound[each.flight_number]["capacity"] = each.capacity
+                ################
                 outbound_flights.append(each.flight_number)  # E.G. [MX465, MX475, MX485]
                 out_time_options1.append(each.flight_STD)
                 out_time_options2.append(Common.format_radio_button_option(
@@ -92,12 +94,14 @@ class Common:
                                                 each.flight_to))
             else:
             # Inbound Flight
+                # TODO MAY BE N/A PLEASE CHECK
                 inbound[each.flight_number] = {}
                 inbound[each.flight_number]["flight_from"] = each.flight_from.strip().upper()
                 inbound[each.flight_number]["flight_to"] = each.flight_to.strip().upper()
                 inbound[each.flight_number]["flight_STD"] = each.flight_STD.strip()
                 inbound[each.flight_number]["flight_STA"] = each.flight_STA.strip()
                 inbound[each.flight_number]["capacity"] = each.capacity
+                ################
                 inbound_flights.append(each.flight_number)  # I.E. [MX466, MX476, MX486]
                 in_time_options1.append(each.flight_STD)
                 in_time_options2.append(Common.format_radio_button_option(

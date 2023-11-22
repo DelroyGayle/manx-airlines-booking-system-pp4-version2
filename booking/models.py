@@ -76,12 +76,20 @@ class Booking(models.Model):
                                           .upper())
                               if self.return_flight else "")
 
-        return ("PNR: {0} {1} {2} {3} - {4} PAX + {5} INFANTS".format(
-                 self.pnr,
-                 self.outbound_flightno,
-                 self.outbound_date.strftime("%d%b%Y").upper(),
-                 return_flight_info,
-                 self.number_of_pax, self.number_of_infants))
+        adult_plural = "S" if self.number_of_adults != 1 else ""
+        child_plural = "CHILDREN" if self.number_of_children != 1 else "CHILD"
+        infant_plural = "S" if self.number_of_infants != 1 else ""
+        return ("PNR: {0} {1} {2} {3} - {4} ADULT{5}, {6} {7} & {8} INFANT{9}".format(
+                 self.pnr, # 0
+                 self.outbound_flightno, # 1
+                 self.outbound_date.strftime("%d%b%Y").upper(), # 2
+                 return_flight_info, #3 
+                 self.number_of_adults, #4
+                 adult_plural, #5
+                 self.number_of_children, #6
+                 child_plural, #7
+                 self.number_of_infants, # 8,
+                 infant_plural)) #9
 
 
 class Passenger(models.Model):
@@ -90,7 +98,7 @@ class Passenger(models.Model):
     last_name = models.CharField(max_length=40)
     # A=Adult C=Child I=Infant
     pax_type = models.CharField(max_length=1, default="A")
-    pax_order_number = models.PositiveSmallIntegerField(default=1)
+    order_number = models.PositiveSmallIntegerField(default=1)
     # D.O.B. applicable to Children and Infants only
     date_of_birth = models.DateField(null=True)
     # Either one of these two fields needs to be set for Adult No. 1
