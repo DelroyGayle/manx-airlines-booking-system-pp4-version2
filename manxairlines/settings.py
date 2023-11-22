@@ -138,7 +138,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-# STATIC_ROOTS = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOTS = os.path.join(BASE_DIR, 'staticfiles')
 
 
 # Default primary key field type
