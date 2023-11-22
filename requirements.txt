@@ -5,3 +5,4 @@ gunicorn==21.2.0
 psycopg2==2.9.9
 pytz==2023.3.post1
 sqlparse==0.4.4
+python-dateutil==1.16.0
