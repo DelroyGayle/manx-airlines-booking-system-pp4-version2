@@ -1,0 +1,110 @@
+/* Footer Solution found at https://stackoverflow.com/questions/34250019/footer-semantic-ui */
+
+.my-main-style {min-height:74%; 
+    padding-bottom:60px; 
+    box-sizing:border-box;
+}
+
+.my-footer-style {
+    /*background-color: #212121;*/
+    position: absolute;
+    margin-top: -50px;
+    left: 0;
+    width: 100%;
+    padding: 15px 0;
+}
+
+ul.errorlist {display:none;}
+
+/* TODO #homepage */
+/*
+@media only screen and (min-width: 600px)  {
+    #homepage {
+        height: 70vh;
+    }
+} 
+*/
+
+
+/* TODO */
+.errorlist {
+    display: none;
+    color:red
+  }
+  
+/* Used to centre the forms */
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+  
+.form-centre {
+    width: 50%;
+}
+
+#id_departing_time, #id_returning_time {
+    list-style-type: none;
+}
+
+.helptext {
+    color: green;
+    font-weight: bold;
+}
+
+.ui.form select {
+    width: 25%;
+}
+
+#id_return_option {
+    width: 60%;
+}
+
+.ui.form input[type=text],
+textarea {
+    text-transform: uppercase;
+}
+
+.ui.form.price-flex-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.ui.form article {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* MOBILE HANDLING */
+
+@media only screen and (max-width: 640px) {
+    .ui.form select {
+        width: 45%;
+    } 
+}
+
+@media only screen and (max-width: 500px) {
+    .ui.form select {
+        width: 45%;
+    } 
+
+    h2 {
+        font-size: 1.2rem;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    ul #id_departing_time,
+    ul #id_returning_time {
+        font-size: 83%;
+    } 
+}
+
+@media only screen and (max-width: 360px) {
+    ul #id_departing_time,
+    ul #id_returning_time {
+        font-size: 77%;
+    } 
+}
