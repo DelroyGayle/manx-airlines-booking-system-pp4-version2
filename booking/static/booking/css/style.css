@@ -72,7 +72,7 @@ textarea {
     justify-content: space-between;
 }
 
-#p1rices, #p1a {
+.ui.form article {
     display: flex;
     justify-content: space-between;
 }

@@ -471,6 +471,7 @@ def all_formsets_valid(request, adults_formset,
         return (False, None)
     print("B1", bags_remarks_form,bags_remarks_form.is_valid )
     print("cleanbags", bags_remarks_form, bags_remarks_form.cleaned_data) # TODO
+    #context["bags_remarks_form"] = bags_remarks_form.cleaned_data #DG #TODO
     return (True, bags_remarks_form.cleaned_data)
 
 # Create your views here.
@@ -660,7 +661,9 @@ def initialise_formset_context(request):
                                          prefix="infant")
         context["infants_formset"] = infants_formset
 
-    context["bags_remarks_form"] = Common.save_context["bags_remarks_form"]
+    #context["bags_remarks_form"] = Common.save_context["bags_remarks_form"]
+    bags_remarks_form = BagsRemarks(request.POST or None, prefix="bagrem")
+    context["bags_remarks_form"] = bags_remarks_form # DG100 TODO
     context["hidden_form"] = Common.save_context["hidden_form"]
     # TODO
     print("CON", context)
@@ -887,14 +890,13 @@ def view_booking(request, id):
     print("PNR", booking.pnr)
     # context = {"booking": booking}
     # qs = Passenger.objects.filter(booking=b)
-    qs = Passenger.objects.filter(pnr_id=id).order_by("pax_type",
-                                                      "pax_order_number")
+    qs = Passenger.objects.filter(pnr_id=id).order_by("pax_number")
     print(qs)  # TODO
     print(len(qs))
     passenger_list = []
     for pax_record in qs:  # TODO
         print(type(pax_record))
-        print(pax_record.pax_type, pax_record.pax_order_number)
+        print(pax_record.pax_type, pax_record.pax_number)
         passenger_list.append(pax_record)
     #  print(type(passenger_list)) #  TODO
     context = {"booking": booking, "passengers": passenger_list}
@@ -911,15 +913,15 @@ def search_bookings(request):
     # TODO
 
     # Each Booking must has one Principal Passenger
-    # That Passenger must be the first mentioned (pax_order_number=1)
+    # That Passenger must be the first mentioned (pax_number=1)
     # and an Adult (pax_type="A")
 
     # Every Booking has 'one' Principal Passenger
     # Adult 1 - query that Passenger i.e.
-    # pax_type == "A" and pax_order_number == 1
+    # pax_type == "A" and pax_number == 1
     adult1_qs = Passenger.objects.filter(pnr=OuterRef("id"),
-                                         pax_type="A",
-                                         pax_order_number=1)
+                                         
+                                         pax_number=1)
 
     # Case Insensitive Search - in 3 parts
 
@@ -929,13 +931,13 @@ def search_bookings(request):
 
                  # 2) Or Matching Principal Passenger's First Name
                  Q(passenger__first_name__icontains=query) &
-                 Q(passenger__pax_type__exact="A") &
-                 Q(passenger__pax_order_number=1)) | (
+                 #Q(passenger__pax_type__exact="A") &
+                 Q(passenger__pax_number=1)) | (
 
                  # 3) Or Matching Principal Passenger's Last Name
                  Q(passenger__last_name__icontains=query) &
-                 Q(passenger__pax_type__exact="A") &
-                 Q(passenger__pax_order_number=1)))
+                 #Q(passenger__pax_type__exact="A") &
+                 Q(passenger__pax_number=1)))
 
                 # Sort the Query Result by the PNR
                 .distinct().order_by("pnr")
@@ -957,8 +959,8 @@ def search_bookings(request):
     for element in queryset:
         print("PNR1", element.pnr)  # TODO
         qs = Passenger.objects.filter(pnr=element.id,
-                                      pax_type="A",
-                                      pax_order_number=1)
+                                      #pax_type="A",
+                                      pax_number=1)
         print("SUBQ", qs)  # TODO
         for elem2 in qs:
             print(elem2.first_name, elem2.last_name)
@@ -1126,8 +1128,8 @@ def create_pax_instance(booking, dataset_name, key, paxno, pax_type,
         data["last_name"]
               .strip().upper())
     pax.pax_type=pax_type
-    pax.order_number = order_number
-    print("ORDER", order_number, pax.order_number)
+    pax.pax_number = order_number
+    print("ORDER", order_number, pax.pax_number)
     # Date of Birth is NULL for Adult
     # Contact Details are "" for Non-Adult
     if pax_type == "A":
@@ -1145,7 +1147,7 @@ def create_pax_instance(booking, dataset_name, key, paxno, pax_type,
     pax.status = (f"HK{order_number}" if pax_type != "I"
                                       else f"HK{infant_status_number}")
     print("PCH", pax, order_number, infant_status_number) # TODO
-    print("PCH2", pax.order_number, order_number, infant_status_number) # TODO
+    print("PCH2", pax.pax_number, order_number, infant_status_number) # TODO
     order_number += 1
     infant_status_number += 1
 

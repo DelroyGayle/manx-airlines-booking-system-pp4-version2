@@ -98,7 +98,9 @@ class Passenger(models.Model):
     last_name = models.CharField(max_length=40)
     # A=Adult C=Child I=Infant
     pax_type = models.CharField(max_length=1, default="A")
-    order_number = models.PositiveSmallIntegerField(default=1)
+    # The passenger number within the Booking i.e.
+    # 1st passenger is 1, 2nd is 2, etc
+    pax_number = models.PositiveSmallIntegerField(default=1)
     # D.O.B. applicable to Children and Infants only
     date_of_birth = models.DateField(null=True)
     # Either one of these two fields needs to be set for Adult No. 1

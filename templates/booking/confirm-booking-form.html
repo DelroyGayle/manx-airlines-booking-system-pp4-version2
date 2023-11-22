@@ -11,33 +11,29 @@
     <div class="content">
         <form method="POST" action={% url 'confirm-booking-form' %} class="ui form">
             {% csrf_token %}
-            <div class="ui header">
+            <div class="ui centred header">
                 Booking: {{ pnr }}
             </div>
-            <div id="prices">
-                <div id="pa">
+            <section>
+                <article>
                     <p>Adults</p>
                     <p>{{ adults_total }}</p>    
-                </div>
-                <div class="price-flex-container">
+                </article>
+                <article>
                     <p>Children</p>
                     <p>{{ children_total }}</p>    
-                </div>
-                <div class="price-flex-container">
+                </article>
+                <article>
                     <p>Infants</p>
                     <p>{{ infants_total }}</p>    
                 </div>
-                <div class="price-flex-container">
+                <article>
                     <p>Bags</p>
                     <p>{{ bags_total }}</p>    
-                </div>
+                </article>
                 <hr>
-                <div class="price-flex-container">
-                    <p>Total</p>
-                    <p>{{ total_price_string }}</p>    
-                </div>
-            </div>
-            <div class="ui medium header">Total {{ total_price_string }}</div>
+            </section>
+            <div class="ui medium centred header">Total {{ total_price_string }}</div>
             <p><small>Non-refundable. Changeable subject to fees.</small></p>
             <p><small>Prices includes all applicable taxes and fees</small></p>
 
