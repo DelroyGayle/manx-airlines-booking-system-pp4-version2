@@ -11,20 +11,40 @@ TODO
 
 <div class="ui centered card">
     <div class="content">
-        <div class="header">{{  booking.pnr }}</div>
-        <div class="meta">{{ booking.created_at }}</div>
+        <div class="center aligned header">{{  booking.pnr }}</div>
+        <div class="meta">Created: {{ display.created_at }}</div>
         <div class="description">
-            <p>MX485&nbsp;{{ booking.ticket_class }}&nbsp;13NOV23&nbsp;
+            <p>{{ booking.outbound_flightno }}&nbsp;{{ booking.ticket_class }}&nbsp;{{ display.outbound_date }}&nbsp;
                 {{ booking.flight_from }}{{ booking.flight_to }}</p>
-            <p>MX486&nbsp;{{ booking.ticket_class }}&nbsp;13NOV23&nbsp;
-                {{  booking.flight_to }}{{ booking.flight_from }}</p>
+            {% if booking.return_flight %}
+                <p>{{ booking.inbound_flightno }}&nbsp;{{ booking.ticket_class }}&nbsp;{{ display.inbound_date }}&nbsp;
+                    {{  booking.flight_to }}{{ booking.flight_from }}</p>
+            {% endif %}
+            <hr>
             {% for pax in passengers %}
-            <p>{{ pax.title }}&nbsp;{{ pax.first_name }}&nbsp;{{ pax.last_name }}</p>
-            <p>Seat&nbsp;23A&nbsp;Status&nbsp;{{ pax.status }}&nbsp;Booking&nbsp;Class&nbsp;{{ pax.ticket_class }}</p>
-            <p>Contact&nbsp;Telephone&nbsp;{{ pax.contact_number }}</p>
-            <p>Contact Email&nbsp;{{ pax.contact_email }}</p>
+                <p><strong>{{ pax.title }}&nbsp;{{ pax.first_name }}&nbsp;{{ pax.last_name }}</strong></p>
+                <p>Status&nbsp;{{ pax.status }}&nbsp;
+                {% if pax.pax_type == "A" %}
+                    (ADULT)
+                {% elif pax.pax_type == "C" %}
+                pax.data_of_birth
+                    (CHILD/{{ pax.data_of_birth }}|date:"dmy"|upper)
+                {% else %}
+                    (INFANT)
+                {% endif %}
+                </p>
+                {%if pax.contact_number|length %}
+                    <p>Contact&nbsp;Telephone&nbsp;{{ pax.contact_number }}</p>
+                {% endif %}
+                {%if pax.contact_email %}
+                    <p>Contact Email&nbsp;{{ pax.contact_email }}</p>
+                    {% endif %}
+                <p>Seat&nbsp;23A</p>
             {% endfor %}
-            <p>{{ booking.number_of_bags }} Bags</p>
+            {%if booking.number_of_bags %}
+                <hr>
+                <p>{{ booking.number_of_bags }} Bags</p>
+            {% endif %}
         </div>
     </div>
     <div class="extra content">
@@ -32,4 +52,4 @@ TODO
         <a href={% url 'delete-booking' booking.id %} class="ui button red">Delete</a>
     </div>
 </div>
-    {% endblock %}
+{% endblock %}

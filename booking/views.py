@@ -699,21 +699,20 @@ def compute_total_price(children_included, infants_included):
             f"{number_of_adults} x GBP{ADULT_PRICE:3.2f} = GBP{total:5.2f}")
 
     if children_included:
-            number_of_children = Common.save_context["booking"]["children"]
-            product = number_of_children * CHILD_PRICE 
-            total += product
-            the_fees_template_values["children_total"] = (
+        number_of_children = Common.save_context["booking"]["children"]
+        product = number_of_children * CHILD_PRICE 
+        total += product
+        the_fees_template_values["children_total"] = (
                     f"{number_of_children} x GBP{CHILD_PRICE:3.2f} = "
                     f"GBP{product:5.2f}")
 
     if infants_included:
-            number_of_infants = Common.save_context["booking"]["infants"]
-            product = number_of_infants * INFANT_PRICE
-            total += product
-            the_fees_template_values["infants_total"] = (
+        number_of_infants = Common.save_context["booking"]["infants"]
+        product = number_of_infants * INFANT_PRICE
+        total += product
+        the_fees_template_values["infants_total"] = (
                     f"{number_of_infants} x GBP{INFANT_PRICE:3.2f} = "
                     f"GBP{product:5.2f}")
-    # TODO context["bags_remarks_form"] = bags_remarks_form
     
     print("BAGS",Common.save_context["bags"] ) # TODO
     number_of_bags = Common.save_context["bags"]
@@ -936,7 +935,11 @@ def view_booking(request, id):
         print(pax_record.pax_type, pax_record.pax_number)
         passenger_list.append(pax_record)
     #  print(type(passenger_list)) #  TODO
-    context = {"booking": booking, "passengers": passenger_list}
+    display = dict(created_at=booking.created_at.strftime("%d/%m/%Y"),
+                   outbound_date=booking.outbound_date.strftime("%d%b%y").upper())
+    if booking.return_flight:
+        display["inbound_date"] = booking.inbound_date.strftime("%d%b%y").upper()
+    context = {"booking": booking, "passengers": passenger_list, "display": display}
     # print(pax.title, pax.last_name, pax.last_name) TODO
     return render(request, "booking/view-booking.html", context)
 

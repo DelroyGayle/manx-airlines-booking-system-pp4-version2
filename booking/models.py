@@ -109,8 +109,9 @@ class Passenger(models.Model):
     contact_email = models.CharField(max_length=40, blank=True, default="")
     pnr = models.ForeignKey(Booking, on_delete=models.CASCADE)
     seat_number = models.PositiveSmallIntegerField(default=0)
-    # Status: HK1 for PAX 1, HK2 for PAX 2, etc
-    status = models.CharField(max_length=3)
+    # Status: HK1 for PAX 1, HK2 for PAX 2, etc up to HK20
+    # Infants have the same status number as the accompanying adult
+    status = models.CharField(max_length=4)
     # Optional Wheelchair Info
     # Blank or R for WHCR, S for WCHS, C for WCHC
     wheelchair_ssr = models.CharField(max_length=1, blank=True, default="")

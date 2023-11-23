@@ -11,6 +11,4 @@ urlpatterns = [
     path('edit/<id>/', views.edit_booking, name='edit-booking'),
     path('details/', views.passenger_details_form,
          name='passenger-details-form'),
-    path('copy/', views.passenger_details_form2,
-         name='passenger-details-form-copy'),
 ]

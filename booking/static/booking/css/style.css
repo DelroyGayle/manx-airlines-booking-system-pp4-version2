@@ -62,6 +62,10 @@ ul.errorlist {display:none;}
     width: 60%;
 }
 
+.ui[class*="center aligned"].container {
+    text-align: left;
+}
+
 .ui.form input[type=text],
 textarea {
     text-transform: uppercase;
