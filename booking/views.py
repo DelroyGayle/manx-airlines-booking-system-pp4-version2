@@ -1170,6 +1170,7 @@ def create_pax_instance(booking, dataset_name, key, paxno, pax_type,
     pax.title = (
         data["title"]
               .strip().upper())
+    print("TITLE>", data["title"], pax.title)
     pax.first_name = (
         data["first_name"]
               .strip().upper())
@@ -1178,7 +1179,7 @@ def create_pax_instance(booking, dataset_name, key, paxno, pax_type,
               .strip().upper())
     pax.pax_type=pax_type
     pax.pax_number = order_number
-    print("ORDER", order_number, pax.pax_number)
+    print("ORDER", pax_type, order_number, pax.pax_number)
     # Date of Birth is NULL for Adult
     # Contact Details are "" for Non-Adult
     if pax_type == "A":

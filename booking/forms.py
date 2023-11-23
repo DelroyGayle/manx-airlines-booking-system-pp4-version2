@@ -185,7 +185,6 @@ TITLE_CHOICES = [
         ("MS", "MS"),
         ("PROF", "PROFESSOR"),
         ("SIR", "SIR"),
-        ("SIS", "SISTER"),
     ]
 
 
@@ -219,6 +218,7 @@ class AdultsForm(forms.Form):
     wheelchair_type = forms.CharField(max_length=1, required=False,
                                       widget=forms.Select(choices=WCH_CHOICES),
                                       initial="")
+
 
 # For Children and Infants
 class MinorsForm(forms.Form):

@@ -3,20 +3,6 @@ constants.py
 Various Constants used throughout this App
 """
 
-TITLE_CHOICES = [
-        ("DR", "DOCTOR"),
-        ("LADY", "LADY"),
-        ("LORD", "LORD"),
-        ("MSTR", "MASTER"),
-        ("MISS", "MISS"),
-        ("MR", "MR"),
-        ("MRS", "MRS"),
-        ("MS", "MS"),
-        ("PROF", "PROFESSOR"),
-        ("SIR", "SIR"),
-        ("SIS", "SISTER"),
-    ]
-
 NULLPAX = "Enter the details for this passenger."
 BAD_NAME = ("Names must begin and end with a letter. "
             "Names must consist of only alphabetical characters, "
