@@ -100,7 +100,7 @@ def append_to_dict(dict, key, item):
 
 def name_validation(fields_dict, accum_dict, errors_found):
     """ Handle the Formsets' Validation of First and Last Names """
-# def adults_formset_validated(cleaned_data, request):
+# def adults_formset_validated(cleaned_data, request):  # TODO
 
     # First Name Validation
     temp_field = fields_dict.get("first_name", "").replace(" ", "")
@@ -182,6 +182,7 @@ def adults_formset_validated(cleaned_data, request):
         display_formset_errors(request, "Adult", formset_errors)
         return False
 
+    print(500) # TODO
     return True
 
 
@@ -369,6 +370,7 @@ def all_formsets_valid(request, adults_formset,
 
     errors_found = False
     if adults_formset.is_valid():
+        print(400) #TODO
         pass
     else:
         # The Adults Formset is Invalid - Report the Errors
@@ -414,8 +416,10 @@ def all_formsets_valid(request, adults_formset,
     is_empty = False
 
     # ADULTS
+    print(401) # TODO
     cleaned_data = adults_formset.cleaned_data
     if not any(cleaned_data):
+        print(402) # TODO
         is_empty = True
         messages.add_message(request, messages.ERROR,
                              "Enter the Adult's Passenger Details "
@@ -448,6 +452,7 @@ def all_formsets_valid(request, adults_formset,
         else:
             Common.save_context["infants_data"] = cleaned_data
 
+    print(403) # TODO
     if is_empty:
         return (False, None)
 
@@ -465,11 +470,14 @@ def all_formsets_valid(request, adults_formset,
                                      False, request)):
         return (False, None)
 
+    print(860, type(bags_remarks_form), bags_remarks_form) # TODO
     # Validate BagsRemarks Form
     if not bags_remarks_form.is_valid:
+        print(865) # TODO
         display_formset_errors(request, "Bag/Remarks", bags_remarks_form.errors)
         return (False, None)
 
+    print(870, bags_remarks_form.cleaned_data) # TODO
     return (True, bags_remarks_form.cleaned_data)
 
 # Create your views here.
@@ -670,7 +678,7 @@ def initialise_formset_context(request):
 
     return context
 
-def compute_total_price(context, children_included, infants_included):
+def compute_total_price(children_included, infants_included):
     """ 
     Compute the Total Price of the Booking 
 
@@ -679,21 +687,22 @@ def compute_total_price(context, children_included, infants_included):
     Infants  -  £30     Age < 2
     Bags     -  £30 
 
-    Set up the template variables to be displayed
+    Then store the values in 'the_fees_template_values'
+    in order that they can be rendered on the Confirmation Form
     """
 
-    template_variables = {}
+    the_fees_template_values = {}
     number_of_adults = Common.save_context["booking"]["adults"]
     print("N/A2", number_of_adults)
     total = number_of_adults * ADULT_PRICE
-    template_variables["adults_total"] = (
+    the_fees_template_values["adults_total"] = (
             f"{number_of_adults} x GBP{ADULT_PRICE:3.2f} = GBP{total:5.2f}")
 
     if children_included:
             number_of_children = Common.save_context["booking"]["children"]
             product = number_of_children * CHILD_PRICE 
             total += product
-            template_variables["children_total"] = (
+            the_fees_template_values["children_total"] = (
                     f"{number_of_children} x GBP{CHILD_PRICE:3.2f} = "
                     f"GBP{product:5.2f}")
 
@@ -701,7 +710,7 @@ def compute_total_price(context, children_included, infants_included):
             number_of_infants = Common.save_context["booking"]["infants"]
             product = number_of_infants * INFANT_PRICE
             total += product
-            template_variables["infants_total"] = (
+            the_fees_template_values["infants_total"] = (
                     f"{number_of_infants} x GBP{INFANT_PRICE:3.2f} = "
                     f"GBP{product:5.2f}")
     # TODO context["bags_remarks_form"] = bags_remarks_form
@@ -711,27 +720,27 @@ def compute_total_price(context, children_included, infants_included):
     if number_of_bags > 0:
         product = number_of_bags * BAG_PRICE
         total += product
-        template_variables["bags_total"] = (
+        the_fees_template_values["bags_total"] = (
                 f"{number_of_bags} x GBP{BAG_PRICE:3.2f} = "
                 f"GBP{product:5.2f}")
 
-    template_variables["total_price_string"] = f"GBP{total:5.2f}"
+    the_fees_template_values["total_price_string"] = f"GBP{total:5.2f}"
     # The Actual Total Price
-    template_variables["total_price"] = total
+    the_fees_template_values["total_price"] = total
     Common.save_context["total_price"] = total
-    print("TYPE/C1", template_variables) # TODO
-    return template_variables
+    print("TYPE/C1", the_fees_template_values) # TODO
+    return the_fees_template_values
 
-def add_template_variables(template_variables):
+def add_fees_to_context(the_fees_template_values):
     """
-    # TODO
-    Set up the Context to be rendered for the Confirmation Form
+    The fees for the selected journey need to be added to
+    the Context which in turn will be rendered on the Confirmation Form
     """ 
+    # print(702, type(context)) # TODO
     context = {}
-    # Add the templates variables to be displayed
-    # in the Confirm Booking Form
-    for var in template_variables:
-        context[var] = template_variables[var]
+    for var in the_fees_template_values:
+        context[var] = the_fees_template_values[var]
+    print(703, type(context)) # TODO
     return context
     
 def generate_pnr():
@@ -750,27 +759,36 @@ def generate_pnr():
         newpnr = "SMI" + random_string
         matches = Booking.objects.filter(pnr=newpnr)[:1].count()
     # Unique PNR
+    print(newpnr, "TYPE", type(newpnr)) # TODO
     return newpnr
 
 def setup_confirm_booking_context(request,
                                   children_included,
                                   infants_included,
                                   context):
+    # TODO
     """
-    Calculate the Total Price
-    Display for the Customer to confirm payment
-    If Yes, Create the Record
-    If No, Continue viewing the Passengers' Details
+    Calculate the Fees and Total Price
+    Then add the results to the 'context' in order
+    to be displayed on the Confirmation Form
     """
 
     print("CONTEXTIN", context)
-    print(type(context))
-    template_variables = compute_total_price(context, children_included, infants_included)
-    context = add_template_variables(template_variables)
+    print(701, type(context))
+    the_fees = compute_total_price(children_included, infants_included)
+    print(the_fees)
+    context = add_fees_to_context(the_fees)
+
+    # TODO
+    # Update the 'context' with the fees and total price
+    context |= the_fees
+    print("900DONE", context)
+
 
     # Generate a Random Unique 6-character PNR
     # PNR - Passenger Name Record
     context["pnr"] = generate_pnr()
+    print("type pnr", 1001, context["pnr"], type(context["pnr"]))
 
     #print("CONTEXTIN2", context)
     # context = booking_total_price(context, 
@@ -793,9 +811,18 @@ def passenger_details_form(request):
     followed by the BagsRemarks Form
     Therefore, this method processes the validation
     of all 3 form types.
+
+    # TODO
+    Calculate the Fees and Total Price
+    Then add the results to the 'context' in order
+    to be displayed on the Confirmation Form
+    Display result for the Customer to confirm payment
+    If Yes, Create the Record
+    If No, Continue viewing the Passengers' Details
+
     """
 
-    print("REQ", request.method)  # TODO
+    print(800, "REQ", request.method)  # TODO
     context = {}
 
     # ADULTS
@@ -820,42 +847,49 @@ def passenger_details_form(request):
         infants_formset = []
 
     bags_remarks_form = BagsRemarks(request.POST or None, prefix="bagrem")
-    print(request.method, "CONTEXT FETCH",
+    print(802, request.method, "CONTEXT FETCH",
           children_included, request.POST)  # TODO
-    print(context)
+    print(803, context)
 
     if request.method == "POST":
         context = request.POST
-        are_forms_all_valid = all_formsets_valid(request,
+        print(804, "A POST")
+        are_all_forms_valid = all_formsets_valid(request,
                                                  adults_formset,
                                                  children_included,
                                                  children_formset,
                                                  infants_included,
                                                  infants_formset,
                                                  bags_remarks_form)
-        if are_forms_all_valid[0]:
-            cleaned_data = are_forms_all_valid[1]
+        print(880, are_all_forms_valid)
+        if are_all_forms_valid[0]:
+            cleaned_data = are_all_forms_valid[1]
             Common.save_context["bags"] = cleaned_data.get("bags")
             Common.save_context["remarks"] = cleaned_data.get("remarks")
+            print(100) # TODO
             context_copy = request.POST.copy()
+            print(200) # TODO
             new_context = setup_confirm_booking_context(request,
-                                                       children_included,
-                                                       infants_included,
-                                                       context_copy)
+                                                        children_included,
+                                                        infants_included,
+                                                        context_copy)
+            print(300, new_context) # TODO
             Common.save_context["pnr"] = new_context["pnr"]
             # TODO: CREATE THE RECORD!!
-            print("C1", Common.save_context["bags"])
+            print(810, "C1", Common.save_context["bags"], new_context["pnr"])
             print("C2", Common.save_context["remarks"])
             print(type(new_context))
             print(new_context)
-            Common.save_context["confirm-booking-context"] = new_context
+            print("C3", context_copy)
+            Common.save_context["confirm-booking-context"] = context_copy
+            print(2000, Common.save_context["confirm-booking-context"])
 #           return render(request, "booking/confirm-booking-form.html", context)  TODO
             return render(request, "booking/confirm-booking-form.html", new_context)
 
         else:
             context = initialise_formset_context(request)
             #  TODO
-            print(type(Common.save_context))
+            print(820, type(Common.save_context))
             print("TT", Common.save_context)
             print("CON", context)
             print("SAVED_CONTEXT", Common.save_context)
@@ -867,21 +901,30 @@ def passenger_details_form(request):
 
     return render(request, "booking/passenger-details-form.html", context)
 
+def passenger_details_form2(request):
+    pass
 
 def confirm_booking_form(request):
     
     print(request.method, "RQ")
     if request.method == "POST":
         if "cancel" in request.POST:
-            context = Common.save_context["confirm-booking-context"]
-            return render(request, "booking/confirm-booking-form.html", context)
+            context = Common.save_context["confirm-booking-context"] # .copy()
+            print(1000, context)
+            n = {}
+            for each in context:
+                print(each, type(each))
+                if each != "csrfmiddlewaretoken":
+                    n[each] = context[each]
+            print(1001, n)
+            return render(request, "booking/passenger-details-form-copy.html", n)
             # return HttpResponseRedirect(reverse("home"))
         # TODO
             #bags_remarks_form = BagsRemarks(request.POST or None, prefix="bagrem")
             #context["bags_remarks_form"] = bags_remarks_form
             #Common.save_context["confirm-booking-context"] = new_context
 #           return render(request, "booking/confirm-booking-form.html", context)  TODO
-            return render(request, "booking/confirm-booking-form.html", new_context)
+#           return render(request, "booking/confirm-booking-form.html", new_context)
 
         else:
             # Create a new record Booking/Passenger Records
@@ -1219,6 +1262,7 @@ def create_new_records():
     print(Common.save_context) # TODO
     # New Booking Instance
     pnr = Common.save_context["pnr"]
+    print(1004, type(pnr), pnr)
     tuple = create_booking_instance(pnr)
     booking, number_of_adults, number_of_children, number_of_infants = tuple
 
@@ -1227,6 +1271,7 @@ def create_new_records():
     passenger_type = "adult"
     plural = "adults"
     pax_type = "A"
+    print("WRITE BEFORE")
     order_number = write_passenger_record(booking, passenger_type, plural, pax_type,
                                           number_of_adults)
     print("A AFTER", order_number)

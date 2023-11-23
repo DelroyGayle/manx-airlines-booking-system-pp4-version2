@@ -67,12 +67,12 @@ textarea {
     text-transform: uppercase;
 }
 
-.ui.form.price-flex-container {
+.ui.form article {
     display: flex;
     justify-content: space-between;
 }
 
-.ui.form article {
+#agreeandpay {
     display: flex;
     justify-content: space-between;
 }

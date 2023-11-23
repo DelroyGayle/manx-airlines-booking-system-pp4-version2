@@ -388,7 +388,7 @@ This is your deployed app in operation
 + I visited [BA](https://www.britishairways.com/travel/home/public/en_gb/)'s and [EasyJet](https://www.easyjet.com/en)'s websites to get an idea of layout the forms and the phraseology of error messages.
 + The Isle of Man Logo was downloaded from [icon-icons](https://icon-icons.com/icon/isle-of-man/17195) - *Free for personal use*
 + [drawSQL](https://drawsql.app/) was used to draw the SQL tables
-+ I frequently visited [Stackoverflow](https://stackoverflow.com/) to find answers to varous technical challenges that I faced
++ I frequently visited [Stackoverflow](https://stackoverflow.com/) to find answers to various technical challenges that I faced
         
 ## Acknowledgements    
 Tutor Support for their speedy help during this project

@@ -1,0 +1,46 @@
+{% extends 'includes/base.html' %}
+
+{% block title %}Passenger Details Form/2{% endblock %}
+
+
+{% load static %}
+
+{% block content %}
+
+    <h1 class="ui centered header">Passenger Details</h1>
+
+    {% include 'includes/messages.html' %}
+
+    <form class="ui form" method="POST" action={% url 'passenger-details-form-copy' %}>
+        {% csrf_token %}
+
+        {{ adults_formset.management_form }}
+        {% if children_formset %}
+            {{ children_formset.management_form }}
+        {% endif %}
+        
+        {% if infants_formset %}
+            {{ infants_formset.management_form }}
+        {% endif %}
+
+        {{ adults_formset.as_p }}
+        
+        {% if children_formset %}
+            {{ children_formset.as_p }}
+        {% endif %}
+        
+        {% if infants_formset %}
+            {{ infants_formset.as_p }}
+        {% endif %}
+
+        <h2 class="ui centered header">Number of Bags and Booking Remarks</h2>
+        
+        {{ bags_remarks_form.as_p }}
+
+        {{ hidden_form }}
+     
+        <br>
+        
+        <p><input type="submit" class="ui button primary" value="Continue">
+    </form>
+{% endblock %}
