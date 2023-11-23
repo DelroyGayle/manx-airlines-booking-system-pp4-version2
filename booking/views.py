@@ -1178,6 +1178,7 @@ def create_pax_instance(booking, dataset_name, key, paxno, pax_type,
         data["last_name"]
               .strip().upper())
     pax.pax_type=pax_type
+    print("TYPE>", pax_type, pax.pax_type)
     pax.pax_number = order_number
     print("ORDER", pax_type, order_number, pax.pax_number)
     # Date of Birth is NULL for Adult
@@ -1202,21 +1203,10 @@ def create_pax_instance(booking, dataset_name, key, paxno, pax_type,
     infant_status_number += 1
 
     # SSR: # Blank or R for WHCR, S for WCHS, C for WCHC
-    ssr = data["wheelchair_ssr"]
-    pax.wheelchair_ssr = "WCH{ssr}" if ssr != "" else ""
+    pax.wheelchair_ssr = data["wheelchair_ssr"]
 
     # Type: Blank or M for WCMP, L for WCLB; D for WCBD; W for WCBW
-    wchtype = data["wheelchair_type"]
-    if wchtype == "M":
-        pax.wheelchair_type = "WCMP"
-    elif wchtype == "L":
-        pax.wheelchair_type = "WCLB"
-    elif wchtype == "D":
-        pax.wheelchair_type = "WCBD"
-    elif wchtype == "W":
-        pax.wheelchair_type = "WCBW"
-    else:
-        pax.wheelchair_type = ""
+    pax.wheelchair_type = data["wheelchair_type"]
 
     return (pax, order_number, infant_status_number)
 
