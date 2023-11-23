@@ -8,10 +8,10 @@
 TODO
 {% block content %}
 <h1 class="ui centered header">View Booking</h1>
-
 <div class="ui centered card">
     <div class="content">
         <div class="center aligned header">{{  booking.pnr }}</div>
+        <hr>
         <div class="meta">Created: {{ display.created_at }}</div>
         <div class="description">
             <p>{{ booking.outbound_flightno }}&nbsp;{{ booking.ticket_class }}&nbsp;{{ display.outbound_date }}&nbsp;
@@ -27,23 +27,38 @@ TODO
                 {% if pax.pax_type == "A" %}
                     (ADULT)
                 {% elif pax.pax_type == "C" %}
-                pax.data_of_birth
-                    (CHILD/{{ pax.data_of_birth }}|date:"dmy"|upper)
+                    (CHILD/{{ pax.date_of_birth }})
                 {% else %}
-                    (INFANT)
+                    (INFANT/{{ pax.date_of_birth }})
                 {% endif %}
                 </p>
-                {%if pax.contact_number|length %}
+                {% comment %}
+                    "|length" is used just in case the number is a string of zeros i.e. 000000 
+                {% endcomment %}
+                {% if pax.contact_number|length %}
                     <p>Contact&nbsp;Telephone&nbsp;{{ pax.contact_number }}</p>
                 {% endif %}
-                {%if pax.contact_email %}
+                {% if pax.contact_email %}
                     <p>Contact Email&nbsp;{{ pax.contact_email }}</p>
-                    {% endif %}
+                {% endif %}
                 <p>Seat&nbsp;23A</p>
+                {% if pax.wheelchair_ssr %}
+                    <p>SSR:{{ pax.wheelchair_ssr }}
+                        {% if pax.wheelchair_type %}
+                            &nbsp;{{ pax.wheelchair_type }}
+                        {% endif %}
+                    </p>
+                {% endif %}
             {% endfor %}
-            {%if booking.number_of_bags %}
+            {%if booking.number_of_bags or booking.number_of_remarks %}
                 <hr>
-                <p>{{ booking.number_of_bags }} Bags</p>
+                {%if booking.number_of_bags %}
+                    <p>{{ booking.number_of_bags }} Bags</p>
+                {% endif %}
+                {%if booking.remarks %}
+                    <p><strong>Booking Remarks:</strong></p>
+                    <p>{{ booking.remarks }} Bags</p>
+                {% endif %}
             {% endif %}
         </div>
     </div>

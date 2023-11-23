@@ -62,6 +62,7 @@ ul.errorlist {display:none;}
     width: 60%;
 }
 
+/* Do not 'centre' the contents of the Semantic UI Card */
 .ui[class*="center aligned"].container {
     text-align: left;
 }

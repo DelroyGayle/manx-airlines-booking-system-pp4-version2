@@ -900,9 +900,6 @@ def passenger_details_form(request):
 
     return render(request, "booking/passenger-details-form.html", context)
 
-def passenger_details_form2(request):
-    pass
-
 def confirm_booking_form(request):
     
     print(request.method, "RQ")
@@ -932,15 +929,27 @@ def view_booking(request, id):
     passenger_list = []
     for pax_record in qs:  # TODO
         print(type(pax_record))
-        print(pax_record.pax_type, pax_record.pax_number)
+        print(pax_record.pax_type, pax_record.pax_number, pax_record.date_of_birth,
+        pax_record.first_name, pax_record.last_name)
         passenger_list.append(pax_record)
     #  print(type(passenger_list)) #  TODO
     display = dict(created_at=booking.created_at.strftime("%d/%m/%Y"),
                    outbound_date=booking.outbound_date.strftime("%d%b%y").upper())
     if booking.return_flight:
         display["inbound_date"] = booking.inbound_date.strftime("%d%b%y").upper()
+
+    passenger_list = qs.values()
+    count = 0
+    for each_record in passenger_list:
+        for each_field in each_record:
+            if (each_field == "pax_type" 
+                    and passenger_list[count]["pax_type"] in "CI"):
+                passenger_list[count]["date_of_birth"] = (
+                    passenger_list[count]["date_of_birth"]
+                             .strftime("%d%b%y").upper())
+        count+=1
+
     context = {"booking": booking, "passengers": passenger_list, "display": display}
-    # print(pax.title, pax.last_name, pax.last_name) TODO
     return render(request, "booking/view-booking.html", context)
 
 
