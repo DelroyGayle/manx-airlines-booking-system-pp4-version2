@@ -14,7 +14,7 @@ class Common:
     initialised = None
     outbound_flights = None
     inbound_flights = None
-    outbound_listof_flights = None # I.E. [MX465, MX475, MX485]
+    outbound_listof_flights = None  # I.E. [MX465, MX475, MX485]
     inbound_listof_flights = None  # I.E. [MX466, MX476, MX486]
     flight_info = None
     save_context = None
@@ -51,7 +51,8 @@ class Common:
 
         all_flight_entries = get_list_or_404(Flight.objects
                                              .all()
-                                             .order_by("flight_STD", "flight_STA"))
+                                             .order_by("flight_STD",
+                                                       "flight_STA"))
 
         # Two dictionaries for outbound and inbound
         outbound = {}
@@ -69,23 +70,18 @@ class Common:
 
         for each in all_flight_entries:
             newdict[each.flight_number] = {}
-            newdict[each.flight_number]["flight_from"] = each.flight_from.strip().upper()
-            newdict[each.flight_number]["flight_to"] = each.flight_to.strip().upper()
+            newdict[each.flight_number]["flight_from"] = (each.flight_from
+                                                          .strip().upper())
+            newdict[each.flight_number]["flight_to"] = (each.flight_to
+                                                            .strip().upper())
             newdict[each.flight_number]["flight_STD"] = each.flight_STD
             newdict[each.flight_number]["flight_STA"] = each.flight_STA
             newdict[each.flight_number]["outbound"] = each.outbound
             newdict[each.flight_number]["capacity"] = each.capacity
             if each.outbound:
-            # Outbound Flight
-                # TODO MAY BE N/A PLEASE CHECK
-                outbound[each.flight_number] = {}
-                outbound[each.flight_number]["flight_from"] = each.flight_from.strip().upper()
-                outbound[each.flight_number]["flight_to"] = each.flight_to.strip().upper()
-                outbound[each.flight_number]["flight_STD"] = each.flight_STD.strip()
-                outbound[each.flight_number]["flight_STA"] = each.flight_STA.strip()
-                outbound[each.flight_number]["capacity"] = each.capacity
-                ################
-                outbound_flights.append(each.flight_number)  # E.G. [MX465, MX475, MX485]
+                # Outbound Flight
+                # E.G. [MX465, MX475, MX485]
+                outbound_flights.append(each.flight_number)
                 out_time_options1.append(each.flight_STD)
                 out_time_options2.append(Common.format_radio_button_option(
                                                 each.flight_STD,
@@ -93,16 +89,9 @@ class Common:
                                                 each.flight_STA,
                                                 each.flight_to))
             else:
-            # Inbound Flight
-                # TODO MAY BE N/A PLEASE CHECK
-                inbound[each.flight_number] = {}
-                inbound[each.flight_number]["flight_from"] = each.flight_from.strip().upper()
-                inbound[each.flight_number]["flight_to"] = each.flight_to.strip().upper()
-                inbound[each.flight_number]["flight_STD"] = each.flight_STD.strip()
-                inbound[each.flight_number]["flight_STA"] = each.flight_STA.strip()
-                inbound[each.flight_number]["capacity"] = each.capacity
-                ################
-                inbound_flights.append(each.flight_number)  # I.E. [MX466, MX476, MX486]
+                # Inbound Flight
+                # I.E. [MX466, MX476, MX486]
+                inbound_flights.append(each.flight_number)
                 in_time_options1.append(each.flight_STD)
                 in_time_options2.append(Common.format_radio_button_option(
                                                each.flight_STD,
@@ -110,8 +99,8 @@ class Common:
                                                each.flight_STA,
                                                each.flight_to))
 
-       # TODO
-       #  newdict["numberof_oneway_flights"] = len(all_flight_entries) // 2
+        # TODO
+        #  newdict["numberof_oneway_flights"] = len(all_flight_entries) // 2
 
         # Store the results in Class variables
         Common.flight_info = newdict

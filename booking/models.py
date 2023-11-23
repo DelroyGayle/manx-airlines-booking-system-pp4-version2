@@ -79,17 +79,18 @@ class Booking(models.Model):
         adult_plural = "S" if self.number_of_adults != 1 else ""
         child_plural = "CHILDREN" if self.number_of_children != 1 else "CHILD"
         infant_plural = "S" if self.number_of_infants != 1 else ""
-        return ("PNR: {0} {1} {2} {3} - {4} ADULT{5}, {6} {7} & {8} INFANT{9}".format(
-                 self.pnr, # 0
-                 self.outbound_flightno, # 1
-                 self.outbound_date.strftime("%d%b%Y").upper(), # 2
-                 return_flight_info, #3 
-                 self.number_of_adults, #4
-                 adult_plural, #5
-                 self.number_of_children, #6
-                 child_plural, #7
-                 self.number_of_infants, # 8,
-                 infant_plural)) #9
+        return ("PNR: {0} {1} {2} {3} - {4} ADULT{5}, {6} {7} & {8} INFANT{9}"
+                .format(
+                 self.pnr,  # 0
+                 self.outbound_flightno,  # 1
+                 self.outbound_date.strftime("%d%b%Y").upper(),  # 2
+                 return_flight_info,  # 3
+                 self.number_of_adults,  # 4
+                 adult_plural,  # 5
+                 self.number_of_children,  # 6
+                 child_plural,  # 7
+                 self.number_of_infants,  # 8,
+                 infant_plural))  # 9
 
 
 class Passenger(models.Model):

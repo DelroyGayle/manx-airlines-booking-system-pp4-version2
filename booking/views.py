@@ -469,9 +469,7 @@ def all_formsets_valid(request, adults_formset,
     if not bags_remarks_form.is_valid:
         display_formset_errors(request, "Bag/Remarks", bags_remarks_form.errors)
         return (False, None)
-    print("B1", bags_remarks_form,bags_remarks_form.is_valid )
-    print("cleanbags", bags_remarks_form, bags_remarks_form.cleaned_data) # TODO
-    #context["bags_remarks_form"] = bags_remarks_form.cleaned_data #DG #TODO
+
     return (True, bags_remarks_form.cleaned_data)
 
 # Create your views here.
@@ -612,6 +610,7 @@ def create_booking_form(request):
             Common.save_context = context
             print("SAVED/1", Common.save_context) # TODO
             # TODO
+            print("NOW", context)
             return render(request, "booking/passenger-details-form.html",
                           context)
 
@@ -663,7 +662,7 @@ def initialise_formset_context(request):
 
     #context["bags_remarks_form"] = Common.save_context["bags_remarks_form"]
     bags_remarks_form = BagsRemarks(request.POST or None, prefix="bagrem")
-    context["bags_remarks_form"] = bags_remarks_form # DG100 TODO
+    context["bags_remarks_form"] = bags_remarks_form
     context["hidden_form"] = Common.save_context["hidden_form"]
     # TODO
     print("CON", context)
@@ -723,8 +722,9 @@ def compute_total_price(context, children_included, infants_included):
     print("TYPE/C1", template_variables) # TODO
     return template_variables
 
-def setup_confirm_booking_context(template_variables):
+def add_template_variables(template_variables):
     """
+    # TODO
     Set up the Context to be rendered for the Confirmation Form
     """ 
     context = {}
@@ -752,10 +752,10 @@ def generate_pnr():
     # Unique PNR
     return newpnr
 
-def setup_new_context(request,
-                      children_included,
-                      infants_included,
-                      context):
+def setup_confirm_booking_context(request,
+                                  children_included,
+                                  infants_included,
+                                  context):
     """
     Calculate the Total Price
     Display for the Customer to confirm payment
@@ -766,7 +766,7 @@ def setup_new_context(request,
     print("CONTEXTIN", context)
     print(type(context))
     template_variables = compute_total_price(context, children_included, infants_included)
-    context = setup_confirm_booking_context(template_variables)
+    context = add_template_variables(template_variables)
 
     # Generate a Random Unique 6-character PNR
     # PNR - Passenger Name Record
@@ -838,16 +838,17 @@ def passenger_details_form(request):
             Common.save_context["bags"] = cleaned_data.get("bags")
             Common.save_context["remarks"] = cleaned_data.get("remarks")
             context_copy = request.POST.copy()
-            new_context = setup_new_context(request,
-                                            children_included,
-                                            infants_included,
-                                            context_copy)
+            new_context = setup_confirm_booking_context(request,
+                                                       children_included,
+                                                       infants_included,
+                                                       context_copy)
             Common.save_context["pnr"] = new_context["pnr"]
             # TODO: CREATE THE RECORD!!
             print("C1", Common.save_context["bags"])
             print("C2", Common.save_context["remarks"])
             print(type(new_context))
             print(new_context)
+            Common.save_context["confirm-booking-context"] = new_context
 #           return render(request, "booking/confirm-booking-form.html", context)  TODO
             return render(request, "booking/confirm-booking-form.html", new_context)
 
@@ -872,8 +873,16 @@ def confirm_booking_form(request):
     print(request.method, "RQ")
     if request.method == "POST":
         if "cancel" in request.POST:
-            return HttpResponseRedirect(reverse("home"))
+            context = Common.save_context["confirm-booking-context"]
+            return render(request, "booking/confirm-booking-form.html", context)
+            # return HttpResponseRedirect(reverse("home"))
         # TODO
+            #bags_remarks_form = BagsRemarks(request.POST or None, prefix="bagrem")
+            #context["bags_remarks_form"] = bags_remarks_form
+            #Common.save_context["confirm-booking-context"] = new_context
+#           return render(request, "booking/confirm-booking-form.html", context)  TODO
+            return render(request, "booking/confirm-booking-form.html", new_context)
+
         else:
             # Create a new record Booking/Passenger Records
                         # TODO
@@ -1110,10 +1119,10 @@ def create_pax_instance(booking, dataset_name, key, paxno, pax_type,
     pax = Passenger()
     pax.pnr = booking # Foreign Key
     # TODO
-    print("TYPE/P/KF",type(pax), key,dataset_name) #DG
+    print("TYPE/P/KF",type(pax), key,dataset_name) # TODO
     print(dataset_name in Common.save_context)
-    #print(f"{key}title", f"{key}title" in Common.save_context[dataset])#DG
-    #print(type(Common.save_context[dataset])) #DG
+    #print(f"{key}title", f"{key}title" in Common.save_context[dataset])#TODO
+    #print(type(Common.save_context[dataset])) #TODO
     # Fetch a record of data which represents a form eg
     data = Common.save_context[dataset_name][paxno]
     print("DN", dataset_name, paxno)
