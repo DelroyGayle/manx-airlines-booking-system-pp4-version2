@@ -94,7 +94,7 @@ class Booking(models.Model):
 
 
 class Passenger(models.Model):
-    title = models.CharField(max_length=3)
+    title = models.CharField(max_length=4)
     first_name = models.CharField(max_length=40)
     last_name = models.CharField(max_length=40)
     # A=Adult C=Child I=Infant
