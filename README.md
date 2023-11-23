@@ -12,6 +12,7 @@
    3. [Agile Design](#agile-design)
    3. [Database Design](#database-design)
    4. [Data Models](#data-models)
+   5. [Framework](#framework)
 5. [Features](#features)
    1. [Home Page](#home-page)
    2. [Create Bookings](#create-bookings)
@@ -61,6 +62,7 @@ The Daily Flight Schedules are:
 
 Throughout this document I will be using typical airline terminology when referring to certain concepts.
 Here are a sample of some of the terms used:
+* OSI - Other Service Information
 * PAX - short for Passenger(s)
 * PNR - Passenger Name Record
 * PRM - Passenger with Reduced Mobility
@@ -230,6 +232,10 @@ Epics, User Stories and their related Tasks are further explained in [TESTING.md
 
 ### Data Models
 
+### Framework
+
+I chose to use [Semantic UI](https://semantic-ui.com/) because this framework's approach of using *natural languages like noun/modifier relationships, word order, and plurality to link concepts intuitively*; resonated with me far better as opposed to using abbreviations as seen in frameworks. It also has a great variety of components to choose from when desigining a website. Semantic UI therefore handles the rendering of the webpages of my project on the relevant media whether it be desktop, tablet or mobile. The fonts (e.g. Lato) and colours used come as part of this framework.
+
 ## Features
 
 ### Home Page
@@ -248,6 +254,7 @@ Epics, User Stories and their related Tasks are further explained in [TESTING.md
 
 ### Libraries and Frameworks
 
+* [Semantic UI](https://semantic-ui.com/) for the design of this site
 #### Other tools and frameworks
 
 * [GitHub](https://github.com/) - for hosting the site

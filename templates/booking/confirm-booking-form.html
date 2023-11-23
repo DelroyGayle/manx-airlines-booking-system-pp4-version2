@@ -19,18 +19,24 @@
                     <p>Adults</p>
                     <p>{{ adults_total }}</p>
                 </article>
-                <article>
-                    <p>Children</p>
-                    <p>{{ children_total }}</p>
-                </article>
-                <article>
-                    <p>Infants</p>
-                    <p>{{ infants_total }}</p>
-                </article>
-                <article>
-                    <p>Bags</p>
-                    <p>{{ bags_total }}</p>
-                </article>
+                {% if children_total %}
+                    <article>
+                        <p>Children</p>
+                        <p>{{ children_total }}</p>
+                    </article>
+                {% endif %}
+                {% if infants_total %}
+                    <article>
+                        <p>Infants</p>
+                        <p>{{ infants_total }}</p>
+                    </article>
+                {% endif %}
+                {% if bags_total %}
+                    <article>
+                        <p>Bags</p>
+                        <p>{{ bags_total }}</p>
+                    </article>
+                {% endif %}
                 <hr>
             </section>
             <div class="ui medium header">Total {{ total_price_string }}</div>

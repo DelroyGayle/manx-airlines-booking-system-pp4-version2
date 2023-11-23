@@ -30,7 +30,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-#X_FRAME_OPTIONS = 'SAMEORIGIN'
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+SITE_ID = 1
 
 ALLOWED_HOSTS = ['manx-airlines-bookings-c1e4c5533a20.herokuapp.com',
                  '8000-delroygayle-manxairline-729hbyr65du.ws-eu105.gitpod.io',

@@ -909,23 +909,8 @@ def confirm_booking_form(request):
     print(request.method, "RQ")
     if request.method == "POST":
         if "cancel" in request.POST:
-            context = Common.save_context["confirm-booking-context"] # .copy()
-            print(1000, context)
-            n = {}
-            for each in context:
-                print(each, type(each))
-                if each != "csrfmiddlewaretoken":
-                    n[each] = context[each]
-            print(1001, n)
-            return render(request, "booking/passenger-details-form-copy.html", n)
-            # return HttpResponseRedirect(reverse("home"))
+            return HttpResponseRedirect(reverse("home"))
         # TODO
-            #bags_remarks_form = BagsRemarks(request.POST or None, prefix="bagrem")
-            #context["bags_remarks_form"] = bags_remarks_form
-            #Common.save_context["confirm-booking-context"] = new_context
-#           return render(request, "booking/confirm-booking-form.html", context)  TODO
-#           return render(request, "booking/confirm-booking-form.html", new_context)
-
         else:
             # Create a new record Booking/Passenger Records
                         # TODO
