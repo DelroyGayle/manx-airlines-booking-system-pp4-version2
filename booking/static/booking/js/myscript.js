@@ -61,7 +61,7 @@ function add_heading(idElement, number, heading) {
         idElement.parent().before( `<h3 class=\"ui centered header\"><em>${heading} ${number}</em></h3>` );
 }
 
-// Add a heading to each set of Adults, Children and Infants
+// Add headings to each set of Adults, Children and Infants
 function add_headings_to_pax(idElement) {
     // Already pointing to the first passenger type
     let paxno = 0;
