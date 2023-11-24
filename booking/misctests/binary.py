@@ -1,6 +1,5 @@
 # Test my seat allocation algorithm using 'bitstring'
 # Passed all the tests I submitted however just to ensure
-# from bitstring import Bits, BitArray, BitStream, pack TODO
 
 from bitstring import BitArray
 from random import randint
