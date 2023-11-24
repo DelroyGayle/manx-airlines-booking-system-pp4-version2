@@ -17,3 +17,5 @@ CONTACTS_BLANK = ("Adult 1 is the Principal Passenger. "
                   "Enter passenger's phone number and/or email.")
 BAD_TELNO = "Enter a phone number of at least six digits."
 BAD_EMAIL = "Enter a valid email address."
+
+CAPACITY = 96
