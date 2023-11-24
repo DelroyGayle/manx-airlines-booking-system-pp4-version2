@@ -43,10 +43,19 @@ TODO
                 {% endif %}
                 <p>Seat&nbsp;23A</p>
                 {% if pax.wheelchair_ssr %}
-                    <p>SSR:{{ pax.wheelchair_ssr }}
-                        {% if pax.wheelchair_type %}
-                            &nbsp;{{ pax.wheelchair_type }}
-                        {% endif %}
+                    <p>SSR&nbsp;WCH{{ pax.wheelchair_ssr }}
+                {% endif %}
+                {% if pax.wheelchair_type %}
+                &nbsp;
+                    {% if pax.wheelchair_type == "M" %}
+                        WCMP
+                    {% elif pax.wheelchair_type == "L" %}
+                        WCLB
+                    {% elif pax.wheelchair_type == "D" %}
+                        WCBD
+                    {% elif pax.wheelchair_type == "W" %}
+                        WCBW
+                    {% endif %}
                     </p>
                 {% endif %}
             {% endfor %}
@@ -57,7 +66,7 @@ TODO
                 {% endif %}
                 {%if booking.remarks %}
                     <p><strong>Booking Remarks:</strong></p>
-                    <p>{{ booking.remarks }} Bags</p>
+                    <p>{{ booking.remarks }}</p>
                 {% endif %}
             {% endif %}
         </div>

@@ -933,7 +933,8 @@ def view_booking(request, id):
         pax_record.first_name, pax_record.last_name)
         passenger_list.append(pax_record)
     #  print(type(passenger_list)) #  TODO
-    display = dict(created_at=booking.created_at.strftime("%d/%m/%Y"),
+    display = dict(created_at=booking.created_at.strftime("%d%b%y").upper(),
+                   # EG 17NOV23
                    outbound_date=booking.outbound_date.strftime("%d%b%y").upper())
     if booking.return_flight:
         display["inbound_date"] = booking.inbound_date.strftime("%d%b%y").upper()
