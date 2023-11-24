@@ -26,7 +26,8 @@ class Schedule(models.Model):
     flight_number = models.CharField(max_length=6)
     total_booked = models.PositiveSmallIntegerField()
     # Bit String which represents the seating of passengers
-    seatmap = models.CharField(max_length=12, default="0" * 12)
+    # The Bit String is represented as a 24-character hex string
+    seatmap = models.CharField(max_length=24, default="0" * 24)
 
     class Meta:
         ordering = ["flight_date", "flight_number"]
