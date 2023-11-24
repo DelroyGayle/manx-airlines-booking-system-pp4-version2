@@ -44,15 +44,63 @@ function infantsCheck() {
     if (infantsValue > adultsValue) {
         openTooManyInfantsModal();
         document.getElementById("id_infants").focus();
-        return false // Indicate Test Failure
+        return false; // Indicate Test Failure
     }
 
-    return true // Indicate Test Success
+    return true; // Indicate Test Success
 }
 
 function checkReturnFlightOption() {
     if ($("#id_returning_date").length) {
         returnCheck();
+    }
+}
+
+function add_heading(idElement, number, heading) {
+        adultNumber = `${heading} $(number)`;
+        idElement.parent().before( `<h3 class=\"ui centered header\"><em>${heading} ${number}</em></h3>` );
+}
+
+// Add a heading to each set of Adults, Children and Infants
+function add_headings_to_pax(idElement) {
+    // Already pointing to the first passenger type
+    let paxno = 0;
+    do {
+        add_heading(idElement, paxno + 1, "Adult");
+        paxno++;
+        idElement = $( `#id_adult-${paxno}-title` );
+    } while (idElement.length);
+
+    // Any children?
+    idElement = $( "#id_child-0-title" );
+    if (idElement.length) {
+        paxno = 0;
+        do {
+            add_heading(idElement, paxno + 1, "Child");
+            paxno++;
+            idElement = $( `#id_child-${paxno}-title` )
+        } while (idElement.length);
+    }
+
+    // Any infants?
+    idElement = $( "#id_infant-0-title" );
+    if (idElement.length) {
+        paxno = 0;
+        do {
+            add_heading(idElement, paxno + 1, "Infant");
+            paxno++;
+            idElement = $( `#id_infant-${paxno}-title` );
+        } while (idElement.length);
+    }
+}
+
+function setup_page() {
+    // If it is a page showing the Passenger Types
+    // Then Add a heading to each set of Adults, Children and Infants
+
+    let p = $( "#id_adult-0-title" )
+    if (p.length) {
+        add_headings_to_pax(p)
     }
 }
 
@@ -69,9 +117,10 @@ $(document).ready( function() {
     checkReturnFlightOption();
 });
 
-// This solution regarding .ready() not trigggering when Back Button pressed was found at
+// This solution regarding .ready() not triggering when Back Button pressed was found at
 // https://stackoverflow.com/questions/11871253/execute-document-ready-even-if-user-came-to-the-page-by-hitting-the-back-button
 
 $(window).on("pageshow", function() {
     checkReturnFlightOption();
+    setup_page();
 });
