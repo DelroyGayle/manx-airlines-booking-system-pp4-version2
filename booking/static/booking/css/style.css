@@ -16,6 +16,10 @@
 
 /***************************************************/
 
+small span {
+    display: block;
+}
+
 ul.errorlist {display:none;}
 
 /* TODO #homepage */

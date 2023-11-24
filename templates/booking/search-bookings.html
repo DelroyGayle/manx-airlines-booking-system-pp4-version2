@@ -28,12 +28,17 @@ Search Bookings
                 <div class="event">
                     <div class="content">
                         <div class="summary">
-                            <p>{{ booking.title }} {{ booking.first_name }} {{ booking.last_name }}
-                            <p>{{ booking.outbound }} LCY IOM
-                            {% if booking.inbound %}
-                                <p>{{ booking.outbound }} IOM LCY</p>
-                            {% endif %}
-                        </div>
+                            <p>{{ booking.first_name }} {{ booking.last_name }}</p>
+                            <p>{{ booking.outbound_flightno }}&nbsp;
+                               {{ booking.ticket_class }}&nbsp;{{ booking.outbound_date|date:"dby"|upper }}&nbsp;
+                               {{ booking.flight_from }}{{ booking.flight_to }}</p>
+                               {% if booking.return_flight %}
+                                        <p>{{ booking.inbound_flightno }}&nbsp;
+                                           {{ booking.ticket_class }}&nbsp;
+                                           {{ booking.inbound_date|date:"dby"|upper }}&nbsp;
+                                           {{ booking.flight_to }}{{ booking.flight_from }}</p>
+                               {% endif %}
+                        </div>                        
                     </div>
                 </div>
             </div>

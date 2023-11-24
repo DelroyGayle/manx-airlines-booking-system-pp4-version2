@@ -1,2 +1,2 @@
-function test():
+def tester():
     return True

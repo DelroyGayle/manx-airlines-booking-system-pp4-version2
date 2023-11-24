@@ -22,6 +22,7 @@ import random  # TODO
 import re
 
 from .common import Common
+from .helpers import tester
 # TODO
 # from .constants import FIRSTNAME_BLANK
 # KEEP THIS - TODO
@@ -955,6 +956,7 @@ def view_booking(request, id):
 
 
 def search_bookings(request):
+    print("TESTER", tester()) # TODO
     query = request.GET.get("query")
     # Blank Search
     if not query:
