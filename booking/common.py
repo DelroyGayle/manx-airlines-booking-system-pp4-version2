@@ -20,6 +20,16 @@ class Common:
     save_context = None
     OUTBOUND_TIME_OPTIONS1 = None
     OUTBOUND_TIME_OPTIONS2 = None
+    outbound_schedule_id = None
+    inbound_schedule_id = None
+    outbound_schedule_instance = None
+    inbound_schedule_instance = None
+    outbound_seatmap = None
+    inbound_seatmap = None
+    outbound_allocated_seats = []
+    inbound_allocated_seats = []
+    outbound_total_booked = None
+    inbound_total_booked = None
 
     def __init__(self):
         pass

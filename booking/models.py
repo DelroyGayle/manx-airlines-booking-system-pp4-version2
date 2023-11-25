@@ -109,7 +109,8 @@ class Passenger(models.Model):
     contact_number = models.CharField(max_length=40, blank=True, default="")
     contact_email = models.CharField(max_length=40, blank=True, default="")
     pnr = models.ForeignKey(Booking, on_delete=models.CASCADE)
-    seat_number = models.PositiveSmallIntegerField(default=0)
+    outbound_seat_number = models.CharField(max_length=3, default="")
+    inbound_seat_number = models.CharField(max_length=3, default="")
     # Status: HK1 for PAX 1, HK2 for PAX 2, etc up to HK20
     # Infants have the same status number as the accompanying adult
     status = models.CharField(max_length=4)
@@ -129,9 +130,10 @@ class Passenger(models.Model):
 class Transaction(models.Model):
     pnr = models.CharField(max_length=6)
     amount = models.DecimalField(max_digits=6, decimal_places=2, default=0)
-    date_created = models.DateField()
+    date_created = models.DateField(auto_now=True)
+    username = models.CharField(max_length=40, default="user")
 
     def __str__(self):
-        return "{0} AMOUNT: {1} DATE CREATED {2}".format(
+        return "PNR: {0} AMOUNT: GBP{1} DATE CREATED {2} BY {3}".format(
             self.pnr, self.amount,
-            self.date_created.strftime("%Y%m%d"), self.flight_number)
+            self.date_created.strftime("%d/%m/%Y"), self.username)

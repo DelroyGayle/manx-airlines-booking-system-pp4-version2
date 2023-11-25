@@ -185,7 +185,7 @@ TITLE_CHOICES = [
         ("MS", "MS"),
         ("PROF", "PROFESSOR"),
         ("SIR", "SIR"),
-    ]
+]
 
 
 PRM_CHOICES = (

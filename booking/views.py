@@ -579,9 +579,13 @@ def is_booking_form_valid(form, request):
                                               "Returning Flight",
                                               inbound_date, 
                                               inbound_flightno,
-                                              inbound_time)
+                                              inbound_time,
+                                              cleaned_data)
 
-    return (False, None)
+    print("CV", check_avail)
+    if not check_avail:
+        # Insufficient Availability for Selected Flight(s)
+        return (False, None)
     
     # Successful Validation
     return (True, save_data)
@@ -947,9 +951,11 @@ def confirm_booking_form(request):
             return HttpResponseRedirect(reverse("home"))
         # TODO
         else:
-            # Create a new record Booking/Passenger Records
+            # Create new record Booking/Passenger Records
+            # Create new Transaction Record
+            # Update Schedule Database
                         # TODO
-            create_new_records()
+            morecode.create_new_records(request)
             # Then show home page
             return HttpResponseRedirect(reverse("home"))
 
@@ -1112,215 +1118,3 @@ def edit_booking(request, id):
         # CREATE SUCCESS MESSAGE TODO
 
     return render(request, "booking/edit-booking.html", context)
-
-def create_booking_instance(pnr):
-    """
-    Create the Booking Record instance
-    All the Booking information is stored 
-    in the Class Variable 'Common.save_context'
-    """
-
-    # New Instance
-    booking = Booking()
-    print("CONTEXT", Common.save_context)
-    print(pnr)  # TODO
-    booking.pnr = pnr
-    depart_pos = Common.save_context["depart_pos"]
-    # Outbound Flight Info
-    outbound_flightno = Common.outbound_listof_flights[depart_pos]
-    booking.outbound_date = Common.save_context["booking"]["departing_date"]
-    booking.outbound_flightno = outbound_flightno
-    booking.flight_from = Common.flight_info[outbound_flightno]["flight_from"]
-    booking.flight_to = Common.flight_info[outbound_flightno]["flight_to"]
-    
-    if Common.save_context["return_option"] == "Y":
-        # Inbound Flight Info
-        booking.return_flight = True
-        return_pos = Common.save_context["return_pos"]
-        booking.inbound_date = Common.save_context["booking"]["returning_date"]
-        booking.inbound_flightno = Common.inbound_listof_flights[return_pos]
-    
-    else:
-        # One-way: 
-        booking.return_flight = False
-        booking.inbound_date = None
-        booking.inbound_flightno = ""
-
-    booking.fare_quote = Common.save_context["total_price"]
-    booking.ticket_class = "Y"
-    booking.cabin_class = "Y"
-    booking.number_of_adults = Common.save_context["booking"]["adults"]
-    number_of_adults = booking.number_of_adults
-
-    booking.number_of_children = (Common.save_context["booking"]["children"] 
-                                        if Common.save_context["children_included"]
-                                        else 0)
-    number_of_children = booking.number_of_children
-
-    booking.number_of_infants = (Common.save_context["booking"]["infants"] 
-                                        if Common.save_context["infants_included"]
-                                        else 0)
-    number_of_infants = booking.number_of_infants
-
-    booking.number_of_bags = Common.save_context["bags"]
-    booking.departure_time = Common.flight_info[outbound_flightno]["flight_STD"]
-    booking.arrival_time = Common.flight_info[outbound_flightno]["flight_STA"]
-    booking.remarks = Common.save_context["remarks"].strip().upper()
-    print("BOOKING", booking)  # TODO
-    # Write the new Booking record
-    booking.save()
-
-    # Return the Numbers of each Passenger type
-    return (booking, number_of_adults, number_of_children, number_of_infants)
-
-def create_pax_instance(booking, dataset_name, key, paxno, pax_type,
-                           order_number,
-                           infant_status_number,
-                           seat_number=0): # TODO
-                           
-    """ 
-    Create the actual Passenger Record instance 
-    All the Passenger information is stored 
-    in the Class Variable 'Common.save_context'
-
-    order_number: First Pax numbered 1, 2nd 2, etc
-    infant_status_number: 
-    Infant's Status Number matches each Adult's Status Number
-    which starts at 1 i.e. Adult 1 - the Principal Passenger
-
-    The data for each passenger is in 'dataset'
-    'dataset' is a 'list' of each passenger's info e.g.
-    [{'title': 'MR', 'first_name': 'FRED', 'last_name': 'BLOGGS', 
-    'contact_number': '012345678', 'contact_email': '', 'wheelchair_ssr': '', 'wheelchair_type': ''}, 
-    {'title': 'MR', 'first_name': 'JOE', 'last_name': 'BLOGGS', 
-    'contact_number': '', 'contact_email': '', 'wheelchair_ssr': '', 'wheelchair_type': ''}]
-    """
-
-    pax = Passenger()
-    pax.pnr = booking # Foreign Key
-    # TODO
-    print("TYPE/P/KF",type(pax), key,dataset_name) # TODO
-    print(dataset_name in Common.save_context)
-    #print(f"{key}title", f"{key}title" in Common.save_context[dataset])#TODO
-    #print(type(Common.save_context[dataset])) #TODO
-    # Fetch a record of data which represents a form eg
-    data = Common.save_context[dataset_name][paxno]
-    print("DN", dataset_name, paxno)
-    print("FETCHED", data)
-    pax.title = (
-        data["title"]
-              .strip().upper())
-    print("TITLE>", data["title"], pax.title)
-    pax.first_name = (
-        data["first_name"]
-              .strip().upper())
-    pax.last_name = (
-        data["last_name"]
-              .strip().upper())
-    pax.pax_type=pax_type
-    print("TYPE>", pax_type, pax.pax_type)
-    pax.pax_number = order_number
-    print("ORDER", pax_type, order_number, pax.pax_number)
-    # Date of Birth is NULL for Adult
-    # Contact Details are "" for Non-Adult
-    if pax_type == "A":
-        pax.date_of_birth = None
-        pax.contact_number = (data["contact_number"]
-                                    .strip().upper())
-        pax.contact_email = (data["contact_email"]
-                                   .strip().upper())
-    else:
-        pax.date_of_birth = data["date_of_birth"]
-        pax.contact_number = ""
-        pax.contact_email = ""
-
-    pax.seat_number = seat_number
-    pax.status = (f"HK{order_number}" if pax_type != "I"
-                                      else f"HK{infant_status_number}")
-    print("PCH", pax, order_number, infant_status_number) # TODO
-    print("PCH2", pax.pax_number, order_number, infant_status_number) # TODO
-    order_number += 1
-    infant_status_number += 1
-
-    # SSR: # Blank or R for WHCR, S for WCHS, C for WCHC
-    pax.wheelchair_ssr = data["wheelchair_ssr"]
-
-    # Type: Blank or M for WCMP, L for WCLB; D for WCBD; W for WCBW
-    pax.wheelchair_type = data["wheelchair_type"]
-
-    return (pax, order_number, infant_status_number)
-
-def write_passenger_record(booking, passenger_type, plural, pax_type,
-                           number_of_pax_type,
-                           # First Pax numbered 1, 2nd 2, etc
-                           order_number=1):
-
-    """
-    Passenger Records 
-
-    Passenger Info is stored in    
-    Common.save_context["adults_data"]
-    Common.save_context["children_data"]
-    Common.save_context["infants_data"]
-    """
-    # SEATNO TODO seat_numbers
-    dataset_name = f"{plural}_data" # EG "adults_data"
-    paxno = 0
-    key = f"{passenger_type}-{paxno}-" # TODO
-    infant_status_number = 1
-    while paxno < number_of_pax_type:
-        tuple = create_pax_instance(booking, dataset_name, key, paxno, pax_type,
-                                    order_number, infant_status_number)
-        pax, order_number, infant_status_number = tuple
-        print("PAX", pax, paxno, order_number, pax_type, number_of_pax_type) # TODO
-        pax.save()
-        paxno += 1
-
-    return order_number
-
-def create_new_records():
-    """
-    Create the Booking Record
-    And a Passenger Record for each passenger attached to the Booking
-    There will be at least ONE Adult Passenger for each booking
-    All the information is stored in the Class Variable 'Common.save_context'
-    """
-
-    print(Common.save_context) # TODO
-    # New Booking Instance
-    pnr = Common.save_context["pnr"]
-    print(1004, type(pnr), pnr)
-    tuple = create_booking_instance(pnr)
-    booking, number_of_adults, number_of_children, number_of_infants = tuple
-
-    # Now create the corresponding Passenger Records
-    # Adult Passengers
-    passenger_type = "adult"
-    plural = "adults"
-    pax_type = "A"
-    print("WRITE BEFORE")
-    order_number = write_passenger_record(booking, passenger_type, plural, pax_type,
-                                          number_of_adults)
-    print("A AFTER", order_number)
-
-    # Child Passengers
-    if number_of_children > 0: 
-        passenger_type = "child"
-        plural = "children"
-        pax_type = "C"
-        order_number = write_passenger_record(booking, passenger_type, plural, pax_type,
-                                              number_of_children, order_number)
-    print("C AFTER", order_number)
-
-    # Infant Passengers
-    if number_of_infants > 0: 
-        passenger_type = "infant"
-        plural = "infants"
-        pax_type = "I"
-        order_number = write_passenger_record(booking, passenger_type, plural, pax_type,
-                                              number_of_infants, order_number)
-                                                                                    
-    Common.save_context = {} # RESET!
-
-    # RETURN TO HOME PAGE =  # TODO: SHOW MESSAGE
-    return HttpResponseRedirect(reverse("home"))
