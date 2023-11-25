@@ -515,17 +515,16 @@ def is_booking_form_valid(form, request):
     if (cleaned_data["return_option"] == "Y" and
             cleaned_data["returning_date"] == cleaned_data["departing_date"]):
         # Same Day Travel - Is there enough time between journey times?
-        thetime = cleaned_data["departing_time"]
-        depart_pos = Common.OUTBOUND_TIME_OPTIONS1.index(thetime)
-        thetime = cleaned_data["returning_time"]
-        return_pos = Common.INBOUND_TIME_OPTIONS1.index(thetime)
-        if depart_pos > return_pos:
+        depart_time = cleaned_data["departing_time"]
+        return_time = cleaned_data["returning_time"]
+        time_diff = morecode.calc_time_difference(return_time, depart_time)
+        if time_diff < 0:
             message_error("Returning Time - The time of the return flight "
                           "cannot be in the past.",
                           request)
             return (False, None)
 
-        if depart_pos == return_pos:
+        if time_diff < 90:
             message_error(
                 "Returning Time - The interval between flights cannot be "
                 "less than 90 minutes.", request)

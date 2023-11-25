@@ -110,6 +110,13 @@ class Common:
                                                each.flight_to))
 
         # TODO
+        print("OUT", outbound_flights)
+        print(out_time_options1)
+        print(out_time_options2)
+        print("in", inbound_flights)
+        print(in_time_options1)
+        print(in_time_options2)
+        # TODO
         #  newdict["numberof_oneway_flights"] = len(all_flight_entries) // 2
 
         # Store the results in Class variables

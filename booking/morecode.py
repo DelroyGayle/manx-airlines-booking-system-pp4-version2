@@ -21,6 +21,35 @@ CAPACITY = 96  # Number of seats in the aircraft
 LEFT_BIT_POS = CAPACITY - 1  # I.E. 95
 
 
+def calc_time_difference(return_time, depart_time):
+    """
+    Calculate the difference between these two times
+    Which are represented as 4 character strings
+    e.g. '1130'
+    """
+
+    print(return_time, depart_time)
+    return_time = int(return_time)
+    quotient_rem = divmod(return_time, 100)
+    print(quotient_rem)
+    return_time = (quotient_rem[0] * 60 +
+                    quotient_rem[1])
+
+    depart_time = int(depart_time)
+    quotient_rem = divmod(depart_time, 100)
+    print(quotient_rem)
+    depart_time = (quotient_rem[0] * 60 +
+                    quotient_rem[1])
+    print(return_time, depart_time, return_time - depart_time)
+    if return_time < depart_time: # In the Past!
+        return return_time - depart_time
+
+    # ADD 1HR45MINS = 105 MINS TO THE DEPARTURE TIME
+    # Add HR45MINS = 105 to the Departure Time
+    depart_time += 105
+    print(105, return_time, depart_time, return_time - depart_time)
+    return return_time - depart_time
+
 def row_of_N_seats(number_needed, allocated, available):
     """ Find a 'row' of 'number_needed' seats """
     zeros = "0b" + "0"*number_needed
@@ -593,9 +622,10 @@ def create_new_records(request):
     create_transaction_record()
     update_schedule_database()
                                                                                     
-    reset_common_fields() # RESET!
-
     # Indicate success
     messages.add_message(request, messages.SUCCESS,
                          ("Booking {0} Created Successfully"
                          .format(Common.save_context["pnr"])))
+
+    reset_common_fields() # RESET!
+
