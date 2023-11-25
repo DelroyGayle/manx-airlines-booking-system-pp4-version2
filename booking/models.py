@@ -49,7 +49,7 @@ class Booking(models.Model):
     return_flight = models.BooleanField(default=True)
 
     # Outbound Date + Flight No (e.g. MX0485)
-    outbound_date = models.DateField(auto_now=True)
+    outbound_date = models.DateField(null=True)
     outbound_flightno = models.CharField(max_length=6, default="")
     # Inbound Date + Flight No (e.g. MX0486)
     # Optional i.e. One-Way Journey

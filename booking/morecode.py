@@ -44,7 +44,6 @@ def calc_time_difference(return_time, depart_time):
     if return_time < depart_time: # In the Past!
         return return_time - depart_time
 
-    # ADD 1HR45MINS = 105 MINS TO THE DEPARTURE TIME
     # Add HR45MINS = 105 to the Departure Time
     depart_time += 105
     print(105, return_time, depart_time, return_time - depart_time)
@@ -151,6 +150,7 @@ def seat_number(number):
     except ValueError:  # TODO
         result = ""
     finally:
+        print("SEAT:", number, result)
         return result
 
 
@@ -247,6 +247,8 @@ def check_availability(request, departing, outbound_date,
         # Seats Allocated
         Common.outbound_allocated_seats = result[1]
         Common.outbound_seatmap = convert_bitarray_to_hexstring(result[2])
+        print("OUT>",Common.outbound_total_booked, numberof_seats_needed,
+        result[1])
         Common.outbound_total_booked += numberof_seats_needed
 
     if cleaned_data["return_option"] != "Y":
@@ -295,6 +297,8 @@ def check_availability(request, departing, outbound_date,
         # Seats Allocated
         Common.inbound_allocated_seats = result[1]
         Common.inbound_seatmap = convert_bitarray_to_hexstring(result[2])
+        print("IN>",Common.inbound_total_booked, numberof_seats_needed,
+        result[1])
         Common.inbound_total_booked += numberof_seats_needed
 
     print("ROK", all_OK)
@@ -442,10 +446,14 @@ def determine_seatnumber(paxno, pax_type):
     EG   0 is 1A, 1 is 1B , 2 is 1C, 3 is 1D, 4 is 2A, ...
        91 is 23D, 92 is 24A, 93 is 24B, 94 is 24C, 95 is 24D
     """
-       
+
+    # print("PAXNO out", paxno, pax_type, Common.outbound_allocated_seats[paxno])
+    print(Common.outbound_allocated_seats, paxno)
     outbound_seatno = (seat_number(Common.outbound_allocated_seats[paxno])
                        if pax_type != "I" else "")
  
+    # print("PAXNO in", paxno, pax_type, Common.inbound_allocated_seats[paxno])
+    print(Common.inbound_allocated_seats, paxno)
     inbound_seatno = (seat_number(Common.inbound_allocated_seats[paxno])
                        if Common.save_context["return_option"] == "Y"
                           and pax_type != "I" else "")
@@ -551,12 +559,13 @@ def write_passenger_record(booking, passenger_type, plural, pax_type,
     key = f"{passenger_type}-{paxno}-" # TODO
     infant_status_number = 1
     while paxno < number_of_pax_type:
-        outbound_seatno, inbound_seatno = determine_seatnumber(paxno, pax_type)
+        outbound_seatno, inbound_seatno = determine_seatnumber(order_number - 1, pax_type)
         tuple = create_pax_instance(booking, dataset_name, key, paxno, pax_type,
                                     order_number, infant_status_number,
                                     outbound_seatno, inbound_seatno)
         pax, order_number, infant_status_number = tuple
-        print("PAX", pax, paxno, order_number, pax_type, number_of_pax_type) # TODO
+        print("PAX", pax)
+        print("PAX>", paxno, order_number, pax_type, number_of_pax_type) # TODO
         pax.save()
         paxno += 1
 

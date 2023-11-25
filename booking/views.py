@@ -195,6 +195,8 @@ def date_validation_part2(accum_dict, errors_found,
     # datediff = date_of_birth - todays_date
 
     departing_date = Common.save_context["booking"]["departing_date"]
+    print(9881, Common.save_context["booking"]["departing_date"], "DEP")
+    print(9882, Common.save_context["booking"]["returning_date"], "RET")
     output_departing_date = departing_date.strftime("%d/%m/%Y")
     datediff = date_of_birth - todays_date
     days = datediff.days
@@ -904,6 +906,10 @@ def passenger_details_form(request):
             outbound_date = Common.save_context["booking"]["departing_date"]
             outbound_flightno = Common.outbound_listof_flights[depart_pos]            
             print(882)
+
+            print(Common.save_context["booking"]["departing_date"], "DEP")
+            print(Common.save_context["booking"]["returning_date"], "RET")
+
             cleaned_data = are_all_forms_valid[1]
             Common.save_context["bags"] = cleaned_data.get("bags")
             Common.save_context["remarks"] = cleaned_data.get("remarks")
