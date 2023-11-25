@@ -16,18 +16,18 @@ from .forms import AdultsForm, MinorsForm
 from .forms import HiddenForm
 from .forms import BagsRemarks
 
+from . import morecode
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 import random  # TODO
 import re
 
 from .common import Common
-from .helpers import tester
+
 # TODO
 # from .constants import FIRSTNAME_BLANK
 # KEEP THIS - TODO
 # import constants
-# from .helpers import test TODO
 
 # Constants
 
@@ -542,6 +542,7 @@ def is_booking_form_valid(form, request):
         thetime = cleaned_data["departing_time"]
         depart_pos = Common.OUTBOUND_TIME_OPTIONS1.index(thetime)
         save_data["depart_pos"] = depart_pos
+        outbound_flightno = Common.outbound_listof_flights[depart_pos]            
         thetime = cleaned_data["returning_time"]
         return_pos = Common.INBOUND_TIME_OPTIONS1.index(thetime)
         save_data["return_pos"] = return_pos
@@ -551,7 +552,37 @@ def is_booking_form_valid(form, request):
         # One-way: Note the position of the departure flight
         depart_pos = Common.OUTBOUND_TIME_OPTIONS1.index(thetime)
         save_data["depart_pos"] = depart_pos
+        outbound_flightno = Common.outbound_listof_flights[depart_pos]            
 
+    # Check Availability regarding the Selected Journeys
+    # Outbound Flight
+    outbound_date = cleaned_data["departing_date"]
+    outbound_time = cleaned_data["departing_time"]
+    
+    return_option = cleaned_data["return_option"]
+    if return_option == "Y":
+        # Return Flight - Check Availability
+        inbound_time = cleaned_data["returning_time"]
+        return_pos = Common.INBOUND_TIME_OPTIONS1.index(inbound_time)
+        inbound_flightno = Common.outbound_listof_flights[return_pos]            
+        inbound_date = cleaned_data["returning_date"]
+    else:
+        inbound_time = None
+        inbound_flightno = None
+        inbound_date = None
+
+    check_avail = morecode.check_availability(request,
+                                              "Departing Flight",
+                                              outbound_date, 
+                                              outbound_flightno,
+                                              outbound_time,
+                                              "Returning Flight",
+                                              inbound_date, 
+                                              inbound_flightno,
+                                              inbound_time)
+
+    return (False, None)
+    
     # Successful Validation
     return (True, save_data)
 
@@ -800,6 +831,7 @@ def setup_confirm_booking_context(request,
     # TODO
     return context
 
+
 # TODO
 def passenger_details_form(request):
     """
@@ -863,6 +895,12 @@ def passenger_details_form(request):
                                                  bags_remarks_form)
         print(880, are_all_forms_valid)
         if are_all_forms_valid[0]:
+            print(881)
+
+            depart_pos = Common.save_context["depart_pos"]
+            outbound_date = Common.save_context["booking"]["departing_date"]
+            outbound_flightno = Common.outbound_listof_flights[depart_pos]            
+            print(882)
             cleaned_data = are_all_forms_valid[1]
             Common.save_context["bags"] = cleaned_data.get("bags")
             Common.save_context["remarks"] = cleaned_data.get("remarks")
@@ -956,7 +994,6 @@ def view_booking(request, id):
 
 
 def search_bookings(request):
-    print("TESTER", tester()) # TODO
     query = request.GET.get("query")
     # Blank Search
     if not query:
@@ -1228,7 +1265,6 @@ def write_passenger_record(booking, passenger_type, plural, pax_type,
     """
     # SEATNO TODO seat_numbers
     dataset_name = f"{plural}_data" # EG "adults_data"
-    #DG# 'adult-0-title', 'adult-0-first_name',  'adult-0-last_name' etc
     paxno = 0
     key = f"{passenger_type}-{paxno}-" # TODO
     infant_status_number = 1
