@@ -551,6 +551,7 @@ def is_booking_form_valid(form, request):
     else:
 
         # One-way: Note the position of the departure flight
+        thetime = cleaned_data["departing_time"]
         depart_pos = Common.OUTBOUND_TIME_OPTIONS1.index(thetime)
         save_data["depart_pos"] = depart_pos
         outbound_flightno = Common.outbound_listof_flights[depart_pos]            
@@ -971,8 +972,6 @@ def view_booking(request, id):
     print("BOOKING:", booking)  # PK/ID   TODO
     print("ID", id)
     print("PNR", booking.pnr)
-    # context = {"booking": booking}
-    # qs = Passenger.objects.filter(booking=b)
     qs = Passenger.objects.filter(pnr_id=id).order_by("pax_number")
     print(qs)  # TODO
     print(len(qs))
@@ -982,7 +981,7 @@ def view_booking(request, id):
         print(pax_record.pax_type, pax_record.pax_number, pax_record.date_of_birth,
         pax_record.first_name, pax_record.last_name)
         passenger_list.append(pax_record)
-    #  print(type(passenger_list)) #  TODO
+
     display = dict(created_at=booking.created_at.strftime("%d%b%y").upper(),
                    # EG 17NOV23
                    outbound_date=booking.outbound_date.strftime("%d%b%y").upper())

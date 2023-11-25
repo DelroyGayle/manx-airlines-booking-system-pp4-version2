@@ -32,16 +32,26 @@ TODO
                     (INFANT/{{ pax.date_of_birth }})
                 {% endif %}
                 </p>
+                
                 {% comment %}
                     "|length" is used just in case the number is a string of zeros i.e. 000000 
                 {% endcomment %}
+
                 {% if pax.contact_number|length %}
                     <p>Contact&nbsp;Telephone&nbsp;{{ pax.contact_number }}</p>
                 {% endif %}
                 {% if pax.contact_email %}
                     <p>Contact Email&nbsp;{{ pax.contact_email }}</p>
                 {% endif %}
-                <p>Seat&nbsp;23A</p>
+
+                {% if pax.outbound_seat_number %}
+                    <p>Outbound Seat&nbsp;{{ pax.outbound_seat_number|ljust:"3" }}
+                    {% if pax.inbound_seat_number %}
+                        &nbsp;Inbound Seat&nbsp;{{ pax.inbound_seat_number|ljust:"3" }}
+                    {% endif %}
+                    </p>
+                {% endif %}
+                        
                 {% if pax.wheelchair_ssr %}
                     <p>SSR&nbsp;WCH{{ pax.wheelchair_ssr }}
                 {% endif %}

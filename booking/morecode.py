@@ -44,7 +44,7 @@ def calc_time_difference(return_time, depart_time):
     if return_time < depart_time: # In the Past!
         return return_time - depart_time
 
-    # Add HR45MINS = 105 to the Departure Time
+    # Add 1HR45MINS = 105 to the Departure Time
     depart_time += 105
     print(105, return_time, depart_time, return_time - depart_time)
     return return_time - depart_time
@@ -452,7 +452,7 @@ def determine_seatnumber(paxno, pax_type):
     outbound_seatno = (seat_number(Common.outbound_allocated_seats[paxno])
                        if pax_type != "I" else "")
  
-    # print("PAXNO in", paxno, pax_type, Common.inbound_allocated_seats[paxno])
+    # print("PAXNO in", paxno, pax_type, Common.inbound_allocated_seats[paxno]) TODO
     print(Common.inbound_allocated_seats, paxno)
     inbound_seatno = (seat_number(Common.inbound_allocated_seats[paxno])
                        if Common.save_context["return_option"] == "Y"
