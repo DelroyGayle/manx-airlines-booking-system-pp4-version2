@@ -1,5 +1,5 @@
-# Test my seat allocation algorithm using 'bitstring'
-# Passed all the tests I submitted however just to ensure
+# Test my recursive seat allocation algorithm using 'bitstring'
+# Passed all the tests I submitted
 
 from bitstring import BitArray
 from random import randint
@@ -50,6 +50,7 @@ def find_N_seats(number_needed, allocated, available):
     N being 'number_needed'
     'allocated' are all seats found so far
     'available' is a bitstring depicting what is available
+    This is a recursive algorithm
     """
 
     result = row_of_N_seats(number_needed, allocated, available)
@@ -65,47 +66,37 @@ def find_N_seats(number_needed, allocated, available):
     # see if it is possible to find a row of M seats
     # if so, allocate that row of seats
     # then see if the remainder can be allocated
-    if number_needed != 1:
-        minus1 = number_needed - 1
-        count = number_needed - 1
-        while count != 1:
-            result = row_of_N_seats(minus1, allocated, available)
-            remainder_needed = number_needed - count
-            remainder = find_N_seats(remainder_needed,
-                                     allocated + result[1], result[2])
-            if remainder[0]:
-                # Found all seats!
-                return remainder
+    minus1 = number_needed - 1
+    count = number_needed - 1
+    while count != 1:
+        result = row_of_N_seats(count, allocated, available)
+        if not result[0]:
+            # Try a smaller row allocation
+            count != 1
+            continue
 
-    return (False, allocated, available)
+        remainder_needed = number_needed - count
+        remainder = find_N_seats(remainder_needed,
+                                 allocated + result[1], result[2])
+        if remainder[0]:
+            # Found all seats!
+            return remainder
 
-    # Set the bits to 1 to represent 'taken' seats
-    bitrange = range(result[0], result[0] + number_needed)
-    available.invert(bitrange)
-    print(bitrange)
+    # Not successful in finding any 'row' > 1
+    # Therefore, allocate one seat
+    # Then repeat 'find_N_seats' for the remainder
 
-    """
-    Airlines generally seat passengers from the back of the aircraft
-    So interpret the leftmost bit as position 95
-    95 94 93 ... 2 1 0
-     0  0  0 ... 0 0 0
+    result = row_of_N_seats(1, allocated, available)
+    # Finding one seat at this stage should not fail
+    if not result[0]:
+        print("BUG: FAILED TO ALLOCATE ONE SEAT WHEN "
+              "THERE OUGHT TO BE AVAILABILITY")
+        print(available)
+        print(available.bin)
+        quit()
 
-    Then add that range of seats to the 'allocated' list
-    """
-
-    """
-    Determine the range of seat positions
-    e.g. 6 seats at position 77
-    77-6+1 = 72
-    so range(72, 78) = 72, 73, 74, 75, 76, 77
-    """
-    end = LEFT_BIT_POS - result[0]
-    start = end - number_needed + 1
-    seat_range = range(start, end + 1)
-    allocated += [*seat_range]
-    print(allocated)
-    print(available.bin)
-    return (True, allocated, available)
+    return find_N_seats(minus1,
+                        allocated + result[1], result[2])
 
 
 def seat_number(number):
@@ -166,6 +157,7 @@ allocated = result[1]
 result = find_N_seats(3, allocated, seatmap)
 print(result)
 print(result[2].bin)
+
 """
 (True, [95, 94, 91, 92, 93], BitArray('0xf80000000000000000000000'))
 111110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -189,7 +181,7 @@ while count:
     # Return a random integer N such that a <= N <= b.
     # Alias for randrange(a, b+1).
     r = randint(0, CAPACITY)
-    # Ensure hasn't been used prior
+    # Ensure this position hasn't been used prior
     if r in bits_set:
         continue
 
@@ -200,6 +192,7 @@ while count:
     bits_set.add(r)
     count -= 1
 print(seatmap.bin)
+
 """
 TEST 2
 110000010010000100000011000110000010001000100000000000000011001010001000001100000000000000100000
@@ -218,6 +211,7 @@ print(count)
 print(result)
 print(result[2].bin)  # BINARY
 print(result[2])  # HEX
+
 """
 76
 (False, [93, 92, 91, 90, 89, 87, 86, 84, 83, 82, 81, 79, 78, 77, 76, 75, 74,
@@ -231,6 +225,20 @@ BitArray('0xffffffffffffffffffffffff'))
 
 111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
 
+0xffffffffffffffffffffffff
+"""
+
+"""
+TEST 2 AGAIN:
+000001100000000000000000101010100000000000101100100000000000000001001110000010000000001010010011
+76
+(False, [95, 94, 93, 92, 91, 88, 87, 86, 85, 84, 83, 82, 81, 80,
+79, 78, 77, 76, 75,74, 73, 72, 70, 68, 66, 64, 63, 62, 61, 60, 59,
+58, 57, 56, 55, 54, 52, 49, 48, 46, 45, 44, 43, 42, 41, 40, 39, 38,
+37, 36, 35, 34, 33, 32, 31, 29, 28, 24, 23, 22, 21, 20, 18, 17, 16,
+15, 14, 13, 12, 11, 10, 8, 6, 5, 3, 2], BitArray('0xffffffffffffffffffffffff'))
+
+111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
 0xffffffffffffffffffffffff
 """
 
@@ -291,10 +299,33 @@ FFFFFFFFFFFFFFFFFFFFFFFF 24
 """
 
 """
+TEST 3 AGAIN:
+100000100010001010000000000001000001101011011000000000100100000000000001100001000000100001000000
+[0, 6, 10, 14, 16, 29, 35, 36, 38, 40, 41, 43, 44, 54, 57, 71, 72, 77, 84, 89]
+76
+
+(False, [0, 6, 10, 14, 16, 29, 35, 36, 38, 40, 41, 43, 44, 54, 57, 71, 72, 77,
+84, 89, 94, 93, 92, 91, 90, 88, 87, 86, 84, 83, 82, 80, 78, 77, 76, 75, 74, 73,
+72, 71, 70, 69, 68, 67, 65, 64, 63, 62, 61, 58, 56, 53, 50, 49, 48, 47, 46, 45,
+44, 43, 42, 40, 39, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 22, 21,
+20, 19, 17, 16, 15, 14, 13, 12, 10, 9, 8, 7, 5, 4, 3, 2, 1, 0],
+BitArray('0xffffffffffffffffffffffff'))
+
+96
+111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
+0xffffffffffffffffffffffff
+<class 'bitstring.bitarray.BitArray'>
+False
+FFFFFFFFFFFFFFFFFFFFFFFF 24
+"""
+
+"""
 TEST 4
 Randomly attempt to allocate 20 different rows of seats
 beginning with an empty seat map
 After that fill the plane and the number of allocated seats ought to be 96
+
+RAN TEST 4 AGAIN - THIS TIME DOING 10 ROWS INSTEAD OF 20 - CALLED TEST4A
 """
 
 print("TEST 4")
@@ -302,7 +333,7 @@ print("TEST 4")
 # Empty Plane - All zeros
 available = BitArray(bin="0" * CAPACITY)
 allocated = []
-count = 20
+count = 10  # count = 20
 
 while count:
 
@@ -384,7 +415,49 @@ Numbers 0 and 1 which are 'not' in the 'allocated' list above!
 45, 46, 47, 48, 49, 50, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 28, 29, 30, 21,
 22, 23, 24, 25, 26, 27,
 14, 15, 16, 17, 18, 19, 20, 5, 6, 7, 8, 9, 10, 11, 12, 13, 2, 3, 4,
-1, 0] <=== Confirms that the last two avaliable slots were 0 and 1
+1, 0] <=== Confirms that the last two available slots were 0 and 1
+
+96
+"""
+
+"""
+TEST 4 AGAIN WITH 10 ROWS:
+TEST4A
+
+3
+10
+3
+5
+10
+3
+10
+7
+2
+10
+111111111111111111111111111111111111111111111111111111111111111000000000000000000000000000000000
+0xfffffffffffffffe00000000
+
+[93, 94, 95, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 80, 81, 82, 75, 76,
+77, 78, 79, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 62, 63, 64, 52, 53, 54,
+55, 56, 57, 58, 59, 60, 61, 45, 46, 47, 48, 49, 50, 51, 43, 44, 33, 34, 35,
+36, 37, 38, 39, 40, 41, 42]
+
+63
+
+*** The above bitstring confirms that there should be (96 - 63 = 33) zeros
+That is, 33 available slots left - I count 33!
+
+111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
+0xffffffffffffffffffffffff
+[93, 94, 95, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 80, 81, 82, 75, 76,
+77, 78, 79, 65, 66, 67,68, 69, 70, 71, 72, 73, 74, 62, 63, 64, 52, 53, 54,
+55, 56, 57, 58, 59, 60, 61, 45, 46, 47, 48, 49, 50, 51, 43, 44, 33, 34, 35,
+36, 37, 38, 39, 40, 41, 42,
+
+*** What follows are indeed 33 new numbers! ***
+
+32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21,
+20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
 
 96
 """
@@ -453,6 +526,7 @@ print("-1", seat_number(-1))
 print("ABC", seat_number("ABC"))
 print(CAPACITY, seat_number(CAPACITY))
 print(0, seat_number(0))
+
 """
 TEST 6
 -1
@@ -482,6 +556,7 @@ seats_list = [seat_number(number) for number in allocated]
 print(seats_list)
 print(len(seats_list))  # should be 96
 
+
 """
 111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
 0xffffffffffffffffffffffff
@@ -503,7 +578,7 @@ print(len(seats_list))  # should be 96
 """
 
 # TEST 7
-# Ensure can convert from a String to a BitArray and back again!
+# Ensure that I can convert from a String to a BitArray and back again!
 print("TEST 7")
 thestring = "0"*24  # empty flight
 print(thestring)
