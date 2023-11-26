@@ -34,8 +34,10 @@ from .models import Flight, Schedule, Transaction
 
 from .common import Common
 from .constants import CAPACITY
+from datetime import datetime, date
+from dateutil.relativedelta import relativedelta
 from bitstring import BitArray
-import random  # TODO RE GENERATE PNR
+from random import randint
 import re
 
 
@@ -69,6 +71,15 @@ INFANT_PRICE = 30   # Age < 2
 BAG_PRICE = 30
 
 ######################
+
+
+# Removed similar-looking characters such as l, 1, I, O and 0.
+CHARACTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+CHARLIST = [*CHARACTERS]
+CHARLIST = list(CHARACTERS) # 32 CHARACTERS
+
+FIRST_LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ"
+CHARLIST2 = [*FIRST_LETTERS] # 24 CHARACTERS
 
 """
     Airlines generally seat passengers from the back of the aircraft
@@ -350,6 +361,30 @@ def check_availability(request, departing, outbound_date,
 
     print("ROK", all_OK)
     return all_OK
+
+
+def generate_random_pnr():
+    """ Generate a random 6-character PNR """
+    n = 5
+    chars5 = "".join(["{}".format(CHARLIST[randint(0, 32)])
+                          for num in range(0, n)])
+    chars1 = CHARLIST2[randint(0, 23)]
+    return chars1 + chars5
+
+    
+def unique_pnr():
+    """ 
+    Generate a Random Unique 6-character PNR
+    PNR - Passenger Name Record
+    """
+
+    matches = 1
+    while matches > 0:
+        newpnr = generate_random_pnr()
+        # Is it Unique?
+        matches = Booking.objects.filter(pnr=newpnr)[:1].count()
+
+    return newpnr
 
 
 def calc_time_difference(return_time, depart_time):
@@ -1144,26 +1179,6 @@ def initialise_formset_context(request):
 
     return context
 
-    
-def generate_pnr():
-    """ 
-    Generate a Random Unique 6-character PNR
-    PNR - Passenger Name Record
-    """
-
-    # For now use a random number - TODO
-    # For testing purposes use this naive approach:
-    # a 3-character string prefixed with SMI
-    # However ensure it is unique!
-    matches = 1
-    while matches > 0:
-        random_string = str(random.randrange(100, 1000))  # 3 digits TODO
-        newpnr = "SMI" + random_string
-        matches = Booking.objects.filter(pnr=newpnr)[:1].count()
-    # Unique PNR
-    print(newpnr, "TYPE", type(newpnr)) # TODO
-    return newpnr
-
 
 def compute_total_price(children_included, infants_included):
     """ 
@@ -1178,27 +1193,33 @@ def compute_total_price(children_included, infants_included):
     in order that they can be rendered on the Confirmation Form
     """
 
+    multiple = (2 if Common.save_context["return_option"] == "Y"
+                  else 1)
+    adult_price = ADULT_PRICE * multiple
+    child_price = CHILD_PRICE * multiple
+    infant_price = INFANT_PRICE * multiple
+
     the_fees_template_values = {}
     number_of_adults = Common.save_context["booking"]["adults"]
-    print("N/A2", number_of_adults)
-    total = number_of_adults * ADULT_PRICE
+    print("N/A2", number_of_adults, Common.save_context["return_option"]) # TODO
+    total = number_of_adults * adult_price
     the_fees_template_values["adults_total"] = (
-            f"{number_of_adults} x GBP{ADULT_PRICE:3.2f} = GBP{total:5.2f}")
+            f"{number_of_adults} x GBP{adult_price:3.2f} = GBP{total:5.2f}")
 
     if children_included:
         number_of_children = Common.save_context["booking"]["children"]
-        product = number_of_children * CHILD_PRICE 
+        product = number_of_children * child_price 
         total += product
         the_fees_template_values["children_total"] = (
-                    f"{number_of_children} x GBP{CHILD_PRICE:3.2f} = "
+                    f"{number_of_children} x GBP{child_price:3.2f} = "
                     f"GBP{product:5.2f}")
 
     if infants_included:
         number_of_infants = Common.save_context["booking"]["infants"]
-        product = number_of_infants * INFANT_PRICE
+        product = number_of_infants * infant_price
         total += product
         the_fees_template_values["infants_total"] = (
-                    f"{number_of_infants} x GBP{INFANT_PRICE:3.2f} = "
+                    f"{number_of_infants} x GBP{infant_price:3.2f} = "
                     f"GBP{product:5.2f}")
     
     print("BAGS",Common.save_context["bags"] ) # TODO
@@ -1256,7 +1277,7 @@ def setup_confirm_booking_context(request,
 
     # Generate a Random Unique 6-character PNR
     # PNR - Passenger Name Record
-    context["pnr"] = generate_pnr()
+    context["pnr"] = unique_pnr()
     print("type pnr", 1001, context["pnr"], type(context["pnr"]))
 
     #print("CONTEXTIN2", context)
@@ -1613,30 +1634,3 @@ def handle_editpax_GET(request, id, booking):
     # context["infants_included"] = (Common.save_context["infants_included"] == "Y")
     print("NOW", context)
     return context
-
-
-    """
-    Create the 'context' to be used by the Passenger Details Template
-    Necessary preset values have been saved in 'Common.save_context'
-    """
-    context = {}
-
-    # ADULTS
-    context["adults_formset"] = Common.save_context["adults_formset"]
-
-    # CHILDREN
-    context["children_included"] = (Common.save_context["children_included"] == "Y")
-    context["children_formset"] = Common.save_context["children_formset"]
-
-    # INFANTS
-    context["infants_included"] = (Common.save_context["infants_included"] == "Y")
-    context["infants_formset"] = Common.save_context["infants_formset"]
-
-    context["bags_remarks_form"] = Common.save_context["bags_remarks_form"]
-    context["hidden_form"] = Common.save_context["hidden_form"]
-    # TODO
-    print("CON2", context)
-    # print("SAVED_CONTEXT", Common.save_context)
-
-    return context
-   

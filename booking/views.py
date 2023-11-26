@@ -19,8 +19,6 @@ from .forms import HiddenForm
 from .forms import BagsRemarks
 
 from . import morecode
-from datetime import datetime, date
-from dateutil.relativedelta import relativedelta
 import random  # TODO
 import re
 
@@ -169,7 +167,7 @@ def is_booking_form_valid(form, request):
 def create_booking_form(request):
     """ The Handling of the Create Bookings Form """
 
-    reset_common_fields()
+    morecode.reset_common_fields()
     if not Common.initialised:
         Common.initialisation()
 
@@ -241,64 +239,6 @@ def create_booking_form(request):
 
     context = {"form": form}
     return render(request, "booking/create-booking-form.html", context)
-
-    
-def generate_pnr():
-    """ 
-    Generate a Random Unique 6-character PNR
-    PNR - Passenger Name Record
-    """
-
-    # For now use a random number - TODO
-    # For testing purposes use this naive approach:
-    # a 3-character string prefixed with SMI
-    # However ensure it is unique!
-    matches = 1
-    while matches > 0:
-        random_string = str(random.randrange(100, 1000))  # 3 digits TODO
-        newpnr = "SMI" + random_string
-        matches = Booking.objects.filter(pnr=newpnr)[:1].count()
-    # Unique PNR
-    print(newpnr, "TYPE", type(newpnr)) # TODO
-    return newpnr
-
-def setup_confirm_booking_context(request,
-                                  children_included,
-                                  infants_included,
-                                  context):
-    # TODO
-    """
-    Calculate the Fees and Total Price
-    Then add the results to the 'context' in order
-    to be displayed on the Confirmation Form
-    """
-
-    print("CONTEXTIN", context)
-    print(701, type(context))
-    the_fees = morecode.compute_total_price(children_included, infants_included)
-    print(the_fees)
-    context = morecode.add_fees_to_context(the_fees)
-
-    # TODO
-    # Update the 'context' with the fees and total price
-    context |= the_fees
-    print("900DONE", context)
-
-
-    # Generate a Random Unique 6-character PNR
-    # PNR - Passenger Name Record
-    context["pnr"] = generate_pnr()
-    print("type pnr", 1001, context["pnr"], type(context["pnr"]))
-
-    #print("CONTEXTIN2", context)
-    # context = booking_total_price(context, 
-    #                               children_included, infants_included)
-
-    # Render the Booking Confirmation Form
-    print("CONFIRM BOOKING FORM", context) # TODO
-    print(type(context))
-    # TODO
-    return context
 
 
 # TODO

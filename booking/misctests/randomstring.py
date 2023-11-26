@@ -7,12 +7,12 @@ for i in range(10):
     print(s)
 
 # Removed similar-looking characters such as l, 1, I, O and 0.
-CHARACTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789"
+CHARACTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
 THELIST = [*CHARACTERS]
 print(THELIST)
 THELIST = list(CHARACTERS)
 print(THELIST)
-print(len(THELIST))  # 33 CHARACTERS
+print(len(THELIST))  # 32 CHARACTERS
 
 FIRST_LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ"
 THELIST2 = [*FIRST_LETTERS]
@@ -22,7 +22,7 @@ print(len(THELIST2))  # 24 CHARACTERS
 """
 ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q',
 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-'1', '2', '3', '4', '5', '6', '7', '8', '9']
+'2', '3', '4', '5', '6', '7', '8', '9']
 """
 
 n = 5
