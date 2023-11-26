@@ -3,6 +3,27 @@ In an effort to modularise my code
 I have added other methods here
 """
 
+########## TODO
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.db.models import Q, OuterRef, Subquery
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
+from django.forms import formset_factory
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+
+from .models import Booking, Passenger
+from .models import Flight
+
+from .forms import BookingForm, CreateBookingForm
+from .forms import AdultsForm, MinorsForm
+from .forms import HiddenForm
+from .forms import BagsRemarks
+###########
+
+
 from django.shortcuts import render
 # TODO
 # get_object_or_404
@@ -14,7 +35,40 @@ from .models import Flight, Schedule, Transaction
 from .common import Common
 from .constants import CAPACITY
 from bitstring import BitArray
+import random  # TODO RE GENERATE PNR
 import re
+
+
+############# TODO
+
+
+# Constants
+
+NULLPAX = "Enter the details for this passenger."
+BAD_NAME = ("Names must begin and end with a letter. "
+            "Names must consist of only alphabetical characters, "
+            "apostrophes and hyphens.")
+FIRSTNAME_BLANK = (f"Passenger Name required. "
+                   f"Enter the First Name as on the passport.")
+LASTNAME_BLANK = (f"Passenger Name required. "
+                  f"Enter the Last Name as on the passport.")
+CONTACTS_BLANK = ("Adult 1 is the Principal Passenger. "
+                  "Contact Details are "
+                  "mandatory for this Passenger. "
+                  "Enter passenger's phone number and/or email.")
+BAD_TELNO = "Enter a phone number of at least six digits."
+BAD_EMAIL = "Enter a valid email address."
+BAD_DATE = "Enter a valid date of birth."
+FUTURE_DATE = "Your date of birth must be in the past."
+TOO_YOUNG = ("Newly born infants younger than 14 days "
+             " on the {0} will not be accepted for travel.")
+
+ADULT_PRICE = 100   # Age > 15
+CHILD_PRICE = 60 # Age 2-15
+INFANT_PRICE = 30   # Age < 2
+BAG_PRICE = 30
+
+######################
 
 """
     Airlines generally seat passengers from the back of the aircraft
@@ -744,3 +798,720 @@ def realloc_seats_first(request, id, booking):
         print(seat_numbers_list)
         freeup_seats(booking.inbound_date, booking.inbound_flightno,
                      seat_numbers_list)
+
+
+def display_formset_errors(request, prefix, errors_list):
+    """
+    Instead of showing form errors within the form
+    This routine will display any errors via the Django Messaging facility
+
+    Sample 'errors_list'
+    [{'last_name': ['This field is required.'],
+      'last_name': ['This field is required.'],
+      'contact_number': ['This field is required.'],
+      'contact_email': ['This field is required.'],
+      'wheelchair_ssr': ['This field is required.'],
+      'wheelchair_type': ['This field is required.']}, {}]
+    """
+
+    number_of_forms = len(errors_list)
+    for form_number in range(number_of_forms):
+        prefix_number = form_number + 1
+        fields_dict = errors_list[form_number]
+        if not fields_dict:  # i.e. empty {}
+            continue
+        list_of_errors = fields_dict.items()
+        for (field, field_errors) in list_of_errors:
+            for item in field_errors:
+                begin = f"{prefix} {prefix_number}:"
+                formatted = Common.format_error(f"{field}")
+                message_string = f"{begin} {formatted} - {item}"
+                messages.add_message(request, messages.ERROR,
+                                     message_string)
+
+
+def append_to_dict(dict, key, item):
+    """
+    This dictionary should be of the form
+    {item: [ ... , ... , ...]}
+    Create a list if one does not exist before appending item
+    """
+
+    if item not in dict:
+        dict[key] = [item]
+    else:
+        dict[key] = dict[key] + [item]
+    return dict
+
+
+def name_validation(fields_dict, accum_dict, errors_found):
+    """ Handle the Formsets' Validation of First and Last Names """
+# def adults_formset_validated(cleaned_data, request):  # TODO
+
+    # First Name Validation
+    temp_field = fields_dict.get("first_name", "").replace(" ", "")
+    if temp_field == "":
+        errors_found = True
+        accum_dict = append_to_dict(accum_dict, "first_name",
+                                    FIRSTNAME_BLANK)
+    elif not re.search("^[A-Z]$|^[A-Z][A-Za-z'-]*[A-Z]$",
+                       temp_field, re.IGNORECASE):
+        errors_found = True
+        accum_dict = append_to_dict(accum_dict, "first_name", BAD_NAME)
+
+    # Last Name Validation
+    temp_field = fields_dict.get("last_name", "").replace(" ", "")
+    if temp_field == "":
+        errors_found = True
+        accum_dict = append_to_dict(accum_dict, "last_name",
+                                    LASTNAME_BLANK)
+    elif not re.search("^[A-Z]$|^[A-Z][A-Za-z'-]*[A-Z]$",
+                       temp_field, re.IGNORECASE):
+        errors_found = True
+        accum_dict = append_to_dict(accum_dict, "last_name", BAD_NAME)
+
+    return (accum_dict, errors_found)
+
+
+def adults_formset_validated(cleaned_data, request):
+    """ Carry out Custom Validation of the Adults Formset """
+    formset_errors = []  # Hopefully this will remain empty
+    errors_found = False
+    number_of_forms = len(cleaned_data)
+    for form_number in range(number_of_forms):
+        accum_dict = {}
+        prefix_number = form_number + 1
+        fields_dict = cleaned_data[form_number]
+
+        # Blank Form?
+        if not fields_dict:  # i.e. empty {} which indicates a blank form
+            errors_found = True
+            accum_dict = append_to_dict(accum_dict, "first_name", NULLPAX)
+            formset_errors.append(accum_dict)
+            continue
+
+        accum_dict, errors_found = name_validation(fields_dict,
+                                                   accum_dict, errors_found)
+
+        # Contact Number/Email Validation can be null except for Adult 1
+        telephone = fields_dict.get("contact_number", "").replace(" ", "")
+        email = fields_dict.get("contact_email", "").replace(" ", "")
+        # These can be null except for Adult 1
+        both_blank = telephone == "" and email == ""
+        if both_blank and prefix_number == 1:
+            errors_found = True
+            accum_dict = append_to_dict(accum_dict,
+                                        "contact_number", CONTACTS_BLANK)
+
+        if not both_blank:
+            if telephone != "" and not re.search("^[0-9]{6,}$", telephone):
+                errors_found = True
+                accum_dict = append_to_dict(accum_dict,
+                                            "contact_number", BAD_TELNO)
+
+        # This solution found at
+        # https://stackoverflow.com/questions/3217682/
+        # how-to-validate-an-email-address-in-django
+
+            if email:
+                try:
+                    validate_email(email)
+                except ValidationError as e:
+                    errors_found = True
+                    accum_dict = append_to_dict(accum_dict,
+                                                "contact_email", BAD_EMAIL)
+
+        formset_errors.append(accum_dict)
+
+    if errors_found:
+        # Send as 'Django Messages' the errors that were found
+        display_formset_errors(request, "Adult", formset_errors)
+        return False
+
+    print(500) # TODO
+    return True
+
+
+def date_validation_part2(accum_dict, errors_found,
+                          date_of_birth, is_child):
+    """ Handles the date validation for children and infants """
+
+    todays_date = datetime.now().date()
+    # datediff = date_of_birth - todays_date
+
+    departing_date = Common.save_context["booking"]["departing_date"]
+    print(9881, Common.save_context["booking"]["departing_date"], "DEP")
+    print(9882, Common.save_context["booking"]["returning_date"], "RET")
+    output_departing_date = departing_date.strftime("%d/%m/%Y")
+    datediff = date_of_birth - todays_date
+    days = datediff.days
+
+    # days > 0 caters for hours/minutes/seconds!
+    if date_of_birth > todays_date and days > 0:
+        errors_found = True
+        accum_dict = append_to_dict(accum_dict,
+                                    "date_of_birth", FUTURE_DATE)
+        return (accum_dict, errors_found)
+
+    # if date_of_birth > todays_date then that means
+    # days == 0 i.e. identical to Today's Date
+    if days == 0:
+        errors_found = True
+        accum_dict = append_to_dict(accum_dict,
+                                    "date_of_birth",
+                                    TOO_YOUNG.format(output_departing_date))
+
+        return (accum_dict, errors_found)
+
+    datediff = departing_date - date_of_birth
+    days = datediff.days
+    if days < 14:
+        errors_found = True
+        accum_dict = append_to_dict(accum_dict,
+                                    "date_of_birth",
+                                    TOO_YOUNG.format(output_departing_date))
+        return (accum_dict, errors_found)
+
+    # Calculate the difference in years as shown here
+    # https://stackoverflow.com/questions/3278999/how-can-i-compare-a-date-and-a-datetime-in-python
+    difference_in_years = relativedelta(departing_date, date_of_birth).years
+
+    if is_child:
+        # CHILD
+        if difference_in_years > 15:
+            error_message = (
+                "A child should be at least 2 "
+                "and under 16 "
+                f"on the Date of Departure: {output_departing_date} "
+                f"But this passenger will be {difference_in_years}.")
+            errors_found = True
+            accum_dict = append_to_dict(accum_dict,
+                                        "date_of_birth", error_message)
+            return (accum_dict, errors_found)
+
+    if not is_child:
+        # INFANT
+        if difference_in_years >= 2:
+            error_message = (
+                "An infant should be under 2 "
+                f"on the Date of Departure: {output_departing_date} "
+                f"But this passenger will be {difference_in_years}.")
+            errors_found = True
+            accum_dict = append_to_dict(accum_dict,
+                                        "date_of_birth", error_message)
+            return (accum_dict, errors_found)
+
+    # Does this Booking have a Return Journey?
+    if Common.save_context["booking"]["return_option"] == "N":
+        # No!
+        return (accum_dict, errors_found)
+
+    # Yes! - Check the D.O.B. against the Return Date
+    returning_date = Common.save_context["booking"]["returning_date"]
+    output_returning_date = returning_date.strftime("%d/%m/%Y")
+    # Method to determine the years was found at
+    # https://stackoverflow.com/questions/4436957/pythonic-difference-between-two-dates-in-years
+    difference_in_years = relativedelta(returning_date, date_of_birth).years
+    paxtype = "an Adult" if difference_in_years > 15 else "a Child"
+
+    if is_child:
+        # CHILD
+        if difference_in_years > 15:
+            error_message = (
+                "A child should be at least 2 "
+                "and under 16 "
+                f"on the Returning Date: {output_returning_date} "
+                f"But this passenger will be {difference_in_years}. "
+                f"Please enter {paxtype} Booking for this passenger.")
+            errors_found = True
+            accum_dict = append_to_dict(accum_dict,
+                                        "date_of_birth", error_message)
+    if not is_child:
+        # INFANT
+        if difference_in_years >= 2:
+            error_message = (
+                "An infant should be under 2 "
+                f"on the Returning Date: {output_returning_date} "
+                f"But this passenger will be {difference_in_years}. "
+                f"Please enter {paxtype} Booking for this passenger.")
+
+            errors_found = True
+            accum_dict = append_to_dict(accum_dict,
+                                        "date_of_birth", error_message)
+
+    return (accum_dict, errors_found)
+
+
+def minors_formset_validated(cleaned_data, is_child_formset, request,):
+    """
+    Formsets have been 'cleaned' at this point
+    Carry out Custom Validation of the Children Formset
+    and the Infants Formset
+    """
+    formset_errors = []  # Hopefully this will remain empty
+    errors_found = False
+    number_of_forms = len(cleaned_data)
+    todays_date = datetime.now().date()
+    for form_number in range(number_of_forms):
+        accum_dict = {}
+        prefix_number = form_number + 1
+        fields_dict = cleaned_data[form_number]
+
+        # Blank Form?
+        if not fields_dict:  # i.e. empty {} which indicates a blank form
+            errors_found = True
+            accum_dict = append_to_dict(accum_dict, "first_name", NULLPAX)
+            formset_errors.append(accum_dict)
+            continue
+
+        accum_dict, errors_found = name_validation(fields_dict, accum_dict,
+                                                   errors_found)
+
+        # Date of Birth Validation
+        # Children must be between 2 and 15
+        # Infants must be between at least  14 days old and under 2 years old
+
+        date_of_birth = fields_dict.get("date_of_birth", todays_date)
+        # This field SHOULD BE <class 'datetime.date'>
+        # Defensive Programming - because the 'cleaned' version
+        # ought to be a valid date
+        if not isinstance(date_of_birth, date):
+            errors_found = True
+            accum_dict = append_to_dict(accum_dict,
+                                        "date_of_birth", BAD_DATE)
+
+        else:
+            accum_dict, errors_found = date_validation_part2(accum_dict,
+                                                             errors_found,
+                                                             date_of_birth,
+                                                             is_child_formset)
+
+        formset_errors.append(accum_dict)
+
+    if errors_found:
+        # Send as 'Django Messages' the errors that were found
+        paxtype = "Child" if is_child_formset else "Infant"
+        display_formset_errors(request, paxtype, formset_errors)
+        return False
+
+    return True
+
+
+def initialise_formset_context(request):
+    """
+    Create the 'context' to be used by the Passenger Details Template
+    Necessary preset values have been saved in 'Common.save_context'
+    """
+    context = {}
+
+    # ADULTS
+    number_of_adults = Common.save_context["booking"]["adults"]
+    AdultsFormSet = formset_factory(AdultsForm,
+                                    extra=number_of_adults)
+    adults_formset = AdultsFormSet(request.POST or None, prefix="adult")
+    context["adults_formset"] = adults_formset
+
+    # CHILDREN
+    children_included = Common.save_context["children_included"]
+    context["children_included"] = children_included
+    if children_included:
+        number_of_children = Common.save_context["booking"]["children"]
+        ChildrenFormSet = formset_factory(MinorsForm,
+                                          extra=number_of_children)
+        children_formset = ChildrenFormSet(request.POST or None,
+                                           prefix="child")
+        context["children_formset"] = children_formset
+
+    # INFANTS
+
+    infants_included = Common.save_context["infants_included"]
+    context["infants_included"] = infants_included
+    if infants_included:
+        number_of_infants = Common.save_context["booking"]["infants"]
+        InfantsFormSet = formset_factory(MinorsForm,
+                                         extra=number_of_infants)
+        infants_formset = InfantsFormSet(request.POST or None,
+                                         prefix="infant")
+        context["infants_formset"] = infants_formset
+
+    #context["bags_remarks_form"] = Common.save_context["bags_remarks_form"]
+    bags_remarks_form = BagsRemarks(request.POST or None, prefix="bagrem")
+    context["bags_remarks_form"] = bags_remarks_form
+    context["hidden_form"] = Common.save_context["hidden_form"]
+    # TODO
+    print("CON", context)
+    print("SAVED_CONTEXT", Common.save_context)
+
+    return context
+
+    
+def generate_pnr():
+    """ 
+    Generate a Random Unique 6-character PNR
+    PNR - Passenger Name Record
+    """
+
+    # For now use a random number - TODO
+    # For testing purposes use this naive approach:
+    # a 3-character string prefixed with SMI
+    # However ensure it is unique!
+    matches = 1
+    while matches > 0:
+        random_string = str(random.randrange(100, 1000))  # 3 digits TODO
+        newpnr = "SMI" + random_string
+        matches = Booking.objects.filter(pnr=newpnr)[:1].count()
+    # Unique PNR
+    print(newpnr, "TYPE", type(newpnr)) # TODO
+    return newpnr
+
+
+def compute_total_price(children_included, infants_included):
+    """ 
+    Compute the Total Price of the Booking 
+
+    Adults   - £100     Age > 15
+    Children -  £60     Age 2-15
+    Infants  -  £30     Age < 2
+    Bags     -  £30 
+
+    Then store the values in 'the_fees_template_values'
+    in order that they can be rendered on the Confirmation Form
+    """
+
+    the_fees_template_values = {}
+    number_of_adults = Common.save_context["booking"]["adults"]
+    print("N/A2", number_of_adults)
+    total = number_of_adults * ADULT_PRICE
+    the_fees_template_values["adults_total"] = (
+            f"{number_of_adults} x GBP{ADULT_PRICE:3.2f} = GBP{total:5.2f}")
+
+    if children_included:
+        number_of_children = Common.save_context["booking"]["children"]
+        product = number_of_children * CHILD_PRICE 
+        total += product
+        the_fees_template_values["children_total"] = (
+                    f"{number_of_children} x GBP{CHILD_PRICE:3.2f} = "
+                    f"GBP{product:5.2f}")
+
+    if infants_included:
+        number_of_infants = Common.save_context["booking"]["infants"]
+        product = number_of_infants * INFANT_PRICE
+        total += product
+        the_fees_template_values["infants_total"] = (
+                    f"{number_of_infants} x GBP{INFANT_PRICE:3.2f} = "
+                    f"GBP{product:5.2f}")
+    
+    print("BAGS",Common.save_context["bags"] ) # TODO
+    number_of_bags = Common.save_context["bags"]
+    if number_of_bags > 0:
+        product = number_of_bags * BAG_PRICE
+        total += product
+        the_fees_template_values["bags_total"] = (
+                f"{number_of_bags} x GBP{BAG_PRICE:3.2f} = "
+                f"GBP{product:5.2f}")
+
+    the_fees_template_values["total_price_string"] = f"GBP{total:5.2f}"
+    # The Actual Total Price
+    the_fees_template_values["total_price"] = total
+    Common.save_context["total_price"] = total
+    print("TYPE/C1", the_fees_template_values) # TODO
+    return the_fees_template_values
+
+
+def add_fees_to_context(the_fees_template_values):
+    """
+    The fees for the selected journey need to be added to
+    the Context which in turn will be rendered on the Confirmation Form
+    """ 
+    # print(702, type(context)) # TODO
+    context = {}
+    for var in the_fees_template_values:
+        context[var] = the_fees_template_values[var]
+    print(703, type(context)) # TODO
+    return context
+
+
+def setup_confirm_booking_context(request,
+                                  children_included,
+                                  infants_included,
+                                  context):
+    # TODO
+    """
+    Calculate the Fees and Total Price
+    Then add the results to the 'context' in order
+    to be displayed on the Confirmation Form
+    """
+
+    print("CONTEXTIN", context)
+    print(701, type(context))
+    the_fees = compute_total_price(children_included, infants_included)
+    print(the_fees)
+    context = add_fees_to_context(the_fees)
+
+    # TODO
+    # Update the 'context' with the fees and total price
+    context |= the_fees
+    print("900DONE", context)
+
+
+    # Generate a Random Unique 6-character PNR
+    # PNR - Passenger Name Record
+    context["pnr"] = generate_pnr()
+    print("type pnr", 1001, context["pnr"], type(context["pnr"]))
+
+    #print("CONTEXTIN2", context)
+    # context = booking_total_price(context, 
+    #                               children_included, infants_included)
+
+    # Render the Booking Confirmation Form
+    print("CONFIRM BOOKING FORM", context) # TODO
+    print(type(context))
+    # TODO
+    return context
+
+
+def create_formsets(request):
+    """
+    Create up to three formsets 
+    for Adults, Children and Infants
+    Adults Formset is Mandatory
+    """
+
+    print(800, "REQ", request.method)  # TODO
+    context = {}
+
+    # ADULTS
+    AdultsFormSet = formset_factory(AdultsForm, extra=0)
+    adults_formset = AdultsFormSet(request.POST or None, prefix="adult")
+
+    # CHILDREN
+    children_included = Common.save_context["children_included"]
+    if children_included:
+        ChildrenFormSet = formset_factory(MinorsForm, extra=0)
+        children_formset = ChildrenFormSet(request.POST or None,
+                                           prefix="child")
+    else:
+        children_formset = []
+
+    # INFANTS
+    infants_included = Common.save_context["infants_included"]
+    if infants_included:
+        InfantsFormSet = formset_factory(MinorsForm, extra=0)
+        infants_formset = InfantsFormSet(request.POST or None, prefix="infant")
+    else:
+        infants_formset = []
+
+    bags_remarks_form = BagsRemarks(request.POST or None, prefix="bagrem")
+    print(802, request.method, "CONTEXT FETCH",
+          children_included, request.POST)  # TODO
+    print(803, context)
+
+    return (adults_formset, children_formset, infants_formset,
+            children_included, infants_included, bags_remarks_form,
+            context)
+
+
+def all_formsets_valid(request, adults_formset,
+                       children_included, children_formset,
+                       infants_included, infants_formset,
+                       bags_remarks_form):
+    """
+    Carry out validation on up to three formsets
+    1) Adults
+    2) Children
+    3) Infants
+
+    They differ slightly:
+    Adults have contact telephone/email
+    Children/Infants have the Date of Birth - no contact details
+
+    4) If the above are all valid, then validate the BagsRemarks Form
+    """
+
+    # Are there any Django Validations Errors to begin with?
+
+    errors_found = False
+    if adults_formset.is_valid():
+        print(400) #TODO
+        pass
+    else:
+        # The Adults Formset is Invalid - Report the Errors
+        errors_found = True
+        display_formset_errors(request, "Adult", adults_formset.errors)
+        # Are there any 'non-form errors' in the Adults Formset?
+        formset_non_form_errors = adults_formset.non_form_errors()
+        if formset_non_form_errors:
+            display_formset_errors(request,
+                                   "Adult", formset_non_form_errors)
+
+    if children_included:
+        if children_formset.is_valid():
+            pass
+        else:
+            # The Children Formset is Invalid - Report the Errors
+            errors_found = True
+            display_formset_errors(request, "Child", children_formset.errors)
+            # Are there any 'non-form errors' in the Children Formset?
+            formset_non_form_errors = children_formset.non_form_errors()
+            if formset_non_form_errors:
+                display_formset_errors(request,
+                                       "Child", formset_non_form_errors)
+
+    if infants_included:
+        if infants_formset.is_valid():
+            pass
+        else:
+            # The Infants Formset is Invalid - Report the Errors
+            errors_found = True
+            display_formset_errors(request, "Infant", infants_formset.errors)
+            # Are there any 'non-form errors' in the Infants Formset?
+            formset_non_form_errors = infants_formset.non_form_errors()
+            if formset_non_form_errors:
+                display_formset_errors(request,
+                                       "Infant", formset_non_form_errors)
+
+    if errors_found:
+        # Proceed no further because errors have been discovered
+        return (False, None)
+
+    # Are the forms blank?
+    is_empty = False
+
+    # ADULTS
+    print(401) # TODO
+    cleaned_data = adults_formset.cleaned_data
+    if not any(cleaned_data):
+        print(402) # TODO
+        is_empty = True
+        messages.add_message(request, messages.ERROR,
+                             "Enter the Adult's Passenger Details "
+                             "for this booking.")
+    else:
+        Common.save_context["adults_data"] = cleaned_data
+
+    # CHILDREN
+    if children_included:
+        cleaned_data = children_formset.cleaned_data
+        if not any(children_formset.cleaned_data):
+            is_empty = True
+            messages.add_message(request, messages.ERROR,
+                                 "Enter the Child's Passenger Details "
+                                 "for this booking.")
+        else:
+            Common.save_context["children_data"] = cleaned_data
+
+    if is_empty:
+        return (False, None)
+
+    # INFANTS
+    if infants_included:
+        cleaned_data = infants_formset.cleaned_data
+        if not any(infants_formset.cleaned_data):
+            is_empty = True
+            messages.add_message(request, messages.ERROR,
+                                 "Enter the Infant's Passenger Details "
+                                 "for this booking.")
+        else:
+            Common.save_context["infants_data"] = cleaned_data
+
+    print(403) # TODO
+    if is_empty:
+        return (False, None)
+
+    # Validate all three formsets
+    if not adults_formset_validated(adults_formset.cleaned_data, request):
+        return (False, None)
+
+    if (children_included and
+        not minors_formset_validated(children_formset.cleaned_data,
+                                     True, request)):
+        return (False, None)
+    
+    if (infants_included and
+        not minors_formset_validated(infants_formset.cleaned_data,
+                                     False, request)):
+        return (False, None)
+
+    print(860, type(bags_remarks_form), bags_remarks_form) # TODO
+    # Validate BagsRemarks Form
+    if not bags_remarks_form.is_valid:
+        print(865) # TODO
+        display_formset_errors(request, "Bag/Remarks", bags_remarks_form.errors)
+        return (False, None)
+
+    print(870, bags_remarks_form.cleaned_data) # TODO
+    return (True, bags_remarks_form.cleaned_data)
+
+
+def handle_pax_details_POST(request,
+                            adults_formset,
+                            children_included,
+                            children_formset,
+                            infants_included,
+                            infants_formset,
+                            bags_remarks_form):
+    """
+    The Handling of the Passenger Details Form
+    This form consists of three formsets:
+    1) AdultsForm - class AdultsForm
+    2) ChildrenFormSet - Class MinorsForm
+    3) InfantsFormSet - Class MinorsForm
+    followed by the BagsRemarks Form
+
+    Therefore, this method processes the validation
+    of all the forms
+    """
+
+    context = request.POST
+    print(804, "A POST")
+    are_all_forms_valid = all_formsets_valid(request,
+                                             adults_formset,
+                                             children_included,
+                                             children_formset,
+                                             infants_included,
+                                             infants_formset,
+                                             bags_remarks_form)
+    print(880, are_all_forms_valid)
+    if are_all_forms_valid[0]:
+        print(881)
+
+        depart_pos = Common.save_context["depart_pos"]
+        #outbound_date = Common.save_context["booking"]["departing_date"]
+        #outbound_flightno = Common.outbound_listof_flights[depart_pos]            
+        print(882)
+
+        print(Common.save_context["booking"]["departing_date"], "DEP")
+        print(Common.save_context["booking"]["returning_date"], "RET")
+
+        cleaned_data = are_all_forms_valid[1]
+        Common.save_context["bags"] = cleaned_data.get("bags")
+        Common.save_context["remarks"] = cleaned_data.get("remarks")
+        print(100) # TODO
+        context_copy = request.POST.copy()
+        print(200) # TODO
+        new_context = setup_confirm_booking_context(request,
+                                                    children_included,
+                                                    infants_included,
+                                                    context_copy)
+        print(300, new_context) # TODO
+        Common.save_context["pnr"] = new_context["pnr"]
+        # TODO: CREATE THE RECORD!!
+        print(810, "C1", Common.save_context["bags"], new_context["pnr"])
+        print("C2", Common.save_context["remarks"])
+        print(type(new_context))
+        print(new_context)
+        print("C3", context_copy)
+        Common.save_context["confirm-booking-context"] = context_copy
+        print(2000, Common.save_context["confirm-booking-context"])
+        #       return render(request, "booking/confirm-booking-form.html", context)  TODO
+        #return render(request, "booking/confirm-booking-form.html", new_context)
+        return (True, new_context)
+
+    else:
+        context = initialise_formset_context(request)
+        #  TODO
+        print(820, type(Common.save_context))
+        print("TT", Common.save_context)
+        print("CON", context)
+        print("SAVED_CONTEXT", Common.save_context)
+        return(False, context)

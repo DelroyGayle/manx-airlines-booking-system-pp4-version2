@@ -187,7 +187,7 @@ while count:
 
     # Unused position
     # set the bit to '1'
-    seatmap.overwrite('0b1', r)
+    seatmap.overwrite("0b1", r)
     # Indicate used
     bits_set.add(r)
     count -= 1
