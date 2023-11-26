@@ -1,20 +1,46 @@
 {% extends 'includes/base.html' %}
 
-{% block title %}Edit Booking{% endblock %}
+{% block title %}Edit Passenger Details{% endblock %}
 
+{% load static %}
 
 {% block content %}
-
     
-    <h3>Edit Booking</h3>
+    <h1 class="ui centered header">Edit Passenger Details</h1>
 
-    <form class="ui form" method="POST" action={% url 'edit-booking' booking.id %}>
+    {% include 'includes/messages.html' %}
+
+    <form class="ui form" method="POST" action={% url 'passenger-details-form' %}>
         {% csrf_token %}
 
-        {{ form.as_p }}
+        {{ adults_formset.management_form }}
+        {% if children_formset %}
+            {{ children_formset.management_form }}
+        {% endif %}
+        
+        {% if infants_formset %}
+            {{ infants_formset.management_form }}
+        {% endif %}
 
-        <input type="submit" class="ui button primary" value="Save">
+        {{ adults_formset.as_p }}
+        
+        {% if children_formset %}
+            {{ children_formset.as_p }}
+        {% endif %}
+        
+        {% if infants_formset %}
+            {{ infants_formset.as_p }}
+        {% endif %}
+
+        <h2 class="ui centered header">Number of Bags and Booking Remarks</h2>
+        
+        {{ bags_remarks_form.as_p }}
+
+        {{ hidden_form }}
+     
+        <br>
+        
+        <p><input type="submit" class="ui button primary" value="Continue">
     </form>
-
     
 {% endblock content %}

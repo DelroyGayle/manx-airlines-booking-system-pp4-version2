@@ -219,7 +219,6 @@ class AdultsForm(forms.Form):
                                       widget=forms.Select(choices=WCH_CHOICES),
                                       initial="")
 
-
 # For Children and Infants
 class MinorsForm(forms.Form):
     title = forms.CharField(max_length=4,
@@ -250,3 +249,60 @@ class BagsRemarks(forms.Form):
     remarks = forms.CharField(required=False,
                               widget=forms.Textarea(
                                 attrs={"rows": "4"}))
+
+# For the editing of the Booking's Passenger Details
+
+""" 
+I know this is not 'DRY'
+I did indeed use
+
+class AdultsEditForm(AdultsForm):
+    remove_pax = forms.BooleanField(required=False, label='Remove Pax?')
+
+However I could not change the order of the field 'remove_pax'
+It always appeared at the end of the form!
+Therefore, I had to 'repeat' the definition of 'AdultsForm'
+"""
+
+class AdultsEditForm(forms.Form):
+    title = forms.CharField(max_length=4,
+                            widget=forms.Select(choices=TITLE_CHOICES),
+                            initial="MR")
+    remove_pax = forms.BooleanField(required=False, label='Remove Pax?')
+    first_name = forms.CharField(max_length=40, required=False)
+    last_name = forms.CharField(max_length=40, required=False)
+    contact_number = forms.CharField(max_length=40, required=False)
+    contact_email = forms.CharField(max_length=40, required=False)
+    wheelchair_ssr = forms.CharField(max_length=1,  required=False,
+                                     widget=forms.Select(choices=PRM_CHOICES),
+                                     initial="")
+    wheelchair_type = forms.CharField(max_length=1, required=False,
+                                      widget=forms.Select(choices=WCH_CHOICES),
+                                      initial="")
+
+
+# For Children and Infants
+
+"""
+The above 'ditto' applies in regards to why I haven't used 
+class MinorsEditForm(MinorsForm):
+"""
+
+class MinorsEditForm(forms.Form):
+    title = forms.CharField(max_length=4,
+                            widget=forms.Select(choices=TITLE_CHOICES),
+                            initial="MR",)
+    remove_pax = forms.BooleanField(required=False, label='Remove Pax?')
+    first_name = forms.CharField(max_length=40, required=False)
+    last_name = forms.CharField(max_length=40, required=False)
+    date_of_birth = forms.DateField(required=False,
+                                    initial=datetime.date.today(),
+                                    help_text="Format: DD/MM/YYYY",
+                                    widget=forms.DateInput(
+                                        attrs=dict(type="date")))
+    wheelchair_ssr = forms.CharField(max_length=1,  required=False,
+                                     widget=forms.Select(choices=PRM_CHOICES),
+                                     initial="")
+    wheelchair_type = forms.CharField(max_length=1, required=False,
+                                      widget=forms.Select(choices=WCH_CHOICES),
+                                      initial="")

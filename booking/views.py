@@ -169,6 +169,7 @@ def is_booking_form_valid(form, request):
 def create_booking_form(request):
     """ The Handling of the Create Bookings Form """
 
+    reset_common_fields()
     if not Common.initialised:
         Common.initialisation()
 
@@ -399,6 +400,8 @@ def view_booking(request, id):
         count+=1
 
     context = {"booking": booking, "passengers": passenger_list, "display": display}
+    # Keep a Copy for 'Edit Passengers' functionality
+    Common.save_context = context  # TODO
     return render(request, "booking/view-booking.html", context)
 
 
@@ -502,10 +505,13 @@ def delete_booking(request, id):
 
 
 def edit_booking(request, id):
-    booking = get_object_or_404(Employer, pk=id)
+    booking = get_object_or_404(Booking, pk=id)
     form = BookingForm(instance=booking)
     context = {"booking": booking, "form": form}
+    print(request.method,"RP")
     if request.method == "POST":
+        return HttpResponseRedirect(reverse("view-booking",
+                                            kwargs={"id": booking.pk}))
 
         # Update Booking() with the new values
         # TODO
@@ -523,5 +529,11 @@ def edit_booking(request, id):
         return HttpResponseRedirect(reverse("view-booking",
                                             kwargs={"id": booking.pk}))
         # CREATE SUCCESS MESSAGE TODO
+
+    else:
+        print("DOIT") # TODO
+        
+        # return render(request, "booking/edit-booking.html", context)
+        context = morecode.handle_editpax_GET(request, id, booking)
 
     return render(request, "booking/edit-booking.html", context)

@@ -22,7 +22,7 @@ from .forms import AdultsForm, MinorsForm
 from .forms import HiddenForm
 from .forms import BagsRemarks
 ###########
-
+from .forms import AdultsEditForm, MinorsEditForm
 
 from django.shortcuts import render
 # TODO
@@ -1515,3 +1515,128 @@ def handle_pax_details_POST(request,
         print("CON", context)
         print("SAVED_CONTEXT", Common.save_context)
         return(False, context)
+
+
+def handle_editpax_GET(request, id, booking):
+    """
+    The Handling of the Passenger Details Edit Form
+    This form consists of three formsets:
+    1) AdultsForm - class AdultsForm
+    2) ChildrenFormSet - Class MinorsForm
+    3) InfantsFormSet - Class MinorsForm
+    followed by the BagsRemarks Form
+
+    Therefore, this method retrieves the information
+    Then creates the formsets so that they
+    can be displayed
+    """
+    
+    ## TODO reset_common_fields()
+    print("B=", booking)
+    print(type(booking))
+    print("C=", Common.save_context)
+  
+    context = {}
+    context["booking"] = booking.__dict__
+    context["booking"].pop("_state",None)
+    context["booking_id"] = id # TODO
+    context["booking"]["return_option"] = ("Y" 
+               if context["booking"]["return_flight"]
+               else "N")
+               
+    print(context)
+
+    # Get all the Passengers related to the Booking
+    pax = Common.save_context["passengers"]
+    pax = pax.__dict__
+    pax_initial_list = pax["_result_cache"]
+    pax = None
+    print("P2",pax_initial_list)
+
+    # ADULTS
+    number_of_adults = context["booking"]["number_of_adults"]
+    print("N/A", number_of_adults) # TODO
+    AdultsEditFormSet = formset_factory(AdultsEditForm,
+                                        extra=number_of_adults)
+    adults_formset = AdultsEditFormSet(prefix="adult",
+            initial=list(filter(lambda f: (f["pax_type"] == "A"), pax_initial_list)))
+    initial=filter(lambda f: (f["pax_type"] == "A"), pax_initial_list)
+    print(type(initial), initial, list(initial))
+    print("A", adults_formset)
+
+    # CHILDREN
+    number_of_children = context["booking"]["number_of_children"]
+    if number_of_children > 0:
+        context["children_included"] = True
+        ChildrenEditFormSet = formset_factory(MinorsEditForm,
+                                     extra=number_of_children)
+        children_formset = ChildrenEditFormSet(prefix="child",
+                initial=list(filter(lambda f: (f["pax_type"] == "C"),
+                                          pax_initial_list)))
+    else:
+        context["children_included"] = False
+        children_formset = []
+
+    # INFANTS
+    number_of_infants = context["booking"]["number_of_infants"]
+    if number_of_infants > 0:
+        context["infants_included"] = True
+        InfantsEditFormSet = formset_factory(MinorsEditForm,
+                                     extra=number_of_infants)
+        infants_formset = InfantsEditFormSet(prefix="infant",
+                initial=list(filter(lambda f: (f["pax_type"] == "I"),
+                                          pax_initial_list)))
+    else:
+        context["infants_included"] = False
+        infants_formset = []
+
+    # Update the 'context' in order for
+    # the form to be displayed and processed
+    form = {"adults": number_of_adults, "children": number_of_children,
+            "infants": number_of_infants}
+    hiddenForm = HiddenForm(form)
+    bags_remarks_form = BagsRemarks(prefix="bagrem", 
+                initial={"bags": context["booking"]["number_of_bags"],
+                         "remarks": context["booking"]["remarks"]})
+    context["adults_formset"] = adults_formset
+    context["children_formset"] = children_formset
+    context["infants_formset"] = infants_formset
+    context["hidden_form"] = hiddenForm
+    context["bags_remarks_form"] = bags_remarks_form
+
+    # Save a copy in order to fetch any values as and when needed
+    Common.save_context = context
+    print("SAVED/2", context) # TODO
+    # TODO
+
+    # context["children_included"] = (Common.save_context["children_included"] == "Y")
+    # context["infants_included"] = (Common.save_context["infants_included"] == "Y")
+    print("NOW", context)
+    return context
+
+
+    """
+    Create the 'context' to be used by the Passenger Details Template
+    Necessary preset values have been saved in 'Common.save_context'
+    """
+    context = {}
+
+    # ADULTS
+    context["adults_formset"] = Common.save_context["adults_formset"]
+
+    # CHILDREN
+    context["children_included"] = (Common.save_context["children_included"] == "Y")
+    context["children_formset"] = Common.save_context["children_formset"]
+
+    # INFANTS
+    context["infants_included"] = (Common.save_context["infants_included"] == "Y")
+    context["infants_formset"] = Common.save_context["infants_formset"]
+
+    context["bags_remarks_form"] = Common.save_context["bags_remarks_form"]
+    context["hidden_form"] = Common.save_context["hidden_form"]
+    # TODO
+    print("CON2", context)
+    # print("SAVED_CONTEXT", Common.save_context)
+
+    return context
+   
