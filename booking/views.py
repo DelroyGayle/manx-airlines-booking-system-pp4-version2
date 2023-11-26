@@ -1093,9 +1093,10 @@ def delete_booking(request, id):
     context = {"booking": booking}
 
     if request.method == "POST":
+        # Update the Schedule Data base first by free up the seats
+        # of the passengers belong to this Booking
         morecode.realloc_seats_first(request, id, booking)
-        return HttpResponseRedirect(reverse("home"))
-        return
+        # Delete the Booking 
         booking.delete()
         messages.add_message(request, messages.SUCCESS,
                              "Booking Deleted Successfully")

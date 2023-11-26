@@ -668,44 +668,61 @@ def freeup_seats(thedate, flightno, seat_numbers_list):
     """
     Fetch the relevant flight from the Schedule Database
     using 'thedate & flightno'
-    Then for each number in seat_numbers_list,
-    reset the seat 'bit-string' positions to 0 indicating 
-    that the seats are available. Also update the Booking figure.
+    Then for each number in 'seat_numbers_list',
+    reset the seat's 'bit-string' positions to 0 indicating 
+    that the seat is now available.
+    Also update the Booked figure.
     """
     queryset = Schedule.objects.filter(flight_date=thedate,
                                        flight_number=flightno)
     print("F",len(queryset), thedate, flightno)
     if len(queryset) == 0:
-        return # Defensive
+        return # Defensive - should exist
     
-    print(thedate, flightno)
-    instance = queryset[0]
-    print("BEFORE", instance.seatmap)
-    bit_array = convert_string_to_bitarray(instance.seatmap)
-    count = 0
+    print(thedate, flightno) # TODO
+    schedule = queryset[0]
+    print("BEFORE", schedule.seatmap)
+    bit_array = convert_string_to_bitarray(schedule.seatmap)
+    removed_seats_count = 0
 
     for seatpos in seat_numbers_list:
         if seatpos < 0 or seatpos >= CAPACITY:
-            # Defensive
+            # Defensive - should be between 0-95
             continue
 
         # For the correct 'leftmost' position
         # subtract from 95
         bit_array.overwrite("0b0", LEFT_BIT_POS - seatpos)
-        count += 1
+        removed_seats_count += 1
 
     seatmap = convert_bitarray_to_hexstring(bit_array)
-    print("AFTER", seatmap)
+    print("AFTER", seatmap, removed_seats_count)
 
-def list_pax_seatnos(passenger_list, key):
+    if removed_seats_count == 0: # Defensive - should be nonzero
+        return
+
+    print(schedule)
+    schedule.seatmap = seatmap
+    # Updated Flight's Booked Figure
+    schedule.total_booked -= removed_seats_count
+
+    # Update Schedule Record
+    print("SEATMAP:", schedule.seatmap, "BOOKED", schedule.total_booked)
+    # Save Schedule record
+    schedule.save()
+
+
+def list_pax_seatnos(passenger_record, key):
     """ Create a list of each pax's seat number """
     seat_numbers_list = []
-    print("P", passenger_list)
-    for each in passenger_list:
-        print(each)
-        if each[key]:
-            print("E", each[key])
-            seat_numbers_list.append(from_seat_to_number(each[key]))
+    # TODO
+    print("P", passenger_record)
+    for each_seatnum in passenger_record:
+        print(each_seatnum)
+        # Defensive - 'outbound_seat_number', 'inbound_seat_number' ought to be present
+        if each_seatnum[key]:
+            print("E", each_seatnum[key])
+            seat_numbers_list.append(from_seat_to_number(each_seatnum[key]))
 
     return seat_numbers_list
 
@@ -715,17 +732,14 @@ def realloc_seats_first(request, id, booking):
     Firstly, Determine the Booking's Seated Passengers
     Then fetch the relevant flight from the Schedule Database
     Moreover, reset the seat 'bit-string' positions to 0 indicating 
-    that the seats are available. Also update the Booking figure.
+    that the seats are now available. Also update the Booking figure.
     """
 
-    # booking = get_object_or_404(Booking, pk=id)
-    #print("BOOKING:", booking)  # PK/ID   TODO
-    # print("ID", id)
-    # print("PNR", booking.pnr)
+    # Retrieve the Passengers
     queryset = Passenger.objects.filter(pnr_id=id).order_by("pax_number")
     passenger_list = queryset.values()
     seat_numbers_list = list_pax_seatnos(passenger_list, "outbound_seat_number")
-    print(seat_numbers_list)
+    print(seat_numbers_list)  # TODO
     freeup_seats(booking.outbound_date, booking.outbound_flightno, seat_numbers_list)
         
     if booking.return_flight:
