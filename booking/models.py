@@ -131,7 +131,7 @@ class Transaction(models.Model):
     pnr = models.CharField(max_length=6)
     amount = models.DecimalField(max_digits=6, decimal_places=2, default=0)
     date_created = models.DateField(auto_now=True)
-    username = models.CharField(max_length=40, default="user")
+    username = models.CharField(max_length=40, default="username")
 
     def __str__(self):
         return "PNR: {0} AMOUNT: GBP{1} DATE CREATED {2} BY {3}".format(
