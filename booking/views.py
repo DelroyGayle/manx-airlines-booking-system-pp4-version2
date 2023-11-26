@@ -566,7 +566,7 @@ def is_booking_form_valid(form, request):
         # Return Flight - Check Availability
         inbound_time = cleaned_data["returning_time"]
         return_pos = Common.INBOUND_TIME_OPTIONS1.index(inbound_time)
-        inbound_flightno = Common.outbound_listof_flights[return_pos]            
+        inbound_flightno = Common.inbound_listof_flights[return_pos]            
         inbound_date = cleaned_data["returning_date"]
     else:
         inbound_time = None
@@ -972,15 +972,18 @@ def view_booking(request, id):
     print("BOOKING:", booking)  # PK/ID   TODO
     print("ID", id)
     print("PNR", booking.pnr)
-    qs = Passenger.objects.filter(pnr_id=id).order_by("pax_number")
-    print(qs)  # TODO
-    print(len(qs))
-    passenger_list = []
-    for pax_record in qs:  # TODO
-        print(type(pax_record))
-        print(pax_record.pax_type, pax_record.pax_number, pax_record.date_of_birth,
-        pax_record.first_name, pax_record.last_name)
-        passenger_list.append(pax_record)
+    queryset = Passenger.objects.filter(pnr_id=id).order_by("pax_number")
+    #morecode.handle_view_booking(request, booking, queryset)
+    #return #TODO
+    # TODO REMOVE
+    print(queryset)  # TODO
+    print(len(queryset))
+    # passenger_list = []
+    # for pax_record in queryset:  # TODO
+    #     print(type(pax_record))
+    #     print(pax_record.pax_type, pax_record.pax_number, pax_record.date_of_birth,
+    #           pax_record.first_name, pax_record.last_name)
+    #     passenger_list.append(pax_record)
 
     display = dict(created_at=booking.created_at.strftime("%d%b%y").upper(),
                    # EG 17NOV23
@@ -988,7 +991,7 @@ def view_booking(request, id):
     if booking.return_flight:
         display["inbound_date"] = booking.inbound_date.strftime("%d%b%y").upper()
 
-    passenger_list = qs.values()
+    passenger_list = queryset.values()
     count = 0
     for each_record in passenger_list:
         for each_field in each_record:
@@ -1090,6 +1093,9 @@ def delete_booking(request, id):
     context = {"booking": booking}
 
     if request.method == "POST":
+        morecode.realloc_seats_first(request, id, booking)
+        return HttpResponseRedirect(reverse("home"))
+        return
         booking.delete()
         messages.add_message(request, messages.SUCCESS,
                              "Booking Deleted Successfully")

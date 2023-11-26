@@ -3,12 +3,18 @@ In an effort to modularise my code
 I have added other methods here
 """
 
+from django.shortcuts import render
+# TODO
+# get_object_or_404
+# from django.http import HttpResponseRedirect
 from django.contrib import messages
 from .models import Booking, Passenger
 from .models import Flight, Schedule, Transaction
 
 from .common import Common
+from .constants import CAPACITY
 from bitstring import BitArray
+import re
 
 """
     Airlines generally seat passengers from the back of the aircraft
@@ -17,37 +23,9 @@ from bitstring import BitArray
      0  0  0 ... 0 0 0
 """
 
-CAPACITY = 96  # Number of seats in the aircraft
+# CAPACITY is 96 - Number of seats in the aircraft
 LEFT_BIT_POS = CAPACITY - 1  # I.E. 95
 
-
-def calc_time_difference(return_time, depart_time):
-    """
-    Calculate the difference between these two times
-    Which are represented as 4 character strings
-    e.g. '1130'
-    """
-
-    print(return_time, depart_time)
-    return_time = int(return_time)
-    quotient_rem = divmod(return_time, 100)
-    print(quotient_rem)
-    return_time = (quotient_rem[0] * 60 +
-                    quotient_rem[1])
-
-    depart_time = int(depart_time)
-    quotient_rem = divmod(depart_time, 100)
-    print(quotient_rem)
-    depart_time = (quotient_rem[0] * 60 +
-                    quotient_rem[1])
-    print(return_time, depart_time, return_time - depart_time)
-    if return_time < depart_time: # In the Past!
-        return return_time - depart_time
-
-    # Add 1HR45MINS = 105 to the Departure Time
-    depart_time += 105
-    print(105, return_time, depart_time, return_time - depart_time)
-    return return_time - depart_time
 
 def row_of_N_seats(number_needed, allocated, available):
     """ Find a 'row' of 'number_needed' seats """
@@ -154,6 +132,24 @@ def seat_number(number):
         return result
 
 
+def from_seat_to_number(seat):
+    """
+    Convert the alphanumeric seat number into a numeric value
+    That is,
+    1A is 0, 1B is 1, 1C is 2, 1D is 3, 2A is 4...
+    23D is 91, 24A is 92, 24B is 93, 24C is 94, 24D is 95
+    """
+
+    number = re.search("^\d+", seat)
+    if number:
+        print(number, number.group(0), seat, type(seat), seat[-1])
+        number = (int(number.group(0)) - 1) * 4
+        number += ord(seat[-1]) - ord("A")
+        return number
+    
+    return -1 # Catchall: Just In Case!
+
+    
 def convert_string_to_bitarray(hexstring):
     """
     The seatmap for a 96-seat aircraft is represented as
@@ -166,7 +162,6 @@ def convert_string_to_bitarray(hexstring):
     """
 
     bit_array = BitArray(length=96)
-    print("TYP1", bit_array, hexstring) #  TODO
     bit_array.overwrite("0x" + hexstring, 0)
     return bit_array
 
@@ -178,6 +173,7 @@ def convert_bitarray_to_hexstring(bit_array):
     """
     return str(bit_array.hex.upper())
     # TODO - 24 CHARACTER CHECK
+
 
 def report_unavailability(request, direction, date_formatted, thetime):
     """ Send a Django Message regarding unavailability of seats """
@@ -305,6 +301,35 @@ def check_availability(request, departing, outbound_date,
     return all_OK
 
 
+def calc_time_difference(return_time, depart_time):
+    """
+    Calculate the difference between these two times
+    Which are represented as 4 character strings
+    e.g. '1130'
+    """
+
+    print(return_time, depart_time)
+    return_time = int(return_time)
+    quotient_rem = divmod(return_time, 100)
+    print(quotient_rem)
+    return_time = (quotient_rem[0] * 60 +
+                    quotient_rem[1])
+
+    depart_time = int(depart_time)
+    quotient_rem = divmod(depart_time, 100)
+    print(quotient_rem)
+    depart_time = (quotient_rem[0] * 60 +
+                    quotient_rem[1])
+    print(return_time, depart_time, return_time - depart_time)
+    if return_time < depart_time: # In the Past!
+        return return_time - depart_time
+
+    # Add 1HR45MINS = 105 to the Departure Time
+    depart_time += 105
+    print(105, return_time, depart_time, return_time - depart_time)
+    return return_time - depart_time
+
+
 def reset_common_fields():
     """
     Reset the following fields which are used 
@@ -373,7 +398,8 @@ def update_schedule_database():
 
 
     # Return Flight
-    print("SCH/ID/in", Common.inbound_schedule_id)
+    print("SCH/ID/in", Common.inbound_schedule_id, Common.inbound_schedule_instance,
+                            Common.inbound_total_booked)
     save_schedule_record(Common.inbound_schedule_id, 
                          Common.inbound_schedule_instance,
                          Common.inbound_total_booked, 
@@ -575,7 +601,7 @@ def write_passenger_record(booking, passenger_type, plural, pax_type,
 def create_new_booking_pax_records():
     """
     Create the Booking Record
-    And a Passenger Record for each passenger attached to the Booking
+    Create a Passenger Record for each passenger attached to the Booking
     There will be at least ONE Adult Passenger for each booking
     All the information is stored in the Class Variable 'Common.save_context'
     """
@@ -618,12 +644,12 @@ def create_new_booking_pax_records():
 def create_new_records(request):
     """
     Create the Booking Record
-    And a Passenger Record for each passenger attached to the Booking
+    Create a Passenger Record for each passenger attached to the Booking
 
     Create a Transaction Record record the fees charged
 
     Update the Schedule Database 
-    with an updated seatmap for selected Date/Flight
+    with an updated seatmap for selected Dates/Flights
     reflecting the Booked Passengers
     """
 
@@ -638,3 +664,72 @@ def create_new_records(request):
 
     reset_common_fields() # RESET!
 
+def freeup_seats(thedate, flightno, seat_numbers_list):
+    """
+    Fetch the relevant flight from the Schedule Database
+    using 'thedate & flightno'
+    Then for each number in seat_numbers_list,
+    reset the seat 'bit-string' positions to 0 indicating 
+    that the seats are available. Also update the Booking figure.
+    """
+    queryset = Schedule.objects.filter(flight_date=thedate,
+                                       flight_number=flightno)
+    print("F",len(queryset), thedate, flightno)
+    if len(queryset) == 0:
+        return # Defensive
+    
+    print(thedate, flightno)
+    instance = queryset[0]
+    print("BEFORE", instance.seatmap)
+    bit_array = convert_string_to_bitarray(instance.seatmap)
+    count = 0
+
+    for seatpos in seat_numbers_list:
+        if seatpos < 0 or seatpos >= CAPACITY:
+            # Defensive
+            continue
+
+        # For the correct 'leftmost' position
+        # subtract from 95
+        bit_array.overwrite("0b0", LEFT_BIT_POS - seatpos)
+        count += 1
+
+    seatmap = convert_bitarray_to_hexstring(bit_array)
+    print("AFTER", seatmap)
+
+def list_pax_seatnos(passenger_list, key):
+    """ Create a list of each pax's seat number """
+    seat_numbers_list = []
+    print("P", passenger_list)
+    for each in passenger_list:
+        print(each)
+        if each[key]:
+            print("E", each[key])
+            seat_numbers_list.append(from_seat_to_number(each[key]))
+
+    return seat_numbers_list
+
+def realloc_seats_first(request, id, booking):
+    """
+    As part of the 'Delete Booking' operation
+    Firstly, Determine the Booking's Seated Passengers
+    Then fetch the relevant flight from the Schedule Database
+    Moreover, reset the seat 'bit-string' positions to 0 indicating 
+    that the seats are available. Also update the Booking figure.
+    """
+
+    # booking = get_object_or_404(Booking, pk=id)
+    #print("BOOKING:", booking)  # PK/ID   TODO
+    # print("ID", id)
+    # print("PNR", booking.pnr)
+    queryset = Passenger.objects.filter(pnr_id=id).order_by("pax_number")
+    passenger_list = queryset.values()
+    seat_numbers_list = list_pax_seatnos(passenger_list, "outbound_seat_number")
+    print(seat_numbers_list)
+    freeup_seats(booking.outbound_date, booking.outbound_flightno, seat_numbers_list)
+        
+    if booking.return_flight:
+        print(booking.inbound_date, booking.inbound_flightno)  # TODO
+        seat_numbers_list = list_pax_seatnos(passenger_list, "inbound_seat_number")
+        print(seat_numbers_list)
+        freeup_seats(booking.inbound_date, booking.inbound_flightno, seat_numbers_list)
