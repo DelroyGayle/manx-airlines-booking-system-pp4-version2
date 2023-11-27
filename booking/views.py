@@ -111,11 +111,10 @@ def is_booking_form_valid(form, request):
         depart_time = cleaned_data["departing_time"]
         time_diff = morecode.calc_time_difference(depart_time, timenow)  # TODO
         if time_diff < 0:
-            message_error("Returning Time - The time of the return flight2 "
+            message_error("Departing Time - The time of the outbound flight "
                           "cannot be in the past.",
                           request)
             return (False, None)
-
 
     # The Form's contents has passed all validation checks!
     # Save the information for later processing
@@ -276,11 +275,15 @@ def passenger_details_form(request):
     If Validation failed, Continue viewing the Passengers' Details
     """
 
-    (adults_formset, children_formset, infants_formset,
-     children_included, infants_included,
-     bags_remarks_form, context) = morecode.create_formsets(request)
+    if not Common.paxdetails_editmode:
+        (adults_formset, children_formset, infants_formset,
+        children_included, infants_included,
+        bags_remarks_form, context) = morecode.create_formsets(request)
 
     if request.method == "POST":
+        print(request.POST)
+        print(request.POST.get("adult-0-last_name", 100))
+        print(request.POST.dict)
         result = morecode.handle_pax_details_POST(request,
                                                   adults_formset,
                                                   children_included,
@@ -471,6 +474,7 @@ def edit_booking(request, id):
         # Update Booking() with the new values
         # TODO
 
+        #TODO REMOVE
         booking.company_name = request.POST.get("company_name")
         booking.number_of_employees = request.POST.get("number_of_employees")
         # employer_test_flag will either be set to "on" or None

@@ -30,6 +30,8 @@ class Common:
     inbound_allocated_seats = []
     outbound_total_booked = None
     inbound_total_booked = None
+    paxdetails_editmode = None
+
 
     def __init__(self):
         pass
