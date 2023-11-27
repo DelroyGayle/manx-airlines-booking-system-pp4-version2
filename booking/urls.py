@@ -11,4 +11,5 @@ urlpatterns = [
     path('edit/<id>/', views.edit_booking, name='edit-booking'),
     path('details/', views.passenger_details_form,
          name='passenger-details-form'),
+    path('changes/', views.confirm_changes_form, name='confirm-changes-form'),
 ]

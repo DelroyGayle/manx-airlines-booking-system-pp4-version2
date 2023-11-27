@@ -61,6 +61,7 @@ BAG_PRICE = 30
 # Display the Home Page
 
 def homepage(request):
+    # TODO """"
     # On the first display of the Home Page
     # Initialise various settings
     if not Common.initialised:
@@ -70,10 +71,12 @@ def homepage(request):
 
 
 def message_error(message_string, request):
+    # TODO """"
     messages.add_message(request, messages.ERROR, message_string)
 
 
 def is_booking_form_valid(form, request):
+    # TODO """"
     if not form.is_valid():
         for field in form.errors:
             for item in form.errors[field]:
@@ -275,12 +278,15 @@ def passenger_details_form(request):
     If Validation failed, Continue viewing the Passengers' Details
     """
 
-    if not Common.paxdetails_editmode:
-        (adults_formset, children_formset, infants_formset,
-        children_included, infants_included,
-        bags_remarks_form, context) = morecode.create_formsets(request)
+    (adults_formset, children_formset, infants_formset,
+    children_included, infants_included,
+    bags_remarks_form, context) = (
+            morecode.setup_formsets_for_create(request)
+            if not Common.paxdetails_editmode
+            else morecode.setup_formsets_for_edit(request))
 
     if request.method == "POST":
+        # TODO
         print(request.POST)
         print(request.POST.get("adult-0-last_name", 100))
         print(request.POST.dict)
@@ -293,8 +299,10 @@ def passenger_details_form(request):
                                                   bags_remarks_form)
         is_valid, context = result
         if is_valid:
-#           return render(request, "booking/confirm-booking-form.html", context)  TODO
-            return render(request, "booking/confirm-booking-form.html", context)
+            if not Common.paxdetails_editmode:
+                return render(request, "booking/confirm-booking-form.html", context)
+            else:
+                return render(request, "booking/confirm-changes-form.html", context) # TODO
 
     else:
         # request.method is "GET"
@@ -305,6 +313,7 @@ def passenger_details_form(request):
 
 
 def confirm_booking_form(request):
+    # TODO """"
     
     print(request.method, "RQ")
     if request.method == "POST":
@@ -322,7 +331,31 @@ def confirm_booking_form(request):
 
     return render(request, "booking/confirm-booking-form.html", context)
 
+def confirm_changes_form(request):
+    # TODO """"
+    
+    print(request.method, "RQQ")
+    if request.method == "POST":
+        if "cancel" in request.POST:
+            return HttpResponseRedirect(reverse("home"))
+        # TODO
+        else:
+            print(request)
+            return HttpResponseRedirect(reverse("home")) ## TODO
+            # Create new record Booking/Passenger Records
+            # Create new Transaction Record
+            # Update Schedule Database
+                        # TODO
+            return
+            morecode.create_new_records(request)
+            # Then show home page
+            return HttpResponseRedirect(reverse("home"))
+
+    return render(request, "booking/confirm-changes-form.html", context)
+
+
 def view_booking(request, id):
+    # TODO """"
     booking = get_object_or_404(Booking, pk=id)
     print("BOOKING:", booking)  # PK/ID   TODO
     print("ID", id)
@@ -364,6 +397,7 @@ def view_booking(request, id):
 
 
 def search_bookings(request):
+    # TODO """"
     query = request.GET.get("query")
     # Blank Search
     if not query:
@@ -446,6 +480,7 @@ def search_bookings(request):
 
 
 def delete_booking(request, id):
+    # TODO """"
     booking = get_object_or_404(Booking, pk=id)
     context = {"booking": booking}
 
@@ -463,6 +498,7 @@ def delete_booking(request, id):
 
 
 def edit_booking(request, id):
+    # TODO """" REMOVE???
     booking = get_object_or_404(Booking, pk=id)
     form = BookingForm(instance=booking)
     context = {"booking": booking, "form": form}

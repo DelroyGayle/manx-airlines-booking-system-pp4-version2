@@ -1,0 +1,62 @@
+{% extends 'includes/base.html' %}
+
+{% block title %}Confirmation of Changes to Booking{% endblock %}
+
+{% block content %}
+<h1 class="ui centered header">Please Confirm Changes</h1>
+
+{% include 'includes/messages.html' %}
+
+<div class="ui centered card">
+    <div class="content">
+        <form method="POST" action={% url 'confirm-changes-form' %} class="ui form">
+            {% csrf_token %}
+            <div class="ui medium header">
+                Booking: {{ pnr }}
+            </div>
+            <section>
+                 {% if adults_total %}
+                    <article>
+                        <p>{{ adults_total }}</p>
+                    </article>
+                {% endif %}
+                {% if children_total %}
+                    <article>
+                        <p>{{ children_total }}</p>
+                    </article>
+                {% endif %}
+                {% if infants_total %}
+                    <article>
+                        <p>{{ infants_total }}</p>
+                    </article>
+                {% endif %}
+                {% if bags_total %}
+                    <article>
+                        <p>Bags</p>
+                        <p>{{ bags_total }}</p>
+                    </article>
+                {% endif %}
+                {% if admin_total %}
+                    <article>
+                        <p>{{ admin_total }}</p>
+                    </article>
+                {% endif %}
+                <hr>
+            </section>
+            <div class="ui medium header">Total {{ total_price_string }}</div>
+            <small><span>Non-refundable. Changeable subject to fees.</span>
+            <span>Prices includes all applicable taxes and fees</span></small>
+            <section id="agreeandpay">
+                {% if total_price %}
+                    <input type="submit" name="agree" class="ui primary button" value="Agree and pay now">
+                {% else %}
+                    <input type="submit" name="agree" class="ui primary button" value="Agree">
+                {% endif %}
+
+                <input type="submit" name="cancel" class="ui button red" value="Cancel">
+            </section>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}

@@ -69,6 +69,7 @@ ADULT_PRICE = 100   # Age > 15
 CHILD_PRICE = 60 # Age 2-15
 INFANT_PRICE = 30   # Age < 2
 BAG_PRICE = 30
+ADMIN_FEE = 20
 
 ######################
 
@@ -998,6 +999,7 @@ def date_validation_part2(accum_dict, errors_found,
 
         return (accum_dict, errors_found)
 
+    print(type(departing_date), type(date_of_birth), "DATETYPES")
     datediff = departing_date - date_of_birth
     days = datediff.days
     if days < 14:
@@ -1179,7 +1181,7 @@ def initialise_formset_context(request):
     context["hidden_form"] = Common.save_context["hidden_form"]
     # TODO
     print("CON", context)
-    print("SAVED_CONTEXT", Common.save_context)
+    print("SAVE_CONTEXT", Common.save_context)
 
     return context
 
@@ -1295,8 +1297,212 @@ def setup_confirm_booking_context(request,
     return context
 
 
-def create_formsets(request):
+def any_string_changes(string1, string2):
     """
+    For both strings: Remove spaces and convert to uppercase 
+    Then check if they have changed
+    """
+
+    string1 = string1.replace(" ", "").upper()
+    string2 = string2.replace(" ", "").upper()
+
+    return string1 != string2
+
+def calc_change_fees(context, count, key, fees, fee_key, minors):
+    """ Calculate Change Fees
+        £20 per pax
+        £30 for each extra bags
+        Will not charge for any 'wheelchair' changes
+    """
+
+    # Has any passenger been removed from the booking - £20 fee!
+    label = f"{key}remove_pax"
+    print(label, context.get(label, None)) # TODO
+    if context.get(label, None):
+        fees[fee_key] += CHANGE_FEE
+        return fees
+    
+    label = f"{key}first_name"
+    print(label, context.get(label, None)) # TODO
+    label = f"{key}last_name"
+    print(label, context.get(label, None)) # TODO
+    
+    paxlist = Common.save_context["original_pax_details"]
+    if (context[f"{key}title"] != paxlist[count]["title"] or
+        any_string_changes(context[f"{key}first_name"], 
+                           paxlist[count]["first_name"]) or
+        any_string_changes(context[f"{key}last_name"], 
+                           paxlist[count]["last_name"])):
+        fees[fee_key] += CHANGE_FEE
+        fees["changed"] = True
+        print("YES", fees)
+    
+    if minors:
+        # Any date changes
+        if (context[f"{key}date_of_birth"] != 
+                    paxlist[count]["date_of_birth"]):
+            fees[fee_key] += CHANGE_FEE
+            fees["changed"] = True
+            print("YESdate", fees)
+
+    return fees
+
+
+def compute_change_fees(request, context, children_included, infants_included):
+    """ 
+    Compute the Total Price for Changing the Booking
+
+    £20 per passenger
+    £30 for every extra bag
+
+    Then store the values in 'the_fees_template_values'
+    in order that they can be rendered on the Confirmation Form
+    """
+
+    #   TODO
+    #   initial={"bags": context["booking"]["number_of_bags"],
+    #                          "remarks": context["booking"]["remarks"]})
+    #     Common.save_context["original_pax_details"] = pax_initial_list
+
+
+    #   TODO
+    
+    # multiple = (2 if Common.save_context["return_option"] == "Y"
+    #               else 1)
+    # adult_price = ADULT_PRICE * multiple
+    # child_price = CHILD_PRICE * multiple
+    # infant_price = INFANT_PRICE * multiple
+
+
+    the_fees_template_values = {}
+    fees = dict(admin=0, adults=0, children=0, infants=0, 
+                bags=0, changed=False)
+    print(fees)
+
+    # ADULT
+    number_of_adults = Common.save_context["booking"]["adults"]
+    count = 0
+    print("CSV2", Common.save_context)
+    print("ADULTS", number_of_adults)
+    print(Common.save_context["original_pax_details"]) # TODO
+    while count < number_of_adults:
+        print("ADULT", count+1)
+        key = f"adult-{count}-"
+        #(context, count, key, fees, fee_key, minors)  TODO
+        fees = calc_change_fees(context, count, 
+                                key, fees, "adults", 
+                                False)
+        count += 1
+
+
+    if fees["adults"]:
+        # Adults Details have changed
+            amount = fees["adults"]
+            the_fees_template_values["adults_total"] = (
+            f"Adult Changes = GBP{amount:5.2f}")
+
+    if children_included:
+        number_of_children = Common.save_context["booking"]["children"]
+        while count < number_of_children:
+            print("CHILD", count+1)
+            key = f"child-{count}-"
+            fees = calc_change_fees(context, count,
+                                    key, fees, "children", 
+                                    True)
+
+        if fees["children"]:
+        # Children Details have changed
+            amount = fees["children"]
+            the_fees_template_values["children_total"] = (
+            f"Child Changes = GBP{amount:5.2f}")
+
+    if infants_included:
+        number_of_infants = Common.save_context["booking"]["infants"]
+        while count < number_of_infants:
+            print("INFANT", count+1)
+            key = f"infant-{count}-"
+            fees = calc_change_fees(context, count,
+                                    key, fees, "infants", 
+                                    True)
+
+        if fees["infants"]:
+        # Infants Details have changed
+            amount = fees["infants"]
+            the_fees_template_values["infants_total"] = (
+            f"Child Changes = GBP{amount:5.2f}")
+
+    print("CSV", Common.save_context)
+    number_of_bags = int(context["bagrem-bags"])
+    orig_number_of_bags = int(Common.save_context["bags"])
+    if number_of_bags > orig_number_of_bags:
+        the_difference = number_of_bags - orig_number_of_bags
+        fees["bags"] = the_difference * BAG_PRICE
+        fees["changed"] = True
+        product = fees["bags"]
+        the_fees_template_values["bags_total"] = (
+                f"{the_difference} x GBP{BAG_PRICE:3.2f} = "
+                f"GBP{product:5.2f}")
+
+    orig_remarks = Common.save_context["remarks"]
+    if not any([fees["adults"], fees["children"], fees["infants"]]):
+        if any_string_changes(context["bagrem-remarks"], orig_remarks):
+            fees["admin"] = ADMIN_FEE
+            fees["changed"] = True
+            the_fees_template_values["admin_total"] = (
+               f"Admin Fee = GBP{ADMIN_FEE:5.2f}")
+
+    if not fees["changed"]:
+        # Charge 0.00 !
+        the_fees_template_values["total_price_string"] = "GBP0.00"
+        # The Actual Total Price
+        the_fees_template_values["total_price"] = 0
+    
+    else:
+
+        total = (fees["adults"] + fees["children"] + fees["infants"]
+                                + fees["bags"] + fees["admin"])
+        the_fees_template_values["total_price_string"] = f"GBP{total:5.2f}"
+        # The Actual Total Price
+        the_fees_template_values["total_price"] = total
+        Common.save_context["total_price"] = total
+
+    print("TYPE/C2", the_fees_template_values) # TODO
+    return the_fees_template_values
+
+
+def setup_confirm_changes_context(request,
+                                  children_included,
+                                  infants_included,
+                                  context):
+    # TODO
+    """
+    Calculate the Change Fees and Total Price
+    Then add the results to the 'context' in order
+    to be displayed on the Confirmation Form
+    """
+
+    print("CONTEXTIN3", context)
+    print(7010, type(context))
+    the_fees = compute_change_fees(request, context, children_included, infants_included)
+    print(the_fees)
+    context = add_fees_to_context(the_fees)
+
+    # TODO
+    # Update the 'context' with the fees and total price
+    context |= the_fees
+    print("9000DONE", context)
+
+
+    # Render the Booking Changes Confirmation Form
+    print("CONFIRM CHANGES FORM", context) # TODO
+    print(type(context))
+    # TODO
+    return context
+
+
+def setup_formsets_for_create(request):
+    """
+    For the Creating of Passenger Details:
     Create up to three formsets 
     for Adults, Children and Infants
     Adults Formset is Mandatory
@@ -1500,7 +1706,7 @@ def handle_pax_details_POST(request,
     if are_all_forms_valid[0]:
         print(881)
 
-        depart_pos = Common.save_context["depart_pos"]
+        # depart_pos = Common.save_context["depart_pos"] TODO 27/11
         #outbound_date = Common.save_context["booking"]["departing_date"]
         #outbound_flightno = Common.outbound_listof_flights[depart_pos]            
         print(882)
@@ -1514,10 +1720,32 @@ def handle_pax_details_POST(request,
         print(100) # TODO
         context_copy = request.POST.copy()
         print(200) # TODO
+
+
+        # Editing Pax Details?
+        if Common.paxdetails_editmode:
+            new_context = setup_confirm_changes_context(request,
+                                                       children_included,
+                                                       infants_included,
+                                                       context_copy)
+            new_context["pnr"] = Common.save_context["booking"]["pnr"]
+            print(305, new_context) # TODO
+            # TODO: UPDATE THE RECORD!!
+            print(811, "C1UPDATE", Common.save_context["bags"])
+            print("C2UPDATE", Common.save_context["remarks"])
+            print(type(new_context))
+            print(new_context)
+            print("C3UPDATE", context_copy)
+            Common.save_context["confirm-booking-context"] = context_copy
+            print(2004, Common.save_context["confirm-booking-context"])
+            return (True, new_context)
+
+        # Otherwise Creating New Pax Details
         new_context = setup_confirm_booking_context(request,
                                                     children_included,
                                                     infants_included,
                                                     context_copy)
+
         print(300, new_context) # TODO
         Common.save_context["pnr"] = new_context["pnr"]
         # TODO: CREATE THE RECORD!!
@@ -1538,7 +1766,7 @@ def handle_pax_details_POST(request,
         print(820, type(Common.save_context))
         print("TT", Common.save_context)
         print("CON", context)
-        print("SAVED_CONTEXT", Common.save_context)
+        print("SAVE_CONTEXT", Common.save_context)
         return(False, context)
 
 
@@ -1560,6 +1788,14 @@ def handle_editpax_GET(request, id, booking):
     print("B=", booking)
     print(type(booking))
     print("C=", Common.save_context)
+   
+    # Convert from "16NOV23" format to Datevalue i.e. 16/11/2023 
+    departing_date = datetime.strptime(
+             Common.save_context["display"]["outbound_date"],
+                    "%d%b%y").date()
+    returning_date = datetime.strptime(
+             Common.save_context["display"]["inbound_date"],
+                    "%d%b%y").date()
   
     context = {}
     context["booking"] = booking.__dict__
@@ -1569,14 +1805,30 @@ def handle_editpax_GET(request, id, booking):
                if context["booking"]["return_flight"]
                else "N")
                
-    print(context)
+    print(context) # TODO
 
     # Get all the Passengers related to the Booking
     pax = Common.save_context["passengers"]
     pax = pax.__dict__
     pax_initial_list = pax["_result_cache"]
-    pax = None
-    print("P2",pax_initial_list)
+    print("P2",pax_initial_list) # TODO
+    count = 0
+    # Convert from "12JAN12" format to Datevalue i.e. 12/01/2012 
+    for paxitem in pax_initial_list:
+        date_of_birth = paxitem.get("date_of_birth")
+        print(count, date_of_birth)
+        if date_of_birth:
+            pax_initial_list[count]["date_of_birth"] = (
+                datetime.strptime(date_of_birth, "%d%b%y").date()
+            )
+        count += 1
+    pax = None # reset
+    # TODO
+    print("P3",pax_initial_list)
+    d1 = datetime.strptime("12JAN12", "%d%b%y").date()
+    d2 = datetime.strptime("01JUL23", "%d%b%y").date()
+    print(d1, d2)
+
 
     # ADULTS
     number_of_adults = context["booking"]["number_of_adults"]
@@ -1587,8 +1839,7 @@ def handle_editpax_GET(request, id, booking):
     adults_formset = AdultsEditFormSet(prefix="adult",
             initial=list(filter(lambda f: (f["pax_type"] == "A"), pax_initial_list)))
     initial=filter(lambda f: (f["pax_type"] == "A"), pax_initial_list)
-    print(type(initial), initial, list(initial))
-    print("A", adults_formset)
+    print(type(initial), initial, list(initial)) # TODO
 
     # CHILDREN
     number_of_children = context["booking"]["number_of_children"]
@@ -1635,6 +1886,9 @@ def handle_editpax_GET(request, id, booking):
     Common.save_context["booking"]["adults"] = number_of_adults
     Common.save_context["booking"]["children"] = number_of_children
     Common.save_context["booking"]["infants"] = number_of_infants
+    Common.save_context["booking"]["departing_date"] = departing_date
+    Common.save_context["booking"]["returning_date"] = returning_date
+    Common.save_context["original_pax_details"] = pax_initial_list
 
     print("SAVED/2", context) # TODO
     # TODO
@@ -1693,6 +1947,46 @@ def initialise_for_editing(request):
     context["hidden_form"] = Common.save_context["hidden_form"]
     # TODO
     print("CON/edit", context)
-    print("SAVED_CONTEXT/edit", Common.save_context)
+    print("SAVE_CONTEXT/edit", Common.save_context)
 
     return context
+
+
+def setup_formsets_for_edit(request):
+    """
+    For the Editing of Passenger Details:
+    Build up to three formsets 
+    for Adults, Children and Infants
+    Adults Formset is Mandatory
+    """
+
+    result = initialise_for_editing(request)
+    print(8000, "REQ", request.method)  # TODO
+    context = {}
+
+    # ADULTS
+    AdultsFormSet = formset_factory(AdultsForm, extra=0)
+    adults_formset = result["adults_formset"]
+
+    # CHILDREN
+    children_included = Common.save_context["children_included"]
+    if children_included:
+        children_formset = result["children_formset"]
+    else:
+        children_formset = []
+
+    # INFANTS
+    infants_included = Common.save_context["infants_included"]
+    if infants_included:
+        infants_formset = result["infants_formset"]
+    else:
+        infants_formset = []
+
+    bags_remarks_form = BagsRemarks(request.POST or None, prefix="bagrem")
+    print(8020, request.method, "CONTEXT FETCH",
+          children_included, request.POST)  # TODO
+    print(8030, context)
+
+    return (adults_formset, children_formset, infants_formset,
+            children_included, infants_included, bags_remarks_form,
+            context)
