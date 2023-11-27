@@ -19,6 +19,8 @@ from .forms import HiddenForm
 from .forms import BagsRemarks
 
 from . import morecode
+import datetime
+from datetime import datetime
 import random  # TODO
 import re
 
@@ -84,6 +86,7 @@ def is_booking_form_valid(form, request):
     # Check Dates and Flight Availability
     cleaned_data = form.cleaned_data
     print("CD", cleaned_data)
+
     if (cleaned_data["return_option"] == "Y" and
             cleaned_data["returning_date"] == cleaned_data["departing_date"]):
         # Same Day Travel - Is there enough time between journey times?
@@ -101,6 +104,18 @@ def is_booking_form_valid(form, request):
                 "Returning Time - The interval between flights cannot be "
                 "less than 90 minutes.", request)
             return (False, None)
+
+    if (cleaned_data["departing_date"] == datetime.now().date()):
+        # User has selected today's date - check the time HH:MM
+        timenow = datetime.now().strftime("%H%M")
+        depart_time = cleaned_data["departing_time"]
+        time_diff = morecode.calc_time_difference(depart_time, timenow)  # TODO
+        if time_diff < 0:
+            message_error("Returning Time - The time of the return flight2 "
+                          "cannot be in the past.",
+                          request)
+            return (False, None)
+
 
     # The Form's contents has passed all validation checks!
     # Save the information for later processing
