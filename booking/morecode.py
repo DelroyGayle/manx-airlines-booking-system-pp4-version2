@@ -24,9 +24,7 @@ from .forms import BagsRemarks
 ###########
 from .forms import AdultsEditForm, MinorsEditForm
 
-from django.shortcuts import render
 # TODO
-# get_object_or_404
 # from django.http import HttpResponseRedirect
 from django.contrib import messages
 from .models import Booking, Passenger
@@ -1330,7 +1328,7 @@ def calc_change_fees(context, count, key, fees, fee_key,
         Will not charge for any 'wheelchair' changes
     """
 
-    # Has any passenger been removed from the booking - £20 fee!
+    # Has any passenger been removed from the booking? - £20 fee!
     label = f"{key}remove_pax"
     print(label, context.get(label, None)) # TODO
     if context.get(label, None):
@@ -1764,7 +1762,7 @@ def handle_pax_details_POST(request,
         print(200) # TODO
 
 
-        # Editing Pax Details?
+        # Is it Editing Pax Details?
         if Common.paxdetails_editmode:
             new_context = setup_confirm_changes_context(request,
                                                        children_included,
@@ -1842,7 +1840,7 @@ def handle_editpax_GET(request, id, booking):
     context = {}
     context["booking"] = booking.__dict__
     context["booking"].pop("_state",None)
-    context["booking_id"] = id # TODO
+    ##context["booking_id"] = id # TODO
     context["booking"]["return_option"] = ("Y" 
                if context["booking"]["return_flight"]
                else "N")
@@ -2087,7 +2085,7 @@ def update_pax_records():
     print("\n\nREQ\n\n") # TODO
 
     newdata = Common.save_context.get("confirm-booking-context")
-    print("ND", newdata)
+    print("ND", newdata) # TODO
     # print(1, dict)
     # print(2, dict.get("adult-TOTAL_FORMS"))
     # print(2, dict.get("adult-0-first_name"))
@@ -2100,11 +2098,10 @@ def update_pax_records():
 
     context = Common.save_context
 
-    # Delete all the Passengers related to the booking
+    # Delete all the Passengers on the Booking
     booking_id = context["booking"]["id"]
     print(booking_id)
     Passenger.objects.filter(pnr_id=booking_id).delete()
-
 
     outbound_seats_list = []
     inbound_seats_list = []
@@ -2125,6 +2122,7 @@ def update_pax_records():
     print("I", infants_list)
 
     # Remove any pairs of Adult and Infant marked for deletion
+    # Record the seat numbers of all Adults
     count = 0
     while True:
         # 'adult-1-title'
@@ -2132,14 +2130,12 @@ def update_pax_records():
         if not newdata.get(key):
             break
 
-        # Record Seat Number
+        # Record Adult's Seat Number
         outbound_seats_list.append(from_seat_to_number(
                 adults_list[count]["outbound_seat_number"]))
-        number_outbound_seats_deleted += 1
         if "inbound_seat_number" in adults_list[count]:
             inbound_seats_list.append(from_seat_to_number(
                 adults_list[count]["inbound_seat_number"]))
-            number_inbound_seats_deleted += 1
         
         # Is this Adult Marked for deletion?
         # e.g. 'adult-1-remove_pax': ['on']
@@ -2151,14 +2147,20 @@ def update_pax_records():
             # a mandatory part of the booking
             # Suggest 500 ERROR! TODO)
             
+            number_outbound_seats_deleted += 1
+            if "inbound_seat_number" in adults_list[count]:
+                number_inbound_seats_deleted += 1
+
             # Remove Adult from the list
             adults_list[count] = None
 
             # Any corresponding infant attached to this Adult?
-            # 'infant-1-title'
+            # EG 'adult-1-title' plus a corresponding 
+            #   'infant-1-title'
             if newdata.get(f"infant-{count}-title"):
                 # Remove Infant from the list
                 infants_list[count] = None
+
         count += 1
 
     # Remove any Infants marked for deletion
@@ -2185,56 +2187,89 @@ def update_pax_records():
         if not newdata.get(key):
             break
 
-        # Record Seat Number
+        # Record Child's Seat Number
         outbound_seats_list.append(from_seat_to_number(
                 children_list[count]["outbound_seat_number"]))
-        number_outbound_seats_deleted += 1
-        if "inbound_seat_number" in adults_list[count]:
+        if "inbound_seat_number" in children_list[count]:
             inbound_seats_list.append(from_seat_to_number(
                 children_list[count]["inbound_seat_number"]))
-            number_inbound_seats_deleted += 1
 
-        # Is ths Child Marked for deletion?
+        # Is this Child Marked for deletion?
         # e.g. 'child-0-remove_pax': ['on']
         key = f"child-{count}-remove_pax"
         if newdata.get(key):
+            number_outbound_seats_deleted += 1
+            if "inbound_seat_number" in children_list[count]:
+                number_inbound_seats_deleted += 1
+
             # Remove child from the list
-            childs_list[count] = None
+            children_list[count] = None
+
         count += 1
 
     # Filter Out The Deleted Items
     adults_list = list(filter(None, adults_list))
     children_list = list(filter(None, children_list))
     infants_list = list(filter(None, infants_list))
+    print("FILTERED") # TODO
     print("A2", adults_list)
     print("C2", children_list)
     print("I2", infants_list)
+    # This value should never be zero! - 500 error?
+    number_outbound_seated_adults = len(adults_list)
+    # Unlike this value which could be zero
+    number_outbound_seated_children = len(children_list)
+    number_seated_pax = (number_outbound_seated_adults + 
+                         number_outbound_seated_children)
 
-    Common.inbound_allocated_seats = None # Optional
+    # Note: Inbound Flight is Optional
+    Common.inbound_allocated_seats = None
+    Common.inbound_removed_seats = None
+
     outbound_seats_list.sort()
     outbound_seats_list.reverse() # Descending Order
     inbound_seats_list.sort()
     inbound_seats_list.reverse() # Descending Order
+
+    # Outbound
     if number_outbound_seats_deleted > 0:
-        # Determine the seats that need to be removed
+        # Determine the seats that need to be removed from the Booking
+        # Keep these
         Common.outbound_allocated_seats = (
-            outbound_seats_list[0:number_outbound_seats_deleted])
-        Common.outbound_remove_seats = (
-            outbound_seats_list[-number_outbound_seats_deleted])
+            outbound_seats_list[0:number_seated_pax])
+        # Remove these
+        Common.outbound_removed_seats = (
+            outbound_seats_list[-number_outbound_seats_deleted:])
     else:
+        # No seats to remove
         Common.outbound_allocated_seats = outbound_seats_list
 
+    # Inbound
     if number_inbound_seats_deleted > 0:
         # Determine the seats that need to be removed
+        # Keep these
         Common.inbound_allocated_seats = (
-            inbound_seats_list[0:number_inbound_seats_deleted])
-        Common.inbound_remove_seats = (
-            inbound_seats_list[-number_inbound_seats_deleted])
+            inbound_seats_list[0:number_seated_pax])
+        # Remove these
+        Common.inbound_removed_seats = (
+            inbound_seats_list[-number_inbound_seats_deleted:])
     else:
+        # No seats to remove
         Common.inbound_allocated_seats = inbound_seats_list
 
+    print("KEEP")
     print(Common.outbound_allocated_seats)
     print(Common.inbound_allocated_seats)
+    print("REMOVE")
+    print(Common.outbound_removed_seats)
+    print(Common.inbound_removed_seats)
+
+    # In fact these two values ought to be identical
+    # if the Booking contains a return flight
+    # number_outbound_seats_deleted
+    # number_inbound_seats_deleted
+    # Otherwise 500 error?
+    print(number_outbound_seats_deleted, number_inbound_seats_deleted) # TODO
     
     # Fetch Booking Instance
     booking = get_object_or_404(Booking, pk=booking_id)
@@ -2283,12 +2318,20 @@ def update_pax_records():
                                               number_of_infants,
                                               order_number, True)
 
-    return booking
+    return (booking,
+            number_of_adults, number_of_children,
+            number_of_infants,
+            number_outbound_seats_deleted,
+            number_inbound_seats_deleted)
 
 
-def update_booking(booking):
-    """ Update the Booking Record with 
+def update_booking(booking,
+                   number_of_adults, number_of_children,
+                   number_of_infants):
+    """
+    Update the Booking Record with 
     any changes to Baggage or Remarks
+    Update the number of passengers
     """
 
     print(type(booking))
@@ -2297,7 +2340,84 @@ def update_booking(booking):
     print(Common.save_context["remarks"])
     booking.number_of_bags = int(Common.save_context["bags"])
     booking.remarks = Common.save_context["remarks"].strip().upper()
+    booking.number_of_adults = number_of_adults
+    booking.number_of_children = number_of_children
+    booking.number_of_infants = number_of_infants
+
     booking.save()
+
+
+def update_booked_figure_seatmap(schedule, 
+                                 number_deleted, seatnumbers_list):
+    """
+    # Adjust the Total Booked Figure and the Seatmap
+    # in regards to the deleted passengers
+    """
+
+    schedule.total_booked -= number_deleted
+    # Adjust the seatmap
+    bit_array = convert_string_to_bitarray(schedule.seatmap)
+    # TODO
+    print(bit_array)
+    print(bit_array.bin)
+    for each_seatno in seatnumbers_list:
+        if each_seatno < 0 or each_seatno >= CAPACITY:
+            # Defensive - should be between 0-95
+            continue
+
+        # For the correct 'leftmost' position
+        # subtract from 95
+        bit_array.overwrite("0b0", LEFT_BIT_POS - each_seatno)
+
+    # TODO
+    print("DONE")
+    print(bit_array)
+    print(bit_array.bin)
+    schedule.seatmap = convert_bitarray_to_hexstring(bit_array)
+    schedule.save()
+
+
+def update_schedule_seating(number_outbound_deleted,
+                            number_inbound_deleted):
+    """
+    Update the Schedule Database with any seat changes 
+    due to removal/deletions of passengers from the Booking 
+    """
+
+    # Outbound Flight
+    if number_outbound_deleted == 0:
+        # No Adults or Children removed
+        # Just infants which do not occupy seats
+        return
+    
+    the_flightdate = Common.save_context["booking"]["outbound_date"]
+    the_flightno = Common.save_context["booking"]["outbound_flightno"]
+
+    # Fetch Schedule Instance
+    queryset = Schedule.objects.filter(flight_date=the_flightdate,
+                                       flight_number=the_flightno)
+    schedule = get_object_or_404(queryset)
+    print("SCH1=",schedule)
+    # Adjust the Total Booked Figure and the Seatmap
+    update_booked_figure_seatmap(schedule, 
+                                 number_outbound_deleted,
+                                 Common.outbound_removed_seats)
+
+    if Common.save_context["booking"]["return_option"] != "Y":
+        return
+
+    the_flightdate = Common.save_context["booking"]["inbound_date"]
+    the_flightno = Common.save_context["booking"]["inbound_flightno"]
+
+    # Fetch Schedule Instance
+    queryset = Schedule.objects.filter(flight_date=the_flightdate,
+                                       flight_number=the_flightno)
+    schedule = get_object_or_404(queryset)
+    print("SCH2=",schedule)
+    # Adjust the Total Booked Figure and the Seatmap
+    update_booked_figure_seatmap(schedule, 
+                                 number_inbound_deleted,
+                                 Common.inbound_removed_seats)
 
 
 def update_pax_details(request):
@@ -2313,10 +2433,20 @@ def update_pax_details(request):
     due to removal/deletions of passengers from the Booking 
     """
 
-    booking = update_pax_records()
-    update_booking(booking)
+    (booking,
+     number_of_adults, number_of_children,
+     number_of_infants,
+     number_outbound_deleted,
+     number_inbound_deleted) = update_pax_records()
+
+    update_booking(booking,
+                   number_of_adults,
+                   number_of_children,
+                   number_of_infants)
     create_transaction_record()
-    # update_schedule_database() # TODO
+
+    update_schedule_seating(number_outbound_deleted,
+                            number_inbound_deleted) # TODO
 
     # Indicate success
     messages.add_message(request, messages.SUCCESS,
