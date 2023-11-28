@@ -341,13 +341,12 @@ def confirm_changes_form(request):
         # TODO
         else:
             print(request)
-            return HttpResponseRedirect(reverse("home")) ## TODO
+            # return HttpResponseRedirect(reverse("home")) ## TODO
             # Create new record Booking/Passenger Records
             # Create new Transaction Record
             # Update Schedule Database
                         # TODO
-            return
-            morecode.create_new_records(request)
+            morecode.update_pax_details(request)
             # Then show home page
             return HttpResponseRedirect(reverse("home"))
 
@@ -361,7 +360,7 @@ def view_booking(request, id):
     print("ID", id)
     print("PNR", booking.pnr)
     queryset = Passenger.objects.filter(pnr_id=id).order_by("pax_number")
-    #morecode.handle_view_booking(request, booking, queryset)
+    #morecode.handle_view_booking(request, booking, queryset) TODO
     #return #TODO
     # TODO REMOVE
     print(queryset)  # TODO
