@@ -97,11 +97,19 @@ function add_headings_to_pax(idElement) {
 function setup_page() {
     // If it is a page showing the Passenger Types
     // Then Add a heading to each set of Adults, Children and Infants
-
+    console.log("TEST")
     let p = $( "#id_adult-0-title" )
     if (p.length) {
         add_headings_to_pax(p)
     }
+    console.log("OK2")
+
+    // labelText = $('label[for="id_adult_0_remove_pax"]').css("color", "red")
+    console.log("OK")
+    $( "id_adult-0-remove_pax" ).prop("disabled", true)
+
+    document.getElementById("id_adult-0-remove_pax").disabled = true;
+    document.getElementById("id_adult-0-remove_pax").hidden=true;
 }
 
 const openTooManyInfantsModal = () => {
@@ -123,4 +131,7 @@ $(document).ready( function() {
 $(window).on("pageshow", function() {
     checkReturnFlightOption();
     setup_page();
+    // document.getElementById("id_adult-0-pax-remove_pax").disabled = true;
 });
+
+// <input type="checkbox" name="adult-0-remove_pax" id="id_adult-0-remove_pax"></input>
