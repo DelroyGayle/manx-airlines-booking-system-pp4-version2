@@ -1,3 +1,9 @@
+body {
+    background: url("../img/Plane_background.jpg") no-repeat;
+    background-size: cover;
+    background-position-y: 30%;
+}
+
 /* Footer Solution found at https://stackoverflow.com/questions/34250019/footer-semantic-ui */
 
 .my-main-style {min-height:74%; 

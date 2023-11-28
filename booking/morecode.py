@@ -316,11 +316,8 @@ def check_availability(request, departing, outbound_date,
         # No Return Flight
         return all_OK
 
-    print(inbound_date, inbound_flightno)
-    print(type(inbound_date))
     queryset = Schedule.objects.filter(flight_date=inbound_date,
                                        flight_number=inbound_flightno)
-    print(len(queryset))
     if len(queryset) == 0:
         # Empty Flight  - initialise the seatmap
         # 96-bit string = 24 character hex-string
@@ -360,7 +357,6 @@ def check_availability(request, departing, outbound_date,
         Common.inbound_seatmap = convert_bitarray_to_hexstring(result[2])
         Common.inbound_total_booked += numberof_seats_needed
 
-    print("ROK", all_OK)
     return all_OK
 
 
@@ -517,8 +513,8 @@ def create_booking_instance(pnr):
     if Common.save_context["return_option"] == "Y":
         # Inbound Flight Info
         booking.return_flight = True
-        return_pos = Common.save_context["return_pos"]
         booking.inbound_date = Common.save_context["booking"]["returning_date"]
+        return_pos = Common.save_context["return_pos"]
         booking.inbound_flightno = Common.inbound_listof_flights[return_pos]
 
     else:
@@ -526,6 +522,7 @@ def create_booking_instance(pnr):
         booking.return_flight = False
         booking.inbound_date = None
         booking.inbound_flightno = ""
+        
 
     booking.fare_quote = Common.save_context["total_price"]
     booking.ticket_class = "Y"
@@ -833,15 +830,13 @@ def realloc_seats_first(request, id, booking):
     passenger_list = queryset.values()
     seat_numbers_list = list_pax_seatnos(passenger_list,
                                          "outbound_seat_number")
-    print(seat_numbers_list)  # TODO
     freeup_seats(booking.outbound_date, booking.outbound_flightno,
                  seat_numbers_list)
 
+    # Return Flight
     if booking.return_flight:
-        print(booking.inbound_date, booking.inbound_flightno)  # TODO
         seat_numbers_list = list_pax_seatnos(passenger_list,
                                              "inbound_seat_number")
-        print(seat_numbers_list)
         freeup_seats(booking.inbound_date, booking.inbound_flightno,
                      seat_numbers_list)
 
@@ -986,8 +981,6 @@ def date_validation_part2(accum_dict, errors_found,
     # datediff = date_of_birth - todays_date
 
     departing_date = Common.save_context["booking"]["departing_date"]
-    print(9881, Common.save_context["booking"]["departing_date"], "DEP")
-    print(9882, Common.save_context["booking"]["returning_date"], "RET")
     output_departing_date = departing_date.strftime("%d/%m/%Y")
     datediff = date_of_birth - todays_date
     days = datediff.days
@@ -1056,7 +1049,7 @@ def date_validation_part2(accum_dict, errors_found,
     # Yes! - Check the D.O.B. against the Return Date
     returning_date = Common.save_context["booking"]["returning_date"]
     output_returning_date = returning_date.strftime("%d/%m/%Y")
-    # Method to determine the years was found at
+    # Method to determine the difference in years was found at
     # https://stackoverflow.com/questions/4436957/pythonic-difference-between-two-dates-in-years
     difference_in_years = relativedelta(returning_date, date_of_birth).years
     paxtype = "an Adult" if difference_in_years > 15 else "a Child"
@@ -1744,22 +1737,10 @@ def handle_pax_details_POST(request,
                                              bags_remarks_form)
     print(880, are_all_forms_valid)
     if are_all_forms_valid[0]:
-        print(881)
-
-        # depart_pos = Common.save_context["depart_pos"] TODO 27/11
-        #outbound_date = Common.save_context["booking"]["departing_date"]
-        #outbound_flightno = Common.outbound_listof_flights[depart_pos]            
-        print(882)
-
-        print(Common.save_context["booking"]["departing_date"], "DEP")
-        print(Common.save_context["booking"]["returning_date"], "RET")
-
         cleaned_data = are_all_forms_valid[1]
         Common.save_context["bags"] = cleaned_data.get("bags")
         Common.save_context["remarks"] = cleaned_data.get("remarks")
-        print(100) # TODO
-        context_copy = request.POST.copy()
-        print(200) # TODO
+        context_copy = request.POST.copy()  # Because of Immutability
 
 
         # Is it Editing Pax Details?
@@ -1833,9 +1814,13 @@ def handle_editpax_GET(request, id, booking):
     departing_date = datetime.strptime(
              Common.save_context["display"]["outbound_date"],
                     "%d%b%y").date()
-    returning_date = datetime.strptime(
+    print("CSS", Common.save_context )
+    if "inbound_date" in Common.save_context["display"]:
+        returning_date = datetime.strptime(
              Common.save_context["display"]["inbound_date"],
                     "%d%b%y").date()
+    else:
+        returning_date = None
   
     context = {}
     context["booking"] = booking.__dict__
@@ -2078,29 +2063,15 @@ def update_pax_records():
     Then write out the updated data taking into consideration any deletions
     """
 
-    print("CC\n\n")
-    print(Common.save_context)  # TODO
     # Need a second copy of the PNR!
     Common.save_context["pnr"] = Common.save_context["booking"]["pnr"]
-    print("\n\nREQ\n\n") # TODO
 
     newdata = Common.save_context.get("confirm-booking-context")
-    print("ND", newdata) # TODO
-    # print(1, dict)
-    # print(2, dict.get("adult-TOTAL_FORMS"))
-    # print(2, dict.get("adult-0-first_name"))
-    
-    # dict = dict.__dict__
-    # print("DICT", dict)
-    # print("BOOKING", Common.save_context.get("booking"))
-    # print("BOOKING/id", Common.save_context.get("booking_id"))
-    # print("TF", Common.save_context.get("adult-TOTAL_FORMS"))
 
     context = Common.save_context
 
     # Delete all the Passengers on the Booking
     booking_id = context["booking"]["id"]
-    print(booking_id)
     Passenger.objects.filter(pnr_id=booking_id).delete()
 
     outbound_seats_list = []
@@ -2108,7 +2079,6 @@ def update_pax_records():
     number_outbound_seats_deleted = 0
     number_inbound_seats_deleted = 0
     pax_orig_data_list = context["original_pax_details"]
-    print(pax_orig_data_list)
 
     # Fetch all Adults into one list
     adults_list = list(filter(lambda f: (f["pax_type"] == "A"), pax_orig_data_list))
@@ -2222,7 +2192,8 @@ def update_pax_records():
     number_seated_pax = (number_outbound_seated_adults + 
                          number_outbound_seated_children)
 
-    # Note: Inbound Flight is Optional
+    Common.outbound_allocated_seats = None
+    Common.outbound_removed_seats = None
     Common.inbound_allocated_seats = None
     Common.inbound_removed_seats = None
 
@@ -2397,7 +2368,6 @@ def update_schedule_seating(number_outbound_deleted,
     queryset = Schedule.objects.filter(flight_date=the_flightdate,
                                        flight_number=the_flightno)
     schedule = get_object_or_404(queryset)
-    print("SCH1=",schedule)
     # Adjust the Total Booked Figure and the Seatmap
     update_booked_figure_seatmap(schedule, 
                                  number_outbound_deleted,
@@ -2413,7 +2383,6 @@ def update_schedule_seating(number_outbound_deleted,
     queryset = Schedule.objects.filter(flight_date=the_flightdate,
                                        flight_number=the_flightno)
     schedule = get_object_or_404(queryset)
-    print("SCH2=",schedule)
     # Adjust the Total Booked Figure and the Seatmap
     update_booked_figure_seatmap(schedule, 
                                  number_inbound_deleted,

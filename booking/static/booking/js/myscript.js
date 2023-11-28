@@ -96,18 +96,16 @@ function add_headings_to_pax(idElement) {
 
 function setup_page() {
     // If it is a page showing the Passenger Types
-    // Then Add a heading to each set of Adults, Children and Infants
-    console.log("TEST")
+    // Then add a Heading to each set of Adults, Children and Infants
     let p = $( "#id_adult-0-title" )
     if (p.length) {
         add_headings_to_pax(p)
     }
-    console.log("OK2")
 
-    // labelText = $('label[for="id_adult_0_remove_pax"]').css("color", "red")
-    console.log("OK")
-    $( "id_adult-0-remove_pax" ).prop("disabled", true)
-
+    /* Adult 1 Passenger is a Mandatory part of the Booking
+    Adult 1 cannot be removed - therefore disable and hide the option
+    */
+    
     document.getElementById("id_adult-0-remove_pax").disabled = true;
     document.getElementById("id_adult-0-remove_pax").hidden=true;
 }
