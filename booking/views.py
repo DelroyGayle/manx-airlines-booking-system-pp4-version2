@@ -19,7 +19,7 @@ from .forms import AdultsForm, MinorsForm
 from .forms import HiddenForm
 from .forms import BagsRemarks
 
-from . import morecode
+from . import bookinghelper as m
 import datetime
 from datetime import datetime
 
@@ -64,7 +64,7 @@ def is_booking_form_valid(form, request):
         # Same Day Travel - Is there enough time between journey times?
         depart_time = cleaned_data["departing_time"]
         return_time = cleaned_data["returning_time"]
-        time_diff = morecode.calc_time_difference(return_time, depart_time)
+        time_diff = m.calc_time_difference(return_time, depart_time)
         if time_diff < 0:
             message_error("Returning Time - The time of the return flight "
                           "cannot be in the past.",
@@ -81,7 +81,7 @@ def is_booking_form_valid(form, request):
         # User has selected today's date - check the time HH:MM
         timenow = datetime.now().strftime("%H%M")
         depart_time = cleaned_data["departing_time"]
-        time_diff = morecode.calc_time_difference(depart_time, timenow)  # TODO
+        time_diff = m.calc_time_difference(depart_time, timenow)  # TODO
         if time_diff < 0:
             message_error("Departing Time - The time of the outbound flight "
                           "cannot be in the past.",
@@ -129,16 +129,16 @@ def is_booking_form_valid(form, request):
         inbound_flightno = None
         inbound_date = None
 
-    check_avail = morecode.check_availability(request,
-                                              "Departing Flight",
-                                              outbound_date,
-                                              outbound_flightno,
-                                              outbound_time,
-                                              "Returning Flight",
-                                              inbound_date,
-                                              inbound_flightno,
-                                              inbound_time,
-                                              cleaned_data)
+    check_avail = m.check_availability(request,
+                                       "Departing Flight",
+                                       outbound_date,
+                                       outbound_flightno,
+                                       outbound_time,
+                                       "Returning Flight",
+                                       inbound_date,
+                                       inbound_flightno,
+                                       inbound_time,
+                                       cleaned_data)
 
     if not check_avail:
         # Insufficient Availability for Selected Flight(s)
@@ -155,7 +155,7 @@ def create_booking_form(request):
 
     print(request.user.is_authenticated)
     print(request.user.username)
-    morecode.reset_common_fields()
+    m.reset_common_fields()
     if not Common.initialised:
         Common.initialisation()
 
@@ -250,22 +250,22 @@ def passenger_details_form(request):
     (adults_formset, children_formset, infants_formset,
      children_included, infants_included,
      bags_remarks_form, context) = (
-            morecode.setup_formsets_for_create(request)
+            m.setup_formsets_for_create(request)
             if not Common.paxdetails_editmode
-            else morecode.setup_formsets_for_edit(request))
+            else m.setup_formsets_for_edit(request))
 
     if request.method == "POST":
         # TODO
         print(request.POST)
         print(request.POST.get("adult-0-last_name", 100))
         print(request.POST.dict)
-        result = morecode.handle_pax_details_POST(request,
-                                                  adults_formset,
-                                                  children_included,
-                                                  children_formset,
-                                                  infants_included,
-                                                  infants_formset,
-                                                  bags_remarks_form)
+        result = m.handle_pax_details_POST(request,
+                                           adults_formset,
+                                           children_included,
+                                           children_formset,
+                                           infants_included,
+                                           infants_formset,
+                                           bags_remarks_form)
         is_valid, context = result
         if is_valid:
             if not Common.paxdetails_editmode:
@@ -278,7 +278,7 @@ def passenger_details_form(request):
     else:
         # request.method is "GET"
         number_of_adults = Common.save_context["booking"]["adults"]
-        context = morecode.initialise_formset_context(request)
+        context = m.initialise_formset_context(request)
 
     return render(request, "booking/passenger-details-form.html", context)
 
@@ -296,7 +296,7 @@ def confirm_booking_form(request):
             # Create new Transaction Record
             # Update Schedule Database
             # TODO
-            morecode.create_new_records(request)
+            m.create_new_records(request)
             # Then show home page
             return HttpResponseRedirect(reverse("home"))
 
@@ -322,7 +322,7 @@ def confirm_changes_form(request):
             return HttpResponseRedirect(reverse("home"))
         # TODO
         else:
-            morecode.update_pax_details(request)
+            m.update_pax_details(request)
             # Then show home page
             return HttpResponseRedirect(reverse("home"))
 
@@ -447,7 +447,7 @@ def delete_booking(request, id):
     if request.method == "POST":
         # Update the Schedule Data base first by free up the seats
         # of the passengers belong to this Booking
-        morecode.realloc_seats_first(request, id, booking)
+        m.realloc_seats_first(request, id, booking)
         # Delete the Booking
         booking.delete()
         messages.add_message(request, messages.SUCCESS,
@@ -468,7 +468,7 @@ def edit_booking(request, id):
         # CREATE SUCCESS MESSAGE TODO
 
     else:
-        context = morecode.handle_editpax_GET(request, id, booking)
+        context = m.handle_editpax_GET(request, id, booking)
 
     return render(request, "booking/edit-booking.html", context)
 
