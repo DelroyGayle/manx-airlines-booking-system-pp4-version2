@@ -7,6 +7,7 @@ from django.db.models import Q, OuterRef, Subquery
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 from django.forms import formset_factory
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
@@ -61,6 +62,7 @@ BAG_PRICE = 30
 
 # Display the Home Page
 
+@login_required
 def homepage(request):
     # TODO """"
     # On the first display of the Home Page
@@ -182,6 +184,7 @@ def is_booking_form_valid(form, request):
 
 
 # TODO
+@login_required
 def create_booking_form(request):
     """ The Handling of the Create Bookings Form """
 
@@ -262,6 +265,7 @@ def create_booking_form(request):
 
 
 # TODO
+@login_required
 def passenger_details_form(request):
     """
     The Handling of the Passenger Details Form
@@ -315,6 +319,7 @@ def passenger_details_form(request):
     return render(request, "booking/passenger-details-form.html", context)
 
 
+@login_required
 def confirm_booking_form(request):
     # TODO """"
     
@@ -334,6 +339,7 @@ def confirm_booking_form(request):
 
     return render(request, "booking/confirm-booking-form.html", context)
 
+@login_required
 def confirm_changes_form(request):
     """
     After the user has made amendments to the Pax Details
@@ -360,6 +366,7 @@ def confirm_changes_form(request):
     return render(request, "booking/confirm-changes-form.html", context)
 
 
+@login_required
 def view_booking(request, id):
     # TODO """"
     booking = get_object_or_404(Booking, pk=id)
@@ -402,9 +409,10 @@ def view_booking(request, id):
     return render(request, "booking/view-booking.html", context)
 
 
+@login_required
 def search_bookings(request):
     # TODO """"
-    query = request.GET.get("query")
+    query = request.GET.get("query").strip()
     # Blank Search
     if not query:
         return HttpResponseRedirect(reverse("home"))
@@ -485,6 +493,7 @@ def search_bookings(request):
     return render(request, "booking/search-bookings.html", context)
 
 
+@login_required
 def delete_booking(request, id):
     # TODO """"
     booking = get_object_or_404(Booking, pk=id)
@@ -512,23 +521,6 @@ def edit_booking(request, id):
     if request.method == "POST":
         return HttpResponseRedirect(reverse("view-booking",
                                             kwargs={"id": booking.pk}))
-
-        # Update Booking() with the new values
-        # TODO
-
-        #TODO REMOVE
-        booking.company_name = request.POST.get("company_name")
-        booking.number_of_employees = request.POST.get("number_of_employees")
-        # employer_test_flag will either be set to "on" or None
-        # Handle it so that it is either "on" or False
-        new_employer_test_flag = request.POST.get("employer_test_flag", False)
-        # "employer_test_flag" -  convert "on" value to either True or False."]
-        booking.employer_test_flag = (True if new_employer_test_flag == "on"
-                                      else False)
-
-        booking.save()
-        return HttpResponseRedirect(reverse("view-booking",
-                                            kwargs={"id": booking.pk}))
         # CREATE SUCCESS MESSAGE TODO
 
     else:
@@ -540,6 +532,7 @@ def edit_booking(request, id):
     return render(request, "booking/edit-booking.html", context)
 
 
+@login_required
 def logout_user(request):
 
     logout(request)
