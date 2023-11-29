@@ -1,11 +1,12 @@
 # Create your views here.
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Q, OuterRef, Subquery
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
+from django.contrib.auth import logout
 from django.forms import formset_factory
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
@@ -184,6 +185,8 @@ def is_booking_form_valid(form, request):
 def create_booking_form(request):
     """ The Handling of the Create Bookings Form """
 
+    print(request.user.is_authenticated)
+    print(request.user.username)
     morecode.reset_common_fields()
     if not Common.initialised:
         Common.initialisation()
@@ -332,20 +335,24 @@ def confirm_booking_form(request):
     return render(request, "booking/confirm-booking-form.html", context)
 
 def confirm_changes_form(request):
-    # TODO """"
+    """
+    After the user has made amendments to the Pax Details
+    Display the fee incurred and if the user confirms
+    proceed to:
+    1) Update the Pax Details
+    2) Create new Transaction Record
+    3) Update Schedule Database regarding any seat changes
+       because of any removal/deletions of passengers from the Booking
+    """
     
     print(request.method, "RQQ")
     if request.method == "POST":
         if "cancel" in request.POST:
+            reset_common_fields()  # RESET!
+            # Home Page
             return HttpResponseRedirect(reverse("home"))
         # TODO
         else:
-            print(request)
-            # return HttpResponseRedirect(reverse("home")) ## TODO
-            # Create new record Booking/Passenger Records
-            # Create new Transaction Record
-            # Update Schedule Database
-                        # TODO
             morecode.update_pax_details(request)
             # Then show home page
             return HttpResponseRedirect(reverse("home"))
@@ -531,3 +538,13 @@ def edit_booking(request, id):
         context = morecode.handle_editpax_GET(request, id, booking)
 
     return render(request, "booking/edit-booking.html", context)
+
+
+def logout_user(request):
+
+    logout(request)
+
+    messages.add_message(request, messages.SUCCESS,
+                         'Successfully logged out')
+
+    return redirect(reverse('login'))

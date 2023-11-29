@@ -13,10 +13,10 @@
                 <button type="submit">Search</button>
             </form>
         </div>
-        <a class="item">Login</a>
+        <a href={% url 'login' %} class="ui item">Login</a>
         <div class="right menu">
-            <a class="ui item">LogOut</a>
-            <a class="ui item">Register</a>
+            <a href={% url 'logout_user' %} class="ui item">LogOut</a>
+            <a href={% url 'register' %}  class="ui item">Register</a>
         </div>
     </div>
 </div>

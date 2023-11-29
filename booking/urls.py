@@ -12,4 +12,5 @@ urlpatterns = [
     path('details/', views.passenger_details_form,
          name='passenger-details-form'),
     path('changes/', views.confirm_changes_form, name='confirm-changes-form'),
+    path('logout_user', views.logout_user, name='logout_user')
 ]
