@@ -363,7 +363,7 @@ def check_availability(request, departing, outbound_date,
 def generate_random_pnr():
     """ Generate a random 6-character PNR """
     n = 5
-    chars5 = "".join(["{}".format(CHARLIST[randint(0, 32)])
+    chars5 = "".join(["{}".format(CHARLIST[randint(0, 31)])
                           for num in range(0, n)])
     chars1 = CHARLIST2[randint(0, 23)]
     return chars1 + chars5

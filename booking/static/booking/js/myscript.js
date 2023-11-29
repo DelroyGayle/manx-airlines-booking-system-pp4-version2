@@ -132,4 +132,34 @@ $(window).on("pageshow", function() {
     // document.getElementById("id_adult-0-pax-remove_pax").disabled = true;
 });
 
+document.addEventListener('click',function(e){
+    const pattern = /^id_adult-([0-9]+)-remove_pax$/;
+    
+    if (e.target && pattern.test(e.target.id)) {
+        const theAdultId = e.target.id;
+        const thenumber = pattern.exec(theAdultId);
+        infantId = `id_infant-${thenumber[1]}-remove_pax`;
+        alert(infantId)
+        const infantElement = document.getElementById(infantId);
+        const adultElement = document.getElementById(adultId);
+        adultElement.classList.add("strike-thru");
+        alert(adultElement)
+        alert(adultElement.checked)
+        if (adultElement.checked) {
+            alert(adultElement)
+            infantElement.checked = true;
+            infantElement.classList.add("strike-thru");
+
+        } else {
+            infantElement.checked = false;
+            infantElement.classList.remove("strike-thru");
+        }
+        
+        // alert(thenumber[1])
+     }
+     
+}
+
+ );
+// TODO
 // <input type="checkbox" name="adult-0-remove_pax" id="id_adult-0-remove_pax"></input>
