@@ -1,9 +1,55 @@
-<h3>Register here</h3>
-<hr>
+<!DOCTYPE html>
+<html lang="en">
 
-<form action="" method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Home Page{% endblock %}</title>
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js"></script>
+</head>
+{% block content %}
+{% load static %}
 
-    <button type="submit">Register</button>
-</form>
+<br>
+<br>
+<div class="ui grid">
+    <div class="four wide column"></div>
+    <div class="eight wide column">
+        <div class="ui middle aligned aligned grid">
+            <div class="column mt-5">
+                <h2 class="ui teal image header">
+                    <div class="content">Manx Airlines Travel Agency Booking System: Registration</div>
+                </h2>
+
+                <hr>
+
+                {% if messages %}
+
+                    {% for message in messages %}
+
+                        <div class="ui {{message.tags}} message">
+
+                            {{message}}
+
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+                    <button type="submit">Register</button>
+                </form>
+
+                <div class="ui message">Have an account? <a href={% url 'login'  %}>Login</a></div>
+                <div class="four wide column"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

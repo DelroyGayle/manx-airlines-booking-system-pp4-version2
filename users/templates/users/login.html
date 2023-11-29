@@ -1,11 +1,59 @@
-<h3>login</h3>
+<!DOCTYPE html>
+<html lang="en">
 
-<form action="" method="POST">
-    {% csrf_token %}
-    {% for field in form %}
-        <p>{{ field.label }}: <br> {{ field }}</p>
-    {% endfor %}
-    <button type="submit">Login</button>
-</form>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Home Page{% endblock %}</title>
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js"></script>
+</head>
+{% block content %}
 
-<p>Don't have an account? <a href="{% url 'register' %}">Signup here</a></p>
+<br>
+<br>
+<div class="ui grid">
+    <div class="four wide column"></div>
+    <div class="eight wide column">
+        <div class="ui middle aligned aligned grid">
+            <div class="column mt-5">
+                <h2 class="ui teal image header">
+                    <div class="content">Manx Airlines Travel Agency Booking System: Login</div>
+                </h2>
+
+                <hr>
+
+
+                {% if messages %}
+
+                {% for message in messages %}
+
+                <div class="ui {{message.tags}} message">
+
+                    {{message}}
+
+                </div>
+
+                {% endfor %}
+
+                {% endif %}
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <p>{{ field.label }}: <br> {{ field }}</p>
+                    {% endfor %}
+                    <button type="submit">Login</button>
+                </form>
+
+                <p>Don't have an account? <a href="{% url 'register' %}">Signup here</a></p>
+
+                <div class="ui message">Have an account? <a href={% url 'login'  %}>Login</a></div>
+                <div class="four wide column"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
