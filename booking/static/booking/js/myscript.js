@@ -134,6 +134,7 @@ $(window).on("pageshow", function() {
 
 document.addEventListener('click',function(e){
     const pattern = /^id_adult-([0-9]+)-remove_pax$/;
+    return
     
     if (e.target && pattern.test(e.target.id)) {
         const theAdultId = e.target.id;
