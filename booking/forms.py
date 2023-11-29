@@ -220,6 +220,8 @@ class AdultsForm(forms.Form):
                                       initial="")
 
 # For Children and Infants
+
+
 class MinorsForm(forms.Form):
     title = forms.CharField(max_length=4,
                             widget=forms.Select(choices=TITLE_CHOICES),
@@ -250,21 +252,20 @@ class BagsRemarks(forms.Form):
                               widget=forms.Textarea(
                                 attrs={"rows": "4"}))
 
-# For the editing of the Booking's Passenger Details
-
-""" 
-I know this is not 'DRY'
-I did indeed use
-
-class AdultsEditForm(AdultsForm):
-    remove_pax = forms.BooleanField(required=False, label='Remove Pax?')
-
-However I could not change the order of the field 'remove_pax'
-It always appeared at the end of the form!
-Therefore, I had to 'repeat' the definition of 'AdultsForm'
-"""
 
 class AdultsEditForm(forms.Form):
+    """
+    For the editing of the Booking's Passenger Details
+    I know this is not 'DRY'
+    I did indeed use
+
+    class AdultsEditForm(AdultsForm):
+        remove_pax = forms.BooleanField(required=False, label='Remove Pax?')
+
+    However I could not change the order of the field 'remove_pax'
+    It always appeared at the end of the form!
+    Therefore, I had to 'repeat' the definition of 'AdultsForm'
+    """
     title = forms.CharField(max_length=4,
                             widget=forms.Select(choices=TITLE_CHOICES),
                             initial="MR")
@@ -281,14 +282,13 @@ class AdultsEditForm(forms.Form):
                                       initial="")
 
 
-# For Children and Infants
-
-"""
-The above 'ditto' applies in regards to why I haven't used 
-class MinorsEditForm(MinorsForm):
-"""
-
 class MinorsEditForm(forms.Form):
+    """
+    For Children and Infants
+    The above 'ditto' applies in regards to why I haven't used
+    class MinorsEditForm(MinorsForm):
+    """
+
     title = forms.CharField(max_length=4,
                             widget=forms.Select(choices=TITLE_CHOICES),
                             initial="MR",)

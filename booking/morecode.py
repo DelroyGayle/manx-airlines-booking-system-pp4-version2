@@ -31,7 +31,6 @@ from .models import Booking, Passenger
 from .models import Flight, Schedule, Transaction
 
 from .common import Common
-from .constants import CAPACITY
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from bitstring import BitArray
@@ -88,6 +87,7 @@ CHARLIST2 = [*FIRST_LETTERS] # 24 CHARACTERS
 """
 
 # CAPACITY is 96 - Number of seats in the aircraft
+CAPACITY = 96  # Number of seats in the aircraft
 LEFT_BIT_POS = CAPACITY - 1  # I.E. 95
 
 

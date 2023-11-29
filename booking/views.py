@@ -13,7 +13,6 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
 from .models import Booking, Passenger
-from .models import Flight
 
 from .forms import BookingForm, CreateBookingForm
 from .forms import AdultsForm, MinorsForm
@@ -23,44 +22,11 @@ from .forms import BagsRemarks
 from . import morecode
 import datetime
 from datetime import datetime
-import random  # TODO
-import re
 
 from .common import Common
 
-# TODO
-# from .constants import FIRSTNAME_BLANK
-# KEEP THIS - TODO
-# import constants
-
-# Constants
-
-NULLPAX = "Enter the details for this passenger."
-BAD_NAME = ("Names must begin and end with a letter. "
-            "Names must consist of only alphabetical characters, "
-            "apostrophes and hyphens.")
-FIRSTNAME_BLANK = (f"Passenger Name required. "
-                   f"Enter the First Name as on the passport.")
-LASTNAME_BLANK = (f"Passenger Name required. "
-                  f"Enter the Last Name as on the passport.")
-CONTACTS_BLANK = ("Adult 1 is the Principal Passenger. "
-                  "Contact Details are "
-                  "mandatory for this Passenger. "
-                  "Enter passenger's phone number and/or email.")
-BAD_TELNO = "Enter a phone number of at least six digits."
-BAD_EMAIL = "Enter a valid email address."
-BAD_DATE = "Enter a valid date of birth."
-FUTURE_DATE = "Your date of birth must be in the past."
-TOO_YOUNG = ("Newly born infants younger than 14 days "
-             " on the {0} will not be accepted for travel.")
-
-ADULT_PRICE = 100   # Age > 15
-CHILD_PRICE = 60 # Age 2-15
-INFANT_PRICE = 30   # Age < 2
-BAG_PRICE = 30
-
-
 # Display the Home Page
+
 
 @login_required
 def homepage(request):
@@ -133,7 +99,7 @@ def is_booking_form_valid(form, request):
         thetime = cleaned_data["departing_time"]
         depart_pos = Common.OUTBOUND_TIME_OPTIONS1.index(thetime)
         save_data["depart_pos"] = depart_pos
-        outbound_flightno = Common.outbound_listof_flights[depart_pos]            
+        outbound_flightno = Common.outbound_listof_flights[depart_pos]
         thetime = cleaned_data["returning_time"]
         return_pos = Common.INBOUND_TIME_OPTIONS1.index(thetime)
         save_data["return_pos"] = return_pos
@@ -144,19 +110,19 @@ def is_booking_form_valid(form, request):
         thetime = cleaned_data["departing_time"]
         depart_pos = Common.OUTBOUND_TIME_OPTIONS1.index(thetime)
         save_data["depart_pos"] = depart_pos
-        outbound_flightno = Common.outbound_listof_flights[depart_pos]            
+        outbound_flightno = Common.outbound_listof_flights[depart_pos]
 
     # Check Availability regarding the Selected Journeys
     # Outbound Flight
     outbound_date = cleaned_data["departing_date"]
     outbound_time = cleaned_data["departing_time"]
-    
+
     return_option = cleaned_data["return_option"]
     if return_option == "Y":
         # Return Flight - Check Availability
         inbound_time = cleaned_data["returning_time"]
         return_pos = Common.INBOUND_TIME_OPTIONS1.index(inbound_time)
-        inbound_flightno = Common.inbound_listof_flights[return_pos]            
+        inbound_flightno = Common.inbound_listof_flights[return_pos]
         inbound_date = cleaned_data["returning_date"]
     else:
         inbound_time = None
@@ -165,20 +131,19 @@ def is_booking_form_valid(form, request):
 
     check_avail = morecode.check_availability(request,
                                               "Departing Flight",
-                                              outbound_date, 
+                                              outbound_date,
                                               outbound_flightno,
                                               outbound_time,
                                               "Returning Flight",
-                                              inbound_date, 
+                                              inbound_date,
                                               inbound_flightno,
                                               inbound_time,
                                               cleaned_data)
 
-    print("CV", check_avail) # TODO
     if not check_avail:
         # Insufficient Availability for Selected Flight(s)
         return (False, None)
-    
+
     # Successful Validation
     return (True, save_data)
 
@@ -204,11 +169,10 @@ def create_booking_form(request):
         if is_form_valid:
             context = {"booking": form.cleaned_data}
             # Update dict 'context' with the contents of dict 'saved_data'
-            context |= saved_data 
+            context |= saved_data
 
             # ADULTS
             number_of_adults = form.cleaned_data["adults"]
-            print("N/A", number_of_adults) # TODO
             AdultsFormSet = formset_factory(AdultsForm,
                                             extra=number_of_adults)
             adults_formset = AdultsFormSet(prefix="adult")
@@ -248,9 +212,7 @@ def create_booking_form(request):
 
             # Save a copy in order to fetch any values as and when needed
             Common.save_context = context
-            print("SAVED/1", Common.save_context) # TODO
             # TODO
-            print("NOW", context)
             return render(request, "booking/passenger-details-form.html",
                           context)
 
@@ -279,15 +241,15 @@ def passenger_details_form(request):
     1) Validate all the forms
     2) If all the forms are valid,
        Calculate the Fees and Total Price
-       Add the results to the 'context' 
+       Add the results to the 'context'
        in order to be displayed on the Confirmation Form
 
     If Validation failed, Continue viewing the Passengers' Details
     """
 
     (adults_formset, children_formset, infants_formset,
-    children_included, infants_included,
-    bags_remarks_form, context) = (
+     children_included, infants_included,
+     bags_remarks_form, context) = (
             morecode.setup_formsets_for_create(request)
             if not Common.paxdetails_editmode
             else morecode.setup_formsets_for_edit(request))
@@ -307,9 +269,11 @@ def passenger_details_form(request):
         is_valid, context = result
         if is_valid:
             if not Common.paxdetails_editmode:
-                return render(request, "booking/confirm-booking-form.html", context)
+                return render(request, "booking/confirm-booking-form.html",
+                              context)
             else:
-                return render(request, "booking/confirm-changes-form.html", context) # TODO
+                return render(request, "booking/confirm-changes-form.html",
+                              context)
 
     else:
         # request.method is "GET"
@@ -322,8 +286,7 @@ def passenger_details_form(request):
 @login_required
 def confirm_booking_form(request):
     # TODO """"
-    
-    print(request.method, "RQ")
+
     if request.method == "POST":
         if "cancel" in request.POST:
             return HttpResponseRedirect(reverse("home"))
@@ -332,12 +295,13 @@ def confirm_booking_form(request):
             # Create new record Booking/Passenger Records
             # Create new Transaction Record
             # Update Schedule Database
-                        # TODO
+            # TODO
             morecode.create_new_records(request)
             # Then show home page
             return HttpResponseRedirect(reverse("home"))
 
     return render(request, "booking/confirm-booking-form.html", context)
+
 
 @login_required
 def confirm_changes_form(request):
@@ -350,8 +314,7 @@ def confirm_changes_form(request):
     3) Update Schedule Database regarding any seat changes
        because of any removal/deletions of passengers from the Booking
     """
-    
-    print(request.method, "RQQ")
+
     if request.method == "POST":
         if "cancel" in request.POST:
             reset_common_fields()  # RESET!
@@ -370,40 +333,29 @@ def confirm_changes_form(request):
 def view_booking(request, id):
     # TODO """"
     booking = get_object_or_404(Booking, pk=id)
-    print("BOOKING:", booking)  # PK/ID   TODO
-    print("ID", id)
-    print("PNR", booking.pnr)
     queryset = Passenger.objects.filter(pnr_id=id).order_by("pax_number")
-    #morecode.handle_view_booking(request, booking, queryset) TODO
-    #return #TODO
-    # TODO REMOVE
-    print(queryset)  # TODO
-    print(len(queryset))
-    # passenger_list = []
-    # for pax_record in queryset:  # TODO
-    #     print(type(pax_record))
-    #     print(pax_record.pax_type, pax_record.pax_number, pax_record.date_of_birth,
-    #           pax_record.first_name, pax_record.last_name)
-    #     passenger_list.append(pax_record)
 
     display = dict(created_at=booking.created_at.strftime("%d%b%y").upper(),
                    # EG 17NOV23
-                   outbound_date=booking.outbound_date.strftime("%d%b%y").upper())
+                   outbound_date=(booking.outbound_date.strftime("%d%b%y")
+                                  .upper()))
     if booking.return_flight:
-        display["inbound_date"] = booking.inbound_date.strftime("%d%b%y").upper()
+        display["inbound_date"] = (booking.inbound_date.strftime("%d%b%y")
+                                   .upper())
 
     passenger_list = queryset.values()
     count = 0
     for each_record in passenger_list:
         for each_field in each_record:
-            if (each_field == "pax_type" 
+            if (each_field == "pax_type"
                     and passenger_list[count]["pax_type"] in "CI"):
                 passenger_list[count]["date_of_birth"] = (
                     passenger_list[count]["date_of_birth"]
-                             .strftime("%d%b%y").upper())
-        count+=1
+                    .strftime("%d%b%y").upper())
+        count += 1
 
-    context = {"booking": booking, "passengers": passenger_list, "display": display}
+    context = {"booking": booking, "passengers": passenger_list,
+               "display": display}
     # Keep a Copy for 'Edit Passengers' functionality
     Common.save_context = context  # TODO
     return render(request, "booking/view-booking.html", context)
@@ -427,7 +379,6 @@ def search_bookings(request):
     # Adult 1 - query that Passenger i.e.
     # pax_type == "A" and pax_number == 1
     adult1_qs = Passenger.objects.filter(pnr=OuterRef("id"),
-                                         
                                          pax_number=1)
 
     # Case Insensitive Search - in 3 parts
@@ -438,12 +389,10 @@ def search_bookings(request):
 
                  # 2) Or Matching Principal Passenger's First Name
                  Q(passenger__first_name__icontains=query) &
-                 #Q(passenger__pax_type__exact="A") &
                  Q(passenger__pax_number=1)) | (
 
                  # 3) Or Matching Principal Passenger's Last Name
                  Q(passenger__last_name__icontains=query) &
-                 #Q(passenger__pax_type__exact="A") &
                  Q(passenger__pax_number=1)))
 
                 # Sort the Query Result by the PNR
@@ -462,13 +411,9 @@ def search_bookings(request):
                              message_string)
         return HttpResponseRedirect(reverse("home"))
 
-    print("QS1", queryset)  # TODO
     for element in queryset:
-        print("PNR1", element.pnr)  # TODO
         qs = Passenger.objects.filter(pnr=element.id,
-                                      #pax_type="A",
                                       pax_number=1)
-        print("SUBQ", qs)  # TODO
         for elem2 in qs:
             print(elem2.first_name, elem2.last_name)
 
@@ -503,7 +448,7 @@ def delete_booking(request, id):
         # Update the Schedule Data base first by free up the seats
         # of the passengers belong to this Booking
         morecode.realloc_seats_first(request, id, booking)
-        # Delete the Booking 
+        # Delete the Booking
         booking.delete()
         messages.add_message(request, messages.SUCCESS,
                              "Booking Deleted Successfully")
@@ -513,20 +458,16 @@ def delete_booking(request, id):
 
 
 def edit_booking(request, id):
-    # TODO """" REMOVE???
+    # TODO """"
     booking = get_object_or_404(Booking, pk=id)
     form = BookingForm(instance=booking)
     context = {"booking": booking, "form": form}
-    print(request.method,"RP")
     if request.method == "POST":
         return HttpResponseRedirect(reverse("view-booking",
                                             kwargs={"id": booking.pk}))
         # CREATE SUCCESS MESSAGE TODO
 
     else:
-        print("DOIT") # TODO
-        
-        # return render(request, "booking/edit-booking.html", context)
         context = morecode.handle_editpax_GET(request, id, booking)
 
     return render(request, "booking/edit-booking.html", context)
