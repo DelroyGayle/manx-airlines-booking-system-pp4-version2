@@ -244,7 +244,7 @@ I chose to use [Semantic UI](https://semantic-ui.com/) because this framework's 
 ### Create Bookings
 
 Firstly, the user needs to enter the dates of travel and the number of passengers.
-**It is mandatory that there is at least one adult passenger on a booking.<br>
+**It is mandatory that there is at least one adult passenger on a booking.<br/>
 This passenger would be the *Principal Passenger* of the Booking; therefore, cannot be removed from the booking.**<br>
 The user enters:
 the date of travel
@@ -272,6 +272,50 @@ the number of infants - *there can only be one infant for each adult*
 
 
 </details>
+
+#### Enter Passenger Details
+
+<details>
+<summary>Enter the First and Last Name of each passenger</summary>
+<br/>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/cf138aa1-45df-4882-bfd0-19374ca50f01)
+
+
+   For Adult Passengers, there is the option of either Telephone Number or Email Address<br>
+   **At least one of these contact details are mandatory for the *Adult 1* Passenger**
+
+<br/>
+<summary>Return or one-way journey</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ceb8e8b7-e55f-4c96-91a4-a8f6b8064d37)
+
+<summary>Adults, Children and Infants - then Press Continue</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ee9d7b31-7742-49d4-8980-d710a42a6fa7)
+
+
+</details>
+
+#### Confirm the Booking
+
+<details>
+<summary>A Fare Quote will be generated which needs confirmation - Press Agree and pay now</summary>
+<br/>
+   
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/5a11c6ae-2524-4171-971b-46db46f37370)
+
+<summary>Then a message will be displayed that the Booking has been made</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/fbc27496-dd50-4c38-b1d7-b9b1eeeb5918)
+
+**Every Booking has its own unique PNR**
+
+
+</details>
+
+   ---
+
 ### Search Bookings
 ### Edit Bookings
 ### Delete Bookings
@@ -302,7 +346,7 @@ the number of infants - *there can only be one infant for each adult*
 * [Heroku](https://heroku.com) - for the deployment of the site
 * [Jquery](https://jquery.com/) - for scripting purposes
 * [Balsamiq:](https://balsamiq.com/) was used to create the wireframes
-* [drawSQL](https://drawsql.app/) was used to draw the SQL tables
+* [DrawSQL](https://drawsql.app/) was used to draw the SQL tables
 * [Am I Responsive](http://ami.responsivedesign.is/) was used for creating the multi-device mock-up shown at the top of this README.md file
 * [Tiny PNG](https://tinypng.com/) was used to reduce the file size of the background image
 * [Code Institute's GitHub full template](https://github.com/Code-Institute-Org/python-essentials-template) - in order to run Django and Python on Heroku
