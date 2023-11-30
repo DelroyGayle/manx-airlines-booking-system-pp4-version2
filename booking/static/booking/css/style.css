@@ -6,7 +6,7 @@
 }
 
 .my-footer-style {
-    /*background-color: #212121;*/
+    /*background-color: #212121;  TODO*/
     position: absolute;
     margin-top: -50px;
     left: 0;
@@ -14,6 +14,9 @@
     padding: 15px 0;
 }
 
+body {
+    background-image: url("https://res.cloudinary.com/dgrepedkh/image/upload/v1701304884/static/booking/img/plane_background.a5b56e2ee9fa.jpg");
+}
 /***************************************************/
 
 small span {
@@ -32,8 +35,9 @@ ul.errorlist {display:none;}
 */
 
 .strike-thru {
-    text-decoration: line-through;
-    color: red;
+    text-decoration-line: line-through;
+    text-decoration-color: red;
+    text-decoration-style: wavy;    
  }
 
 /* TODO */

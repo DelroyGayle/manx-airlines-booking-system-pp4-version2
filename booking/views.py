@@ -57,7 +57,6 @@ def is_booking_form_valid(form, request):
     # FURTHER VALIDATION NEEDED
     # Check Dates and Flight Availability
     cleaned_data = form.cleaned_data
-    print("CD", cleaned_data)
 
     if (cleaned_data["return_option"] == "Y" and
             cleaned_data["returning_date"] == cleaned_data["departing_date"]):
@@ -90,9 +89,6 @@ def is_booking_form_valid(form, request):
 
     # The Form's contents has passed all validation checks!
     # Save the information for later processing
-    print("CD2", cleaned_data)
-    print("CO", Common.save_context)
-    # TODO
     save_data = {"return_option": cleaned_data["return_option"]}
     if cleaned_data["return_option"] == "Y":
         # Return Flight - Determine both flight numbers
@@ -153,8 +149,6 @@ def is_booking_form_valid(form, request):
 def create_booking_form(request):
     """ The Handling of the Create Bookings Form """
 
-    print(request.user.is_authenticated)
-    print(request.user.username)
     m.reset_common_fields()
     if not Common.initialised:
         Common.initialisation()
@@ -255,10 +249,6 @@ def passenger_details_form(request):
             else m.setup_formsets_for_edit(request))
 
     if request.method == "POST":
-        # TODO
-        print(request.POST)
-        print(request.POST.get("adult-0-last_name", 100))
-        print(request.POST.dict)
         result = m.handle_pax_details_POST(request,
                                            adults_formset,
                                            children_included,
@@ -317,7 +307,7 @@ def confirm_changes_form(request):
 
     if request.method == "POST":
         if "cancel" in request.POST:
-            reset_common_fields()  # RESET!
+            m.reset_common_fields()  # RESET!
             # Home Page
             return HttpResponseRedirect(reverse("home"))
         # TODO
@@ -414,8 +404,6 @@ def search_bookings(request):
     for element in queryset:
         qs = Passenger.objects.filter(pnr=element.id,
                                       pax_number=1)
-        for elem2 in qs:
-            print(elem2.first_name, elem2.last_name)
 
     # Pagination as demonstrated in
     # https://testdriven.io/blog/django-pagination/

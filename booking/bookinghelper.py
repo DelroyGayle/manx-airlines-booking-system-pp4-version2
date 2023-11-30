@@ -1263,8 +1263,8 @@ def calc_change_fees(context, count, key, fees, fee_key,
     else:
 
         # Any date of birth changes
-        newdate = context[f"{key}date_of_birth"], "%Y-%m-%d"
-        newdate = datetime.strptime(newdate).date()
+        newdate = context[f"{key}date_of_birth"]
+        newdate = datetime.strptime(newdate, "%Y-%m-%d").date()
         if (newdate != paxlist[pax_number]["date_of_birth"]):
             fees[fee_key] += CHANGE_FEE
             fees["changed"] = True
@@ -1556,11 +1556,14 @@ def all_formsets_valid(request, adults_formset,
         return (False, None)
 
     # Validate BagsRemarks Form
+    print(100, bags_remarks_form)
     if not bags_remarks_form.is_valid:
         display_formset_errors(request, "Bag/Remarks",
                                         bags_remarks_form.errors)
         return (False, None)
 
+    # DDG
+    print(200, bags_remarks_form)
     return (True, bags_remarks_form.cleaned_data)
 
 
@@ -1592,6 +1595,8 @@ def handle_pax_details_POST(request,
                                              infants_formset,
                                              bags_remarks_form)
     if are_all_forms_valid[0]:
+        ## DDG
+        print(300, are_all_forms_valid)
         cleaned_data = are_all_forms_valid[1]
         Common.save_context["bags"] = cleaned_data.get("bags")
         Common.save_context["remarks"] = cleaned_data.get("remarks")
@@ -1669,9 +1674,6 @@ def handle_editpax_GET(request, id, booking):
             )
         count += 1
     pax = None  # reset
-    # TODO
-    d1 = datetime.strptime("12JAN12", "%d%b%y").date()
-    d2 = datetime.strptime("01JUL23", "%d%b%y").date()
 
     # ADULTS
     number_of_adults = context["booking"]["number_of_adults"]
