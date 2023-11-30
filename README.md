@@ -242,6 +242,36 @@ I chose to use [Semantic UI](https://semantic-ui.com/) because this framework's 
 ### Home Page
 
 ### Create Bookings
+
+Firstly, the user needs to enter the dates of travel and the number of passengers.
+**It is mandatory that there is at least one adult passenger on a booking.<br>
+This passenger would be the *Principal Passenger* of the Booking; therefore, cannot be removed from the booking.**<br>
+The user enters:
+the date of travel
+whether it is a return or one-way journey
+the number of adults (at least one)
+the number of children
+the number of infants - *there can only be one infant for each adult*
+
+#### Create a Booking
+
+<details>
+<summary>Create a Booking - minimum one adult</summary>
+<br/>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ce98c050-33a0-42b1-bf2a-7538d08d0e78)
+
+<br/>
+<summary>Return or one-way journey</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ceb8e8b7-e55f-4c96-91a4-a8f6b8064d37)
+
+<summary>Adults, Children and Infants - then Press Continue</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ee9d7b31-7742-49d4-8980-d710a42a6fa7)
+
+
+</details>
 ### Search Bookings
 ### Edit Bookings
 ### Delete Bookings
@@ -273,7 +303,7 @@ I chose to use [Semantic UI](https://semantic-ui.com/) because this framework's 
 * [Jquery](https://jquery.com/) - for scripting purposes
 * [Balsamiq:](https://balsamiq.com/) was used to create the wireframes
 * [drawSQL](https://drawsql.app/) was used to draw the SQL tables
-* [Am I Responsive])(http://ami.responsivedesign.is/) was used for creating the multi-device mock-up shown at the top of this README.md file
+* [Am I Responsive](http://ami.responsivedesign.is/) was used for creating the multi-device mock-up shown at the top of this README.md file
 * [Tiny PNG](https://tinypng.com/) was used to reduce the file size of the background image
 * [Code Institute's GitHub full template](https://github.com/Code-Institute-Org/python-essentials-template) - in order to run Django and Python on Heroku
 
@@ -410,18 +440,19 @@ This is your deployed app in operation
 ## Credits
 + I visited the websites of [BA](https://www.britishairways.com/travel/home/public/en_gb/)'s and [EasyJet](https://www.easyjet.com/en) to get an idea of layout the forms and the phraseology of error messages.
 + The Isle of Man Logo was downloaded from [icon-icons](https://icon-icons.com/icon/isle-of-man/17195) - *Free for personal use*
++ The background image I used is courtesy of London City Airport
 + Used [Stack Overflow](https://stackoverflow.com/) to investigate various solutions especially
    + [Editing Django _form.as_p](https://stackoverflow.com/questions/7769805/editing-django-form-as-p)
    + [How to Validate an Email Address in Django?](https://stackoverflow.com/questions/3217682/how-to-validate-an-email-address-in-django)
    + [How can I compare a Date and a Datetime in Python?](https://stackoverflow.com/questions/3278999/how-can-i-compare-a-date-and-a-datetime-in-python)
    + [Pythonic difference between two dates in years?](https://stackoverflow.com/questions/4436957/pythonic-difference-between-two-dates-in-years)
    + [Execute document.ready even if user came to the page by hitting the back button](https://stackoverflow.com/questions/11871253/execute-document-ready-even-if-user-came-to-the-page-by-hitting-the-back-button)
-+ 
         
 ## Acknowledgements
 + Cryce Truly's excellent tutorial [Python Django Web Framework](https://www.youtube.com/playlist?list=PLx-q4INfd95ESFMQ1Je3Z0gFdQLhrEuY7)
    + I used his approach as the layout for this project.
 + CodingEntrepreneurs' excellent tutorial [Try DJANGO Tutorial Series](https://www.youtube.com/playlist?list=PLEsfXFp6DpzTD1BD1aWNxS2Ep06vIkaeW) 
    + Very thorough explanations!
-+ Tutor Support for their speedy help during this project especially John and Oisin
++ Tutor Support for their speedy help during this project especially John and Oisin.
++ Many thanks to my mentor Derek McAuley for his technical expertise and guidance.
 
