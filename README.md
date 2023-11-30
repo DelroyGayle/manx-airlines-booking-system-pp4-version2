@@ -1,6 +1,7 @@
 # Manx Airlines Travel Agent Booking System
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/07ac5c40-4984-43df-9b3a-6c6688723c37)
 
-[View live website]
+[View live website](https://manx-airlines-bookings-c1e4c5533a20.herokuapp.com/)
 
 ## Table of Contents
 
@@ -34,7 +35,7 @@
 ## Introduction
 
 For my Code Institute Portfolio Project 4, 
-I would like to implement a Booking/Reservation system<br>so that a Travel Agent<br>can make a booking for passengers to travel with Manx Airlines,<br>with regards to flights between London and the Isle of Man.
+I would like to implement a Booking/Reservation system<br>so that a Travel Agent<br>can make bookings for passengers to travel with Manx Airlines,<br>with regards to flights between London and the Isle of Man.
 
 Throughout the travel industry, travel agents uses GDS ( [Global Distribution Systems](https://www.travelperk.com/corporate-travel-glossary/global-distribution-system/) ) and travel reservation system such as [Amadeus](https://amadeus.com/en/portfolio/hospitality/crs-central-reservation-system), [Galileo](https://en.wikipedia.org/wiki/Galileo_GDS) and [Sabre](https://en.wikipedia.org/wiki/Sabre_(travel_reservation_system)) in order to create travel bookings for passengers.
 
@@ -250,17 +251,32 @@ I chose to use [Semantic UI](https://semantic-ui.com/) because this framework's 
 ## Technologies Used
 
 ### Languages
-* Python3
-
+* [HTML5](https://en.wikipedia.org/wiki/HTML)
+* [CSS3](https://en.wikipedia.org/wiki/CSS)
+* [JavaScript](https://en.wikipedia.org/wiki/JavaScript)
+* [Python](https://en.wikipedia.org/wiki/Python_(programming_language))
+  
 ### Libraries and Frameworks
 
-* [Semantic UI](https://semantic-ui.com/) for the design of this site
+* [Django](https://www.djangoproject.com/)   
+    * Django was used as the web framework.
+* [Semantic UI](https://semantic-ui.com/  
+    * Semantic UI was used the design, styling and responsiveness of this website.
+* [Cloudinary](https://cloudinary.com/)
+    * Cloudinary was used for image management.
+
 #### Other tools and frameworks
 
 * [GitHub](https://github.com/) - for hosting the site
 * [Gitpod](https://www.gitpod.io/) - for editing the files
 * [Heroku](https://heroku.com) - for the deployment of the site
-* [Code Institute's GitHub full template](https://github.com/Code-Institute-Org/python-essentials-template) - in order to run Python on Heroku
+* [Jquery](https://jquery.com/) - for scripting purposes
+* [Balsamiq:](https://balsamiq.com/) was used to create the wireframes
+* [drawSQL](https://drawsql.app/) was used to draw the SQL tables
+* [Am I Responsive])(http://ami.responsivedesign.is/) was used for creating the multi-device mock-up shown at the top of this README.md file
+* [Tiny PNG](https://tinypng.com/) was used to reduce the file size of the background image
+* [Code Institute's GitHub full template](https://github.com/Code-Institute-Org/python-essentials-template) - in order to run Django and Python on Heroku
+
 
 ------
 
@@ -392,11 +408,20 @@ This is your deployed app in operation
 
 
 ## Credits
-+ I visited [BA](https://www.britishairways.com/travel/home/public/en_gb/)'s and [EasyJet](https://www.easyjet.com/en)'s websites to get an idea of layout the forms and the phraseology of error messages.
++ I visited the websites of [BA](https://www.britishairways.com/travel/home/public/en_gb/)'s and [EasyJet](https://www.easyjet.com/en) to get an idea of layout the forms and the phraseology of error messages.
 + The Isle of Man Logo was downloaded from [icon-icons](https://icon-icons.com/icon/isle-of-man/17195) - *Free for personal use*
-+ [drawSQL](https://drawsql.app/) was used to draw the SQL tables
-+ I frequently visited [Stackoverflow](https://stackoverflow.com/) to find answers to various technical challenges that I faced
++ Used [Stack Overflow](https://stackoverflow.com/) to investigate various solutions especially
+   + [Editing Django _form.as_p](https://stackoverflow.com/questions/7769805/editing-django-form-as-p)
+   + [How to Validate an Email Address in Django?](https://stackoverflow.com/questions/3217682/how-to-validate-an-email-address-in-django)
+   + [How can I compare a Date and a Datetime in Python?](https://stackoverflow.com/questions/3278999/how-can-i-compare-a-date-and-a-datetime-in-python)
+   + [Pythonic difference between two dates in years?](https://stackoverflow.com/questions/4436957/pythonic-difference-between-two-dates-in-years)
+   + [Execute document.ready even if user came to the page by hitting the back button](https://stackoverflow.com/questions/11871253/execute-document-ready-even-if-user-came-to-the-page-by-hitting-the-back-button)
++ 
         
-## Acknowledgements    
-Tutor Support for their speedy help during this project
+## Acknowledgements
++ Cryce Truly's excellent tutorial [Python Django Web Framework](https://www.youtube.com/playlist?list=PLx-q4INfd95ESFMQ1Je3Z0gFdQLhrEuY7)
+   + I used his approach as the layout for this project.
++ CodingEntrepreneurs' excellent tutorial [Try DJANGO Tutorial Series](https://www.youtube.com/playlist?list=PLEsfXFp6DpzTD1BD1aWNxS2Ep06vIkaeW) 
+   + Very thorough explanations!
++ Tutor Support for their speedy help during this project especially John and Oisin
 
