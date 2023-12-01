@@ -22,7 +22,7 @@
    5. [Search Bookings](#search-bookings)
    6. [Edit Bookings](#edit-bookings)
    7. [Delete Bookings](#delete-bookings)
-   8. [Validation and Messages](#validation-messages)
+   8. [Validation and Messages](#validation-and-messages)
    9. [Database Usage](#database-usage)
 6. [Technologies Used](#technologies-used)
     1. [Languages](#languages)
@@ -340,18 +340,26 @@ Such as the cost of the flight, extra baggage, editing changes
 #### Infant Passengers Criteria
 In the Airline Line Travel Industry there are certain criteria that generally all airlines apply
 
-1. Infants are defined as passengers aged under 2 years of age.
+1. Infants are defined as passengers who are under 2 years of age.
 2. There cannot be more infants on a booking than adults. That is, *one infant per one adult passenger*.
 3. Infants must be seated on the Adult's lap. That is, infants are not allocated seat.
 4. If the passenger desires the infant to have their own seat - this must be purchased as a INS booking - Infant On Seat
    * For Manx Airlines, this means the user must enter the infant *as a **Child** in the Booking.*
-5. If at the time of the *return flight* the infant would be **aged 2 or above** then the infant must be booked *as a **Child**
+5. If at the time of the *return flight* the infant would be **aged 2 years or above** then the infant must be booked *as a **Child**
 
 #### Criteria specific to Manx Airlines 
 1. Only a maximum of 20 seated passengers are allowed per Booking. That is both Adults and Children.
 2. Which in turn means, only a maximum of 20 infants are allowed per Booking.
-3. A **Child** Passenger is defined as a passengers aged **2 years of age and above and under 16 years of age**.
-
+3. A **Child** Passenger is defined as a passenger who is at least **2 years of age and under 16 years of age**.
+4. The Departure Date cannot be made more than 180 days in the future from the date that the Booking was created.
+5. A maximum of 180 days is allowed between the Departure Date and the Return Date.
+6. The Return Time cannot be less than **90 minutes** from the Departure Time.
+7. The Booking **must** contain at least **one Adult Passenger.** No Child nor Infant can travel on Manx Airlines without an Adult Passenger.
+8. The First Passenger on the Booking *Adult 1* is designated as **the Principal Passenger of the Booking**.<br/>
+   * As such, this passenger is a mandatory of the booking and cannot be removed.
+   * If for example, the passenger does need to be *removed* from the booking, then that booking needs to be **deleted** and a **new** booking needs to be made.
+   * However, *Adult 1* can be edited with a name of a new passenger if necessary.
+9. An Infant Passenger must be at least 14 days old to travel.
 
 ### Background Image
 Some of the images of the Features shown may differ slightly since the *Background Image* was added later on.
@@ -420,6 +428,12 @@ the number of infants - *there can only be one infant for each adult*
 <summary>Adults, Children and Infants - then Press Continue</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ee9d7b31-7742-49d4-8980-d710a42a6fa7)
+
+<summary>Wheelchair Information of a PRM</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/5c461a66-db48-4389-b3b7-d7ebad6bab42)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/836cf440-3dc8-4287-868f-2b77917fc2ed)
 
 
 </details>
@@ -646,7 +660,9 @@ Validation is applied throughout when entering Booking and Passenger information
 #### Creating Bookings
 
 <details>
-   <summary>Entering Past Dates</summary>
+   
+<summary>Entering Past Dates</summary>
+<br/> 
 
    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/895384ff-32e5-4e5b-9956-d9f686ce9241)
 
@@ -654,35 +670,190 @@ Validation is applied throughout when entering Booking and Passenger information
 
 Note: The same validation is applied to the *Returning Date*
 
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/64cfe8cb-56b8-4a16-9a85-3c4dc00422da)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b2d6268c-6877-4e1a-a066-1d86db42c92f)
+
 <summary>Illegal Dates</summary>
+<br/> 
 
    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/cfd46e5f-c44c-4d59-833a-b9087dbe2be2)
 
-   <summary>Same day journey - entering an earlier Return Time than the Departure Time e.g. 13:30pm and 11:00am</summary>
+<summary>Same day journey - entering an earlier Return Time than the Departure Time e.g. 13:30pm and 11:00am</summary>
+<br/> 
 
    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/fa80a9d7-0a96-475f-8a5f-e74f56810113)
 
    
+<summary>Attempt to make a Booking with an interval more than 180 days</summary>
+<br/> 
+
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/10d838cf-a5c6-4069-aeb1-dac28771edce)
+
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/0fa112c4-b722-44ca-b3a1-3f809c6b0e76)
+
+<summary>Attempt to make a Booking too far into the future</summary>
+<br/> 
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/4fde0e59-0cea-49c3-9737-a607c88ffe46)
+
+<br/> 
+
+<summary>The Return Time cannot be less than 90 minutes from the Departure Time</summary>
+<br/>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/39d819b1-895e-4e27-97ec-0ef187d0b8e8)
+
+</details>
+
+#### Entering Passenger Details
+
+<details>
+
    <summary>Attempt to add more infants than the number of adults</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/82522b91-5583-49c4-ad98-806712e280b0)
 
    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ef338adb-c6cc-4eb7-90e8-13e390864a07)
 
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/eed0ff1d-c609-431c-afd2-644bd056f042)
+
+   <summary>Zero number of Adults</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b3ae4c55-a2a8-45c6-bdff-969d1def16b3)
+
+   <summary>Attempt to make a Child Booking with Zero Adults</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/8a552933-547d-4b97-84c8-5c858848404e)
+
+
+ <summary>Entering a Blank Form or Blank Passenger Details</summary>
+<br/> 
+
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/80992d59-a8a6-4527-88f2-5b9382359725)
+
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/2aa78b99-9b8f-453d-9cb9-c07751b32f50)
+
+
+
+<summary>Blank First Name</summary>
+<br/> 
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/9e137e6c-c89e-49a3-bc9c-a5cf29a4355e)
+
+<summary>Blank Last Name</summary>
+<br/> 
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/832b9aa2-d680-40d9-aff9-4c6f4842dce9)
+
+<summary>Names must only consist of Letters, Apostrophes and Hyphens</summary>
+<br/> 
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/e0f1fa9d-ca8a-4c9e-97ca-d6c85087f3e7)
+
+<br/> 
+<summary>Email Validation</summary>
+<br/> 
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/5900ed07-693b-4fa9-9af1-82cc71285d7c)
+
+   <summary>Principal Passenger (Adult 1) Contact Details must be entered</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/1f6dcea1-e58d-4b35-bde6-aa0e1214659f)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/e02d2643-4699-4623-b616-425f77c858be)
+
+   <summary>Erroneous Telephone Numbers</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b25fb09e-1d56-4dc0-99d0-3b3aaa3e72fb)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/9e894431-939b-47be-a836-b520d02b48f8)
+
 
 </details>
+
+ #### Date of Birth Validation
 
 <details>
    
-   <summary></summary>
+ <summary>Future Date</summary>
+<br/> 
 
-   <summary></summary>
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/0fb63bf6-0349-42ee-b48d-e3752e0dc507)
 
-   <summary></summary>
-
-   <summary></summary>
-
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/e5e0ddad-05f1-485f-8e17-c641bd8aa264)
 
 
-</details>
+ <summary>Date of Birth cannot be Today's Date e.g.</summary>
+<br/> 
+
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ef65f84a-1db9-4639-875d-64dce3916c1b)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a35b78ad-de90-4a91-9008-42fbe152668a)
+
+   <summary>An Infant Passenger must be at least 14 days old to travel e.g. for the 19/11/2023</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/59ecaf0a-3049-4307-b37f-bb06134dbe03)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/d60aa11b-6784-4996-88aa-4c4ef33f85e4)
+
+   <summary>An Infant Passenger must be under 2 years of age at the time of the Departure Date of Travel e.g. for the 03/12/2023</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/685a043b-f4b2-4343-8482-151ecc8bf46e)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/88c86db2-8764-4d9a-9601-35dff073b536)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/6d399005-320f-420d-9df3-0ad81e869b5d)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/65af5b3e-89b9-4c91-9a44-74d57a1e1a53)
+
+
+
+<summary>An Infant Passenger must be under 2 years of age at the time of the Return Date of Travel e.g. for the 16/12/2023</summary>
+<br/> 
+   
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/685a043b-f4b2-4343-8482-151ecc8bf46e)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/88c86db2-8764-4d9a-9601-35dff073b536)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a7e2cc9a-121a-4559-a4e7-f7a8003237d5)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/109dabe6-428e-40e4-ac2d-897178663591)
+
+<summary>A Child Passenger must be under 16 years of age  at the time of the Departure Date of Travel e.g. e.g. for the 19/11/2023</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/1ba7d907-c32e-46da-8035-2cdac7643a9f)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/c2b408e6-9f92-4e78-b617-9d6da4c75b1c)
+
+<summary>Second Example</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/82a170be-f3cf-441e-a479-aa593c78eda2)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/60fd8f17-6f65-4ae9-92c7-188fc5500c93)
+
+<summary>A Child Passenger must be under 16 years at the time of the Return Date of Travel</summary>
+<br/> 
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b7ce3e44-db40-4e8b-9a38-37194b7026d5)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/9bd59f1b-39b0-400d-8ee5-1edd4f917d8b)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/6bc4a6d7-f0bc-4bb8-b043-bb0cfe3b2798)
+
+
+   </details>
+------
+
 ### Database Usage
 ------
 
@@ -698,7 +869,7 @@ Note: The same validation is applied to the *Returning Date*
 
 * [Django](https://www.djangoproject.com/)   
     * Django was used as the web framework.
-* [Semantic UI](https://semantic-ui.com/  
+* [Semantic UI](https://semantic-ui.com/)
     * Semantic UI was used the design, styling and responsiveness of this website.
 * [Cloudinary](https://cloudinary.com/)
     * Cloudinary was used for image management.
