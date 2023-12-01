@@ -20,6 +20,8 @@
    3. [Search Bookings](#search-bookings)
    4. [Edit Bookings](#edit-bookings)
    5. [Delete Bookings](#delete-bookings)
+   6. Validation and Messages(#validation-messages)
+   7. Database Usage(#database-usage)
 6. [Technologies Used](#technologies-used)
     1. [Languages](#languages)
     2. [Libraries and Frameworks](#languages-and-frameworks)
@@ -494,6 +496,27 @@ Now when the user views **Booking CGF64F** the user can see that *David Smith* h
   
 ### Delete Bookings
 
+<details>
+<summary>When viewing a Booking the user has the option to delete the Booking</summary>
+<br/>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/f3340e60-f067-45c8-b221-4c0515b6939a)
+
+<summary>The user is prompted to confirm whether the user would like to proceed with the deletion - the option is present to Cancel</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/23661f04-e21e-4f9b-9175-4baa2f666f52)
+
+<summary>If the user presses Yes, a message will be displayed to confirm that the Booking has been deleted</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/00806c8d-dd4a-4761-a166-f5c0a78a8e42)
+
+</details>
+
+-----
+
+### Validation and Messages
+
+### Database Usage
 ------
 
 ## Technologies Used
@@ -551,8 +574,8 @@ Please refer to [TESTING.md](https://github.com/DelroyGayle/manx-airlines-bookin
 
 #### 'Create Booking' Django Form
 
-The fields appeared too long with the *help text* being shown adjacent to the fields as opposed to below the fields
-However, there is a way of *overriding the default action of **forms.as_p** *
+The fields appeared too long with the *help text* being shown adjacent to the fields as opposed to below the fields<br/>
+However, there is a way of <em>overriding the default action of <strong>forms.as_p</strong></em>
 
 <details>
 <summary>Before this fix:</summary>
@@ -578,12 +601,14 @@ I prefer this look:
 #### Footer at the Bottom of the Page
 
 The Footer would not 'stay' at the bottom of the page depending on the view.
-I did not want a **sticky** footer.
-I found this solution at [Stack Overflow]
+I did not want a **sticky** footer.</br>
+I found this solution at [Stack Overflow](https://stackoverflow.com/questions/34250019/footer-semantic-ui)
 
 <details>
-<summary>TODO</summary>
+<summary>Footer stays at the bottom of the page</summary>
 <br/><br/>  
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b487677e-4a24-4c71-85f0-d01775c7e850)
 
 </details>
 
@@ -656,7 +681,7 @@ This is your deployed app in operation
 
 
 ## Credits
-+ I visited the websites of [BA](https://www.britishairways.com/travel/home/public/en_gb/)'s and [EasyJet](https://www.easyjet.com/en) to get an idea of layout the forms and the phraseology of error messages.
++ I visited the websites of [BA](https://www.britishairways.com/travel/home/public/en_gb/)'s and [EasyJet](https://www.easyjet.com/en) to get an idea of layout the forms and the phraseology of error messages
 + The Isle of Man Logo was downloaded from [icon-icons](https://icon-icons.com/icon/isle-of-man/17195) - *Free for personal use*
 + The background image I used is courtesy of London City Airport
 + Used [Stack Overflow](https://stackoverflow.com/) to investigate various solutions especially
