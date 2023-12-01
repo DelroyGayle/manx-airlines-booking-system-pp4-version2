@@ -338,17 +338,22 @@ Note: the user has the option to *Cancel* proceeding with the Booking
 
 <br/>
 
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/feff7dfa-93df-4160-bb3b-1f48e17247d4)
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/969d8de0-1f0d-4437-a762-42acbf4e17ad)
 
 <br/>
-In this case, there are nine results - pagination has been incorporated, so that the user can turn to the relevant page.<br/>
-Then click View to see the Booking
+In the above example, there are nine results - pagination has been incorporated, so that the user can turn to the relevant page<br/>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/1078fea7-e3f0-4ba3-8dfa-c5b08dd553c4)
+
+<br/>
+
+Then the user has to click View to see the Booking
 </details>
 
 ### View Bookings
 
 <details>
-<summary>After a search you have the option to View the selected Booking</summary>
+<summary>After a search the user has the option to View the selected Booking</summary>
 
 <br/>
 
@@ -359,20 +364,20 @@ Then click View to see the Booking
 
 <br/><br/>
 The View shows
-1. The Booking's PNR
-2. The date the booking was created
-3. The Flight(s) selected for the booking
+1. The Booking's 6-character PNR (Passenger Name Record)
+2. The date the Booking was created
+3. The flight(s) selected for the Booking
 
-Then the Passengers' details are shown as follows :-
+Then the Passengers' Details are shown as follows :-
 1. The name of each passenger followed by their status
-2.  * The status is of the form HK**<number>** - each adult and child passenger would be given their own number
+2.  * The status is of the form HK *\<number\>* - each adult and child passenger would be given their own number
     * Whilst an infant, will have the same status/number of the adult that the infant is assigned to
 3. Date of Birth of a Child or Infant Passenger
-4. Adult's passenger's Contact Details
+4. Adult's Passenger's Contact Details
 5. Passenger's Wheelchair Details
 6. Passenger's Allocated Seat Number (An Infant sits on a passenger's laps i.e. Infants are not allocated seats)
 7. Purchased Baggage Allowance
-8. Any particular Remarks attached to the booking
+8. Any particular Remarks attached to the Booking
    
 Then the user has an option to *Edit* or *Delete* the Booking
 
@@ -407,7 +412,7 @@ The fees are
 * GBP 20.00 each - for changes to a passenger's details
 * GBP 30.00 for each extra bag purchased
 * Some changes subject to GBP20.00 Admin fee
-* If for example it is solely passenger's wheelchair details that are changed the fee will be *GBP0.00*
+* If for example it is solely the passenger's wheelchair details that are changed the fee will be *GBP0.00*
 <br/><br/>
 
 
