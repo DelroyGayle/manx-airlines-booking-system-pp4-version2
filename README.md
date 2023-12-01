@@ -15,13 +15,15 @@
    4. [Data Models](#data-models)
    5. [Framework](#framework)
 5. [Features](#features)
-   1. [Home Page](#home-page)
-   2. [Create Bookings](#create-bookings)
-   3. [Search Bookings](#search-bookings)
-   4. [Edit Bookings](#edit-bookings)
-   5. [Delete Bookings](#delete-bookings)
-   6. Validation and Messages(#validation-messages)
-   7. Database Usage(#database-usage)
+   1. [Airline Criteria](#airline-criteria)
+   2. [Background Image](#background-image)
+   3. [Home Page](#home-page)
+   4. [Create Bookings](#create-bookings)
+   5. [Search Bookings](#search-bookings)
+   6. [Edit Bookings](#edit-bookings)
+   7. [Delete Bookings](#delete-bookings)
+   8. [Validation and Messages](#validation-messages)
+   9. [Database Usage](#database-usage)
 6. [Technologies Used](#technologies-used)
     1. [Languages](#languages)
     2. [Libraries and Frameworks](#languages-and-frameworks)
@@ -65,6 +67,7 @@ The Daily Flight Schedules are:
 
 Throughout this document I will be using typical airline terminology when referring to certain concepts.
 Here are a sample of some of the terms used:
+* INS - Infant On Seat
 * OSI - Other Service Information
 * PAX - short for Passenger(s)
 * PNR - Passenger Name Record
@@ -261,7 +264,7 @@ This model contains the available Flight Routing offered by Manx Airlines
 
 This model contains each scheduled flight as per Booking
 - flight_date = DateTimeField
-- flight_number = CharField(6 character) e.g. **MX0465**
+- flight_number = CharField(6 characters) e.g. **MX0465**
 - total_booked = PositiveSmallIntegerField - the number of passengers booked for this schedule
 - seatmap = CharField(24 characters)
 - - the seatmap of the aircraft is represented by a *96-bit-string* represented as a *24-character hex-string*
@@ -270,7 +273,7 @@ This model contains each scheduled flight as per Booking
 #### Booking Model
 
 This model contains all the Bookings that are made by the user according to passengers' requests
-- pnr = CharField(6 character, unique=True) - Passenger Name Record
+- pnr = CharField(6 characters, unique=True) - Passenger Name Record
 - created_at = DateField(auto_now=True)
 - amended_at = DateField(auto_now_add=True)
 - flight_from = CharField(3 characters) e.g. **LCY**
@@ -331,6 +334,37 @@ Such as the cost of the flight, extra baggage, editing changes
 - username = models.CharField(40 characters)
 
 ## Features
+
+### Airline Criteria 
+
+#### Infant Passengers Criteria
+In the Airline Line Travel Industry there are certain criteria that generally all airlines apply
+
+1. Infants are defined as passengers aged under 2 years of age.
+2. There cannot be more infants on a booking than adults. That is, *one infant per one adult passenger*.
+3. Infants must be seated on the Adult's lap. That is, infants are not allocated seat.
+4. If the passenger desires the infant to have their own seat - this must be purchased as a INS booking - Infant On Seat
+   * For Manx Airlines, this means the user must enter the infant *as a **Child** in the Booking.*
+5. If at the time of the *return flight* the infant would be **aged 2 or above** then the infant must be booked *as a **Child**
+
+#### Criteria specific to Manx Airlines 
+1. Only a maximum of 20 seated passengers are allowed per Booking. That is both Adults and Children.
+2. Which in turn means, only a maximum of 20 infants are allowed per Booking.
+3. A **Child** Passenger is defined as a passengers aged **2 years of age and above and under 16 years of age**.
+
+
+### Background Image
+Some of the images of the Features shown may differ slightly since the *Background Image* was added later on.
+
+<details>
+   <summary>
+      The Background Image
+   </summary>
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/93dd67af-1574-4704-a9b2-134e7b8e0f8f)
+
+</details>
+
 
 ### Home Page
 
@@ -607,6 +641,48 @@ Now when the user views **Booking CGF64F** the user can see that *David Smith* h
 
 ### Validation and Messages
 
+Validation is applied throughout when entering Booking and Passenger information. Suitable messages, based on *Django Messaging system*, are displayed to guide the user accordingly.
+
+#### Creating Bookings
+
+<details>
+   <summary>Entering Past Dates</summary>
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/895384ff-32e5-4e5b-9956-d9f686ce9241)
+
+<br/> 
+
+Note: The same validation is applied to the *Returning Date*
+
+<summary>Illegal Dates</summary>
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/cfd46e5f-c44c-4d59-833a-b9087dbe2be2)
+
+   <summary>Same day journey - entering an earlier Return Time than the Departure Time e.g. 13:30pm and 11:00am</summary>
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/fa80a9d7-0a96-475f-8a5f-e74f56810113)
+
+   
+   <summary>Attempt to add more infants than the number of adults</summary>
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ef338adb-c6cc-4eb7-90e8-13e390864a07)
+
+
+</details>
+
+<details>
+   
+   <summary></summary>
+
+   <summary></summary>
+
+   <summary></summary>
+
+   <summary></summary>
+
+
+
+</details>
 ### Database Usage
 ------
 
