@@ -75,6 +75,7 @@ Here are a sample of some of the terms used:
 * WCHR - Passenger cannot walk long distances but able to go up and down the aircraft steps
 * WCHS - Passenger cannot walk long distances and cannot manage the aircraft steps
 * WCHC - Passenger completely immobile, need assistance all the way, to and from the aircraft
+* WCMP - Manual operated wheelchair
 * WCLB - Electric wheelchair operated by lithium ion battery
 * WCBD - Electric wheelchair operated by a non-spillable ("dry") battery
 * WCBW - Electric wheelchair operated by a spillable ("wet") battery
@@ -223,10 +224,10 @@ Epics, User Stories and their related Tasks are further explained in [TESTING.md
 
 ### Database Design
 
+The site uses a Back-end database with the usage of ElephantSQL Postgres for the deployed site
 <details>
-<summary>Mockup Database Schema</summary>
+<summary>Database Schema Diagram</summary>
 <br/><br/>  
-
 
 ![drawSQL-teamdg2-export-2023-10-23](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/bad6685a-cc79-4dc5-92ea-b057cee7a9d6)
 </details>
@@ -235,9 +236,99 @@ Epics, User Stories and their related Tasks are further explained in [TESTING.md
 
 ### Data Models
 
-### Framework
+The following data models were designed to represent the database usage for the site
 
-I chose to use [Semantic UI](https://semantic-ui.com/) because this framework's approach of using *natural languages like noun/modifier relationships, word order, and plurality to link concepts intuitively*; resonated with me far better as opposed to using abbreviations as seen in frameworks. It also has a great variety of components to choose from when desigining a website. Semantic UI therefore handles the rendering of the webpages of my project on the relevant media whether it be desktop, tablet or mobile. The fonts (e.g. Lato) and colours used come as part of this framework.
+#### User Model
+
+The User Model contains information about the user. It is based upon Django's in-built authentication system
+- username
+- email
+- password
+
+#### Flight Model
+
+This model contains the available Flight Routing offered by Manx Airlines
+ - flight_number = CharField(6 characters, Primary Key) e.g. **MX0465**
+ - flight_from = CharField(3 characters) e.g. **LCY**
+ - flight_to = CharField(3 characters) e.g. **IOM**
+ - flight_STD = CharField(4 characters) - Standard Time of Departure e.g. **0800**
+ - flight_STA = CharField(4 characters) - Standard Time of Arrival e.g. **0945**
+ - outbound = BooleanField(default=True) - **True** means a *Return* journey; **False** means a *One-way* journey
+ - capacity = PositiveSmallIntegerField - represents the aircraft passenger capacity
+ - - for this project, the capacity is **96**
+
+#### Schedule Model
+
+This model contains each scheduled flight as per Booking
+- flight_date = DateTimeField
+- flight_number = CharField(6 character) e.g. **MX0465**
+- total_booked = PositiveSmallIntegerField - the number of passengers booked for this schedule
+- seatmap = CharField(24 characters)
+- - the seatmap of the aircraft is represented by a *96-bit-string* represented as a *24-character hex-string*
+- - see [TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md) for more information
+
+#### Booking Model
+
+This model contains all the Bookings that are made by the user according to passengers' requests
+- pnr = CharField(6 character, unique=True) - Passenger Name Record
+- created_at = DateField(auto_now=True)
+- amended_at = DateField(auto_now_add=True)
+- flight_from = CharField(3 characters) e.g. **LCY**
+- flight_to = CharField(3 characters) e.g. **IOM**
+- return_flight = BooleanField(default=True) - **True** means a *Return* journey; **False** means a *One-way* journey
+- outbound_date = DateField
+- outbound_flightno = CharField(6 characters) e.g. **MX0475**
+- inbound_date = DateField
+- inbound_flightno = CharField(6 characters) e.g. **MX0486**
+- fare_quote = DecimalField(max_digits=6, decimal_places=2, default=0) - the actual price of the Booking
+- ticket_class = CharField(max_length=1, default="Y") - always **Y** for economy
+- cabin_class = CharField(max_length=1, default="Y") - always **Y** for economy
+- number_of_adults = PositiveSmallIntegerField - the number of adults on the Booking
+- number_of_children = PositiveSmallIntegerField - the number of children on the Booking
+- number_of_infants = PositiveSmallIntegerField - the number of infants on the Booking
+- number_of_bags = PositiveSmallIntegerField - baggage allowance as requested by the passenger
+- departure_time = CharField(4 characters) - Standard Time of Departure e.g. **0800**
+- arrival_time = CharField((4 characters) - Standard Time of Departure e.g. **0945**
+- remarks = TextField - Remarks added to the Booking
+
+#### Passenger Model
+
+This model contains each individual Passenger Details
+- title = CharField(4 characters) - MR, MRS, MISS, etc
+- first_name = CharField(40 characters)
+- last_name = CharField(40 characters)
+- pax_type = CharField(1 character, default="A") - **A=Adult C=Child I=Infant**
+- pax_number = PositiveSmallIntegerField - The passenger number within the Booking
+- - i.e. 1st passenger is 1, 2nd is 2, etc
+- date_of_birth = DateField - **applicable to Children and Infants only**
+- contact_number = CharField(40 characters)
+- contact_email = CharField(40 characters)
+- -  Either one of these two fields must be initialised for **Adult No. 1**
+- -  For other passengers, these fields are optional
+- pnr = (ForeignKey - Booking) - Passenger Name Record
+- outbound_seat_number = CharField(3 characters) - e.g. **24A, 24B, 24C, 24D, ...**
+- - Passengers are allocated seats from the back of the aircraft onwards
+- - That is, from *Row 24* onwards to *Row 1* - **96 seat capacity**
+- inbound_seat_number = CharField(3 characters) - e.g. **1A, 1B, 1C, 1D, ...**
+- status = CharField(4 characters)
+- - HK1 for PAX 1, HK2 for PAX 2, etc., up to HK20
+- - that is a maximum of 20 seated passengers per Booking
+- - Infants have the same status number as the accompanying adult
+- wheelchair_ssr = CharField(1 character) - Optional Wheelchair Information
+- - That is, is this passenger a PRM?
+- - *Blank for No, R for WHCR, S for WCHS, C for WCHC*
+- wheelchair_type = CharField(1 character) - Optional Accompanying Wheelchair Information
+- - Is this passenger travelling with their **own** wheelchair? If so, what type of wheelchair is it?
+- - *Blank for No, M for WCMP, L for WCLB, D for WCBD, W for WCBW*
+
+#### Transaction Model
+
+This model contains all the fees and charges that the user has made
+Such as the cost of the flight, extra baggage, editing changes
+- pnr = CharField(6 characters) - Passenger Name Record
+- amount = DecimalField(max_digits=6, decimal_places=2, default=0)
+- date_created = DateField(auto_now=True)
+- username = models.CharField(40 characters)
 
 ## Features
 
