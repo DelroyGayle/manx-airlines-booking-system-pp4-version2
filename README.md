@@ -358,8 +358,8 @@ In the Airline Travel Industry, all airlines generally adhere to the following c
    * For Manx Airlines, this means the user must enter the infant *as a **Child** in the Booking.* 
 
 #### Criteria specific to Manx Airlines 
-1. Only a maximum of 20 seated passengers are allowed per Booking. That is, both Adults and Children.
-2. Which in turn means, only a maximum of 20 infants are allowed per Booking.
+1. A maximum of 20 seated passengers are allowed per Booking. That is, both Adults and Children.
+2. Which in turn means, a maximum of 20 infants are allowed per Booking.
 3. A **Child** Passenger is defined as a passenger who is at least **2 years of age and under 16 years of age**.
 4. The Departure Date cannot be made more than 180 days in the future from the date that the Booking was created.
 5. A maximum interval of 180 days is allowed between the Departure Date and the Return Date.
@@ -412,12 +412,23 @@ Some of the images of the Features shown may differ slightly since the *Backgrou
 ### NavBar
 
 The navigation menu bar only shows up for logged in users.<br/>
-From this point, the user has the options to Create or Search for Bookings.<br/>
+From this point onwards, the user has the options to Create or Search for Bookings.<br/>
 On the far left is **the Logo for the Isle of Man**.<br/>
-This acts as a *Home Button*. By clicking the logo, the user is returned to the Home Page.<br/>
+
+<details>
+   <summary>The Isle of Man Logo</summary>
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/929f5f14-552b-41c9-91bd-d9f0c4eef6b2)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/fe5c4512-0e74-44ab-8809-0c7d22197e3a)
+
+
+</details>
+
+The logo acts as a *Home Button*. By clicking the logo, the user is returned to the Home Page.<br/>
 On the far right is the option to Log Out.
 
-If a user is not logged they will not be able to process any bookings! None of the above options will appear to a user who is not logged in.
+If a user is not logged in the user will not be able to process any bookings! None of the above options will appear to a user who is not logged in.
 
 <details>
    <summary>Navigation Bar</summary>
@@ -434,13 +445,15 @@ If a user is not logged they will not be able to process any bookings! None of t
 
 * The Home Page opens up with a *Welcome* from **Manx Airlines** directing the user to use the Navigation Menu Bar.
 * The Footer Text serves as a reminder for the user to inform any potential passengers/customers that *fees are non-refundable, etc.*
-* **The Logo for the Isle of Man** on the far left is the Home Button.
-* Followed by the option to **Create Bookings** and the **Search Box**.
+* **The Logo for the Isle of Man** on the far left is the Home Button.  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/2dd6f21b-1c8f-44f1-95fd-b3f8b9a6591d)
+* Followed by the option to **Create Bookings**.
+* Followed by the **Search Box**.
+* The First Mentioned Passenger in a Booking is the *Principal Passenger*.
 
 The search box enables users to search for Bookings by either 
 1. The PNR - Passenger Name Record.
-2. The First Mentioned Passenger in a Booking is the *Principal Passenger*.<br/> Thereby, the user can search by the Principal Pax's First Name.
-3. The user can search by the Principal Pax's Last Name.
+2. The Principal Passenger's First Name.
+3. The Principal Passenger's Last Name.
 
 In order to retrieve any Booking for *Viewing and Updating* the user must *Search* for the Booking using the designated Search Box.
 <details>
@@ -951,7 +964,7 @@ Note: The same validation is applied to the *Returning Date*
 
 ### LogIn/LogOut
 
-* In order for a user to be able to create, read, edit and delete bookings, the user will need to log into the App using their username and password.
+* In order for a user to be able to create, read, edit and delete bookings, the user will need to <br/>log into the App using their username and password.
 * LogIn/LogOut is based upon the Django's built-in authentication system.
 * When the user logs in, the Home Page will appear to the user.
 * When the user logs out, the user will get a success message to confirm.
@@ -987,26 +1000,31 @@ Note: The same validation is applied to the *Returning Date*
     * Semantic UI was used for the design, styling and responsiveness of the website.
 * [Cloudinary](https://cloudinary.com/)
     * Cloudinary was used for image management.
+* [WhiteNoise](https://whitenoise.readthedocs.io/)
+   * WhiteNoise was used for the manageofment of static images.
 
 #### Other tools and frameworks
 
-* [GitHub](https://github.com/) - for hosting the site
-* [Gitpod](https://www.gitpod.io/) - for editing the files
-* [Heroku](https://heroku.com) - for the deployment of the site
-* [Jquery](https://jquery.com/) - for scripting purposes
+* [GitHub](https://github.com/) for hosting the site
+* [Gitpod](https://www.gitpod.io/) for editing the files
+* [Heroku](https://heroku.com) for the deployment of the site
+* [Jquery](https://jquery.com/) for scripting purposes
 * [Balsamiq:](https://balsamiq.com/) was used to create the wireframes
 * [DrawSQL](https://drawsql.app/) was used to draw the SQL tables
 * [Am I Responsive](http://ami.responsivedesign.is/) was used for creating the multi-device mock-up shown at the top of this README.md file
 * [Tiny PNG](https://tinypng.com/) was used to reduce the file size of the background image
-* [Code Institute's GitHub full template](https://github.com/Code-Institute-Org/python-essentials-template) - in order to run Django and Python on Heroku
+* [Code Institute's GitHub full template](https://github.com/Code-Institute-Org/python-essentials-template) in order to run Django and Python on Heroku
+* [RapidTables Hex to Binary converter](https://www.rapidtables.com/convert/number/hex-to-binary.html) in order to convert from hex numbers to binary & vice versa
 
 
 ------
 
 ## Future Features
-* Fully Flexible Editing of Bookings. That is,
+* Fully Flexible Editing of Bookings without the constraint of a mandatort *Principal Pax*. That is,
 * * Be able to add new passengers to an existing booking
+* * Delete any passenger from a booking
 * * Be able to *change* passenger type e.g. *Adult to Child, Child to Infant, Child to Adult* and vice versa
+* Search for a booking by the name of any passenger who is part of the booking
 
 ### Limitations
 
