@@ -9,7 +9,6 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.forms import formset_factory
-from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
 from .models import Booking, Passenger
@@ -30,9 +29,10 @@ from .common import Common
 
 @login_required
 def homepage(request):
-    # TODO """"
-    # On the first display of the Home Page
-    # Initialise various settings
+    """
+    On the first display of the Home Page
+    Initialise various settings
+    """
     if not Common.initialised:
         Common.initialisation()
 
@@ -40,12 +40,15 @@ def homepage(request):
 
 
 def message_error(message_string, request):
-    # TODO """"
+    """
+    Used the Django Messaging system to display errors
+    as opposed to using 'forms.errors'
+    """
     messages.add_message(request, messages.ERROR, message_string)
 
 
 def is_booking_form_valid(form, request):
-    # TODO """"
+    """ Booking Form Validation """
     if not form.is_valid():
         for field in form.errors:
             for item in form.errors[field]:
@@ -144,7 +147,6 @@ def is_booking_form_valid(form, request):
     return (True, save_data)
 
 
-# TODO
 @login_required
 def create_booking_form(request):
     """ The Handling of the Create Bookings Form """
@@ -210,8 +212,6 @@ def create_booking_form(request):
             return render(request, "booking/passenger-details-form.html",
                           context)
 
-            # CREATE SUCCESS MESSAGE TODO
-
         else:
             # The Booking Form has failed validation
             form = CreateBookingForm(request.POST)
@@ -220,13 +220,12 @@ def create_booking_form(request):
     return render(request, "booking/create-booking-form.html", context)
 
 
-# TODO
 @login_required
 def passenger_details_form(request):
     """
     The Handling of the Passenger Details Form
     This form consists of three formsets:
-    1) AdultsForm - class AdultsForm
+    1) AdultsForm - Class AdultsForm
     2) ChildrenFormSet - Class MinorsForm
     3) InfantsFormSet - Class MinorsForm
     followed by the BagsRemarks Form
@@ -275,7 +274,7 @@ def passenger_details_form(request):
 
 @login_required
 def confirm_booking_form(request):
-    # TODO """"
+    """ Confirm whether the passenger wants to go ahead with the Booking? """
 
     if request.method == "POST":
         if "cancel" in request.POST:
@@ -321,7 +320,7 @@ def confirm_changes_form(request):
 
 @login_required
 def view_booking(request, id):
-    # TODO """"
+    """ View The Booking """
     booking = get_object_or_404(Booking, pk=id)
     queryset = Passenger.objects.filter(pnr_id=id).order_by("pax_number")
 
@@ -347,19 +346,23 @@ def view_booking(request, id):
     context = {"booking": booking, "passengers": passenger_list,
                "display": display}
     # Keep a Copy for 'Edit Passengers' functionality
-    Common.save_context = context  # TODO
+    Common.save_context = context
     return render(request, "booking/view-booking.html", context)
 
 
 @login_required
 def search_bookings(request):
-    # TODO """"
+    """
+    Search for the Booking using either
+    1) The PNR
+    2) The Principal Pax (Adult 1)'s First Name
+    3) The Principal Pax (Adult 1)'s Last Name
+    """
+
     query = request.GET.get("query").strip()
     # Blank Search
     if not query:
         return HttpResponseRedirect(reverse("home"))
-
-    # TODO
 
     # Each Booking must has one Principal Passenger
     # That Passenger must be the first mentioned (pax_number=1)
@@ -428,7 +431,7 @@ def search_bookings(request):
 
 @login_required
 def delete_booking(request, id):
-    # TODO """"
+    """ Delete a Booking """
     booking = get_object_or_404(Booking, pk=id)
     context = {"booking": booking}
 
@@ -446,14 +449,13 @@ def delete_booking(request, id):
 
 
 def edit_booking(request, id):
-    # TODO """"
+    """ Update a Booking """
     booking = get_object_or_404(Booking, pk=id)
     form = BookingForm(instance=booking)
     context = {"booking": booking, "form": form}
     if request.method == "POST":
         return HttpResponseRedirect(reverse("view-booking",
                                             kwargs={"id": booking.pk}))
-        # CREATE SUCCESS MESSAGE TODO
 
     else:
         context = m.handle_editpax_GET(request, id, booking)
@@ -463,6 +465,7 @@ def edit_booking(request, id):
 
 @login_required
 def logout_user(request):
+    """ Handle the Log Out of the User """
 
     logout(request)
 

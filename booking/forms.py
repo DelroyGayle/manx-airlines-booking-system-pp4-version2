@@ -1,11 +1,8 @@
 
 from django import forms
-from django.forms import BaseFormSet
 from .models import Booking
 from .common import Common
-from django.core.validators import validate_email
 import datetime
-import re
 
 
 class BookingForm(forms.ModelForm):
@@ -16,8 +13,8 @@ class BookingForm(forms.ModelForm):
         fields = "__all__"
 
 
-# creating a form
 class CreateBookingForm(forms.Form):
+    """ Creating a Form """
 
     def __init__(self, *args, **kwargs):
         super(CreateBookingForm, self).__init__(*args, **kwargs)
@@ -32,9 +29,9 @@ class CreateBookingForm(forms.Form):
 
         the_choices = list(zip(Common.INBOUND_TIME_OPTIONS1,
                                Common.INBOUND_TIME_OPTIONS2))
-    # Common.INBOUND_TIME_OPTIONS1[0] would be an interval
-    # of less than 90 minutes. Therefore use the next available slot
-    # i.e. Common.INBOUND_TIME_OPTIONS1[1]
+        # Common.INBOUND_TIME_OPTIONS1[0] would be an interval
+        # of less than 90 minutes. Therefore use the next available slot
+        # i.e. Common.INBOUND_TIME_OPTIONS1[1]
         self.fields["returning_time"] = forms.ChoiceField(
                     initial=Common.INBOUND_TIME_OPTIONS1[1],
                     choices=the_choices, widget=forms.RadioSelect)
@@ -58,6 +55,7 @@ class CreateBookingForm(forms.Form):
     # VALIDATION
 
     def clean_departing_date(self):
+        """ Departing Date Validation """
         departing_date = self.cleaned_data.get("departing_date")
         if departing_date < datetime.date.today():
             raise forms.ValidationError("This date cannot be in the past.")
@@ -72,6 +70,7 @@ class CreateBookingForm(forms.Form):
         return departing_date
 
     def clean_returning_date(self):
+        """ Returning Date Validation """
         returning_date = self.cleaned_data.get("returning_date")
         if self.cleaned_data.get("return_option") == "N":
             # One Way Journey
@@ -117,10 +116,11 @@ class CreateBookingForm(forms.Form):
     def clean_infants(self):
         """
         Defensive Programming
-        The field is validated server-side
+        The field is validated client-side
         using JavaScript to ensure Infants <= Adults
-        It turns out that the user could still enter a value
+        However, it turns out that the user could still enter a value
         which is too large i.e. Infants > Adults
+        that comes across server-side
         So this condition is handled here
         """
         number_of_infants = self.cleaned_data.get("infants")
@@ -133,7 +133,6 @@ class CreateBookingForm(forms.Form):
                         "You cannot travel with more infants than adults.")
 
         return number_of_infants
-
 
     def clean_children(self):
         """

@@ -199,7 +199,7 @@ def convert_string_to_bitarray(hexstring):
     """
     The seatmap for a 96-seat aircraft is represented as
     a 96-bit-string.
-    Ones for allocated, Zeros for empty
+    Ones for allocated seats, Zeros for empty seats
     This bit-string is written as a 24-character hex-string
     in the Schedule Model: seatmap
     Convert this string therefore into a BitArray as used
@@ -403,7 +403,6 @@ def create_transaction_record(username):
     trans_record = Transaction()
     trans_record.pnr = Common.save_context["pnr"]
     trans_record.amount = Common.save_context["total_price"]
-    # TODO
     trans_record.username = username
     # Write the new Transaction record
     trans_record.save()
@@ -538,7 +537,7 @@ def create_pax_instance(booking, dataset_name, key, paxno, pax_type,
 
     order_number: First Pax numbered 1, 2nd 2, etc
     infant_status_number:
-    Infant's Status Number matches each Adult's Status Number
+    Infant's Status Number matches each corresponding Adult's Status Number
     which starts at 1 i.e. Adult 1 - the Principal Passenger
 
     The data for each passenger is in 'dataset'
@@ -592,7 +591,6 @@ def write_passenger_record(booking, passenger_type, plural, pax_type,
                            number_of_pax_type,
                            # First Pax numbered 1, 2nd 2, etc
                            order_number, editing_pax_details):
-
     """
     Passenger Records
 
@@ -694,7 +692,7 @@ def freeup_seats(thedate, flightno, seat_numbers_list):
     Fetch the relevant flight from the Schedule Database
     using 'thedate & flightno'
     Then for each number in 'seat_numbers_list',
-    reset the seat's 'bit-string' positions to 0 indicating
+    reset the seats' 'bit-string' positions to 0 indicating
     that the seat is now available.
     Also update the Booked figure.
     """
@@ -747,7 +745,7 @@ def realloc_seats_first(request, id, booking):
     As part of the 'Delete Booking' operation
     Firstly, Determine the Booking's Seated Passengers
     Then fetch the relevant flight from the Schedule Database
-    Moreover, reset the seat 'bit-string' positions to 0 indicating
+    Moreover, reset the seats' 'bit-string' positions to 0 indicating
     that the seats are now available. Also update the Booking figure.
     """
 
@@ -1179,7 +1177,6 @@ def setup_confirm_booking_context(request,
                                   children_included,
                                   infants_included,
                                   context):
-    # TODO
     """
     Calculate the Fees and Total Price
     Then add the results to the 'context' in order
@@ -1189,7 +1186,6 @@ def setup_confirm_booking_context(request,
     the_fees = compute_total_price(children_included, infants_included)
     context = add_fees_to_context(the_fees)
 
-    # TODO
     # Update the 'context' with the fees and total price
     context |= the_fees
 
@@ -1202,7 +1198,7 @@ def setup_confirm_booking_context(request,
 def any_string_changes(string1, string2):
     """
     For both strings: Remove spaces and convert to uppercase
-    Then check if they have changed
+    Then check if they differ
     """
 
     string1 = string1.replace(" ", "").upper()
@@ -1369,7 +1365,6 @@ def setup_confirm_changes_context(request,
                                   children_included,
                                   infants_included,
                                   context):
-    # TODO
     """
     Calculate the Change Fees and Total Price
     Then add the results to the 'context' in order
@@ -1380,7 +1375,6 @@ def setup_confirm_changes_context(request,
                                    infants_included)
     context = add_fees_to_context(the_fees)
 
-    # TODO
     # Update the 'context' with the fees and total price
     context |= the_fees
 
@@ -1429,13 +1423,16 @@ def validate_bagrem_again(bags_remarks_form):
     """
     There is an intermittent error that occurs which I cannot explain
     regarding 'bags_remarks_form'
-    Even though this routine is called AFTER successful cleaning of data
+    Even though this routine is called
+    AFTER successful validation/cleaning of data
     i.e. after this IF statement:
+
         if not bags_remarks_form.is_valid:
             display_formset_errors(request, "Bag/Remarks",
                                         bags_remarks_form.errors)
             return (False, None)
     ....
+
     At this stage the data of 'bags_remarks_form' ought to have been cleaned
     therefore 'bags_remarks_form.cleaned_data' ought to exist!
     However, occasionally I get 500 errors at this stage due to
@@ -1444,7 +1441,7 @@ def validate_bagrem_again(bags_remarks_form):
     So my work-around is to create a version of
     'bags_remarks_form.cleaned_data'
     regardless of whether it exists at this stage since its contents
-    ought to have been cleaned!
+    ought to valid i.e. ought to have been cleaned!
     """
 
     bags_remarks_cleaned_copy = (
@@ -1581,8 +1578,8 @@ def all_formsets_valid(request, adults_formset,
     At this stage "bags" and "remarks" ought to be valid & 'cleaned'
     My work-around:
     Instead of returning
-    return (True, bags_remarks_form.cleaned_data)
-    Return a 'new' copy
+                        return (True, bags_remarks_form.cleaned_data)
+    Return a 'new' copy instead
     """
     bags_remarks_cleaned_copy = (
             validate_bagrem_again(bags_remarks_form))
@@ -1846,7 +1843,6 @@ def setup_formsets_for_edit(request):
             context)
 
 
-# REMOVE TODO
 def write_new_pax_recs(booking, passenger_type, plural, pax_type,
                        number_of_pax_type,
                        # First Pax numbered 1, 2nd 2, etc
@@ -1857,10 +1853,9 @@ def write_new_pax_recs(booking, passenger_type, plural, pax_type,
     Any Deletions Have Been Applied
     """
 
-    # SEATNO TODO seat_numbers
     dataset_name = f"{plural}_data"  # EG "adults_data"
     paxno = 0
-    key = f"{passenger_type}-{paxno}-"  # TODO
+    key = f"{passenger_type}-{paxno}-"
     infant_status_number = 1
     while paxno < number_of_pax_type:
         outbound_seatno, inbound_seatno = (
@@ -1880,7 +1875,7 @@ def update_pax_records():
     """
     Update the Passenger Records with any amendments and deletions
     There will be at least ONE Adult Passenger for each booking
-    That is mandatory so 'Adult 1' cannot be deleted
+    This is mandatory so 'Adult 1' cannot be deleted
     All the information is stored in the Class Variable 'Common.save_context'
 
     Procedure:
