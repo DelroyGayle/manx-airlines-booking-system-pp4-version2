@@ -17,12 +17,16 @@
 5. [Features](#features)
    1. [Airline Criteria](#airline-criteria)
    2. [Background Image](#background-image)
-   3. [Home Page](#home-page)
-   4. [Create Bookings](#create-bookings)
-   5. [Search Bookings](#search-bookings)
-   6. [Edit Bookings](#edit-bookings)
-   7. [Delete Bookings](#delete-bookings)
-   8. [Validation and Messages](#validation-and-messages)
+   3. [NavBar](#navbar)
+   4. [Home Page](#home-page)
+   5. [Create Bookings](#create-bookings)
+   6. [Search Bookings](#search-bookings)
+   7. [Edit Bookings](#edit-bookings)
+   8. [Delete Bookings](#delete-bookings)
+   9. [Validation and Messages](#validation-and-messages)
+   10. [Registration](#registration)
+   11. [LogIn/LogOut](#loginlogout)
+
    
 6. [Technologies Used](#technologies-used)
     1. [Languages](#languages)
@@ -405,8 +409,49 @@ Some of the images of the Features shown may differ slightly since the *Backgrou
 
 </details>
 
+### NavBar
+
+The navigation menu bar only shows up for logged in users.<br/>
+From this point, the user has the options to Create or Search for Bookings.<br/>
+On the far left is **the Logo for the Isle of Man**.<br/>
+This acts as a *Home Button*. By clicking the logo, the user is returned to the Home Page.<br/>
+On the far right is the option to Log Out.
+
+If a user is not logged they will not be able to process any bookings! None of the above options will appear to a user who is not logged in.
+
+<details>
+   <summary>Navigation Bar</summary>
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/4d467cbb-4834-4399-a3a3-c9860e573ebe)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/c9a313c7-9e7a-4171-9aee-1bd223a915c4)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/93177538-fcca-45a3-b665-e5428859ae8f)
+
+</details>
 
 ### Home Page
+
+* The Home Page opens up with a *Welcome* from **Manx Airlines** directing the user to use the Navigation Menu Bar.
+* The Footer Text serves as a reminder for the user to inform any potential passengers/customers that *fees are non-refundable, etc.*
+* **The Logo for the Isle of Man** on the far left is the Home Button.
+* Followed by the option to **Create Bookings** and the **Search Box**.
+
+The search box enables users to search for Bookings by either 
+1. The PNR - Passenger Name Record.
+2. The First Mentioned Passenger in a Booking is the *Principal Passenger*.<br/> Thereby, the user can search by the Principal Pax's First Name.
+3. The user can search by the Principal Pax's Last Name.
+
+In order to retrieve any Booking for *Viewing and Updating* the user must *Search* for the Booking using the designated Search Box.
+<details>
+   <summary>
+      Home Page
+   </summary>
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/2f263ea9-80d1-4392-ae07-dd390d5fbfec)
+
+
+</details>
 
 ### Create Bookings
 
@@ -885,6 +930,45 @@ Note: The same validation is applied to the *Returning Date*
 
    </details>
 ------
+
+### Registration
+
+* In order for a user to be able to create, read, edit and delete bookings, the user will need to register on the site.
+* Registration is based upon the Django's built-in authentication system.
+* When the user registers the user will get a success message to confirm.
+
+<details>
+   <summary>Registration Form</summary>
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/3e4c437e-711e-45c6-b1d4-094ee8e0aa72)
+
+   <summary>Successful Registration</summary>
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/40f6a3ac-c663-4bd2-b7b4-d9e5a112f1e6)
+
+
+</details>
+
+### LogIn/LogOut
+
+* In order for a user to be able to create, read, edit and delete bookings, the user will need to log into the App using their username and password.
+* LogIn/LogOut is based upon the Django's built-in authentication system.
+* When the user logs in, the Home Page will appear to the user.
+* When the user logs out, the user will get a success message to confirm.
+
+<details>
+   <summary>Login Form</summary>
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/75fd5aff-c389-4cc9-a17c-46049e92df60)
+
+
+   <summary>Successful Log Out</summary>
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/971ea8e7-e6ff-408e-ac18-20b4786ffef4)
+
+
+
+</details>
 
 
 ## Technologies Used
