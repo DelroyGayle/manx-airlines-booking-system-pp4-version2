@@ -41,9 +41,9 @@
 For my Code Institute Portfolio Project 4, 
 I would like to implement a Booking/Reservation system<br>so that a Travel Agent<br>can make bookings for passengers to travel with Manx Airlines,<br>with regards to flights between London and the Isle of Man.
 
-Throughout the travel industry, travel agents uses GDS ( [Global Distribution Systems](https://www.travelperk.com/corporate-travel-glossary/global-distribution-system/) ) and travel reservation system such as [Amadeus](https://amadeus.com/en/portfolio/hospitality/crs-central-reservation-system), [Galileo](https://en.wikipedia.org/wiki/Galileo_GDS) and [Sabre](https://en.wikipedia.org/wiki/Sabre_(travel_reservation_system)) in order to create travel bookings for passengers.
+Throughout the travel industry, travel agents use GDS ( [Global Distribution Systems](https://www.travelperk.com/corporate-travel-glossary/global-distribution-system/) ) and travel reservation systems such as [Amadeus](https://amadeus.com/en/portfolio/hospitality/crs-central-reservation-system), [Galileo](https://en.wikipedia.org/wiki/Galileo_GDS) and [Sabre](https://en.wikipedia.org/wiki/Sabre_(travel_reservation_system)) in order to create travel bookings for passengers.
 
-So my project is an attempt to create a *toy travel reservation/booking system* for a fictitious airline called **Manx Airlines**.<br>
+So, my project is an attempt to create a *toy travel reservation/booking system* for a fictitious airline called **Manx Airlines**.<br>
 Manx Airlines offer three flights everyday to the Isle of Man and vice versa.
 
 The Daily Flight Schedules are:
@@ -110,8 +110,6 @@ Here are a sample of some of the terms used:
 * As a **Site User** I can **add an infant to a booking** so that **an infant can be included with an adult on a flight**
 
 * As a **Site User / Admin** I can **Register, Login and Logout** so that **I can access and manage my account**
-
-* As a **Site User / Admin** I can **amend my profile** so that **I can change my password**
 
 ------
 
@@ -232,14 +230,17 @@ The site uses a Back-end database with the usage of ElephantSQL Postgres for the
 <summary>Database Schema Diagram</summary>
 <br/><br/>  
 
-![drawSQL-teamdg2-export-2023-10-23](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/bad6685a-cc79-4dc5-92ea-b057cee7a9d6)
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/fd990e02-df99-49f2-a8cf-c8856a337583)
+
+
+
 </details>
 
 ----
 
 ### Data Models
 
-The following data models were designed to represent the database usage for the site
+The following data models were designed to represent the database usage for this project
 
 #### User Model
 
@@ -267,8 +268,8 @@ This model contains each scheduled flight as per Booking
 - flight_number = CharField(6 characters) e.g. **MX0465**
 - total_booked = PositiveSmallIntegerField - the number of passengers booked for this schedule
 - seatmap = CharField(24 characters)
-- - the seatmap of the aircraft is represented by a *96-bit-string* represented as a *24-character hex-string*
-- - see [TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md) for more information
+- - the seatmap of the aircraft is represented by a *96-bit-string* which in turn is  represented as a *24-character hex-string*
+- - see [TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md) further details
 
 #### Booking Model
 
@@ -292,7 +293,7 @@ This model contains all the Bookings that are made by the user according to pass
 - number_of_bags = PositiveSmallIntegerField - baggage allowance as requested by the passenger
 - departure_time = CharField(4 characters) - Standard Time of Departure e.g. **0800**
 - arrival_time = CharField((4 characters) - Standard Time of Departure e.g. **0945**
-- remarks = TextField - Remarks added to the Booking
+- remarks = TextField - Remarks and SSRs added to the Booking
 
 #### Passenger Model
 
@@ -307,7 +308,7 @@ This model contains each individual Passenger Details
 - contact_number = CharField(40 characters)
 - contact_email = CharField(40 characters)
 - -  Either one of these two fields must be initialised for **Adult No. 1**
-- -  For other passengers, these fields are optional
+- -  For the other passengers, these fields are optional
 - pnr = (ForeignKey - Booking) - Passenger Name Record
 - outbound_seat_number = CharField(3 characters) - e.g. **24A, 24B, 24C, 24D, ...**
 - - Passengers are allocated seats from the back of the aircraft onwards
@@ -316,7 +317,7 @@ This model contains each individual Passenger Details
 - status = CharField(4 characters)
 - - HK1 for PAX 1, HK2 for PAX 2, etc., up to HK20
 - - that is a maximum of 20 seated passengers per Booking
-- - Infants have the same status number as the accompanying adult
+- - An Infant has the same status number as their accompanying Adult
 - wheelchair_ssr = CharField(1 character) - Optional Wheelchair Information
 - - That is, is this passenger a PRM?
 - - *Blank for No, R for WHCR, S for WCHS, C for WCHC*
@@ -326,7 +327,7 @@ This model contains each individual Passenger Details
 
 #### Transaction Model
 
-This model contains all the fees and charges that the user has made
+This model contains all the fees and charges that the user has made<br/>
 Such as the cost of the flight, extra baggage, editing changes
 - pnr = CharField(6 characters) - Passenger Name Record
 - amount = DecimalField(max_digits=6, decimal_places=2, default=0)
@@ -338,27 +339,28 @@ Such as the cost of the flight, extra baggage, editing changes
 ### Airline Criteria 
 
 #### Infant Passengers Criteria
-In the Airline Line Travel Industry there are certain criteria that generally all airlines apply
+In the Airline Travel Industry, all airlines generally adhere to the following criteria regarding Infant Pasengers :-
 
 1. Infants are defined as passengers who are under 2 years of age.
 2. There cannot be more infants on a booking than adults. That is, *one infant per one adult passenger*.
-3. Infants must be seated on the Adult's lap. That is, infants are not allocated seat.
-4. If the passenger desires the infant to have their own seat - this must be purchased as a INS booking - Infant On Seat
+3. Infants must be seated on the adult's lap. That is, infants are not allocated seats.
+4. If the passenger desires the infant to have their own seat - this seat must be purchased as a INS booking - Infant On Seat
    * For Manx Airlines, this means the user must enter the infant *as a **Child** in the Booking.*
-5. If at the time of the *return flight* the infant would be **aged 2 years or above** then the infant must be booked *as a **Child**
+5. If at the time of the *return flight* the infant would be **aged 2 years or above** then the infant must be booked *as a **Child***
+   * For Manx Airlines, this means the user must enter the infant *as a **Child** in the Booking.* 
 
 #### Criteria specific to Manx Airlines 
-1. Only a maximum of 20 seated passengers are allowed per Booking. That is both Adults and Children.
+1. Only a maximum of 20 seated passengers are allowed per Booking. That is, both Adults and Children.
 2. Which in turn means, only a maximum of 20 infants are allowed per Booking.
 3. A **Child** Passenger is defined as a passenger who is at least **2 years of age and under 16 years of age**.
 4. The Departure Date cannot be made more than 180 days in the future from the date that the Booking was created.
-5. A maximum of 180 days is allowed between the Departure Date and the Return Date.
+5. A maximum interval of 180 days is allowed between the Departure Date and the Return Date.
 6. The Return Time cannot be less than **90 minutes** from the Departure Time.
 7. The Booking **must** contain at least **one Adult Passenger.** No Child nor Infant can travel on Manx Airlines without an Adult Passenger.
 8. The First Passenger on the Booking *Adult 1* is designated as **the Principal Passenger of the Booking**.<br/>
-   * As such, this passenger is a mandatory of the booking and cannot be removed.
+   * As such, this passenger is a mandatory part of the booking and cannot be removed.
    * If for example, the passenger does need to be *removed* from the booking, then that booking needs to be **deleted** and a **new** booking needs to be made.
-   * However, *Adult 1* can be edited with a name of a new passenger if necessary.
+   * However, *Adult 1's* name  can be edited with regards to a name of a new passenger.
 9. An Infant Passenger must be at least 14 days old to travel.
 
 ### Background Image
@@ -380,13 +382,13 @@ Some of the images of the Features shown may differ slightly since the *Backgrou
 
 Firstly, the user needs to enter the dates of travel and the number of passengers.</br>
 **It is mandatory that there is at least one adult passenger on a booking.<br/>
-This passenger would be the *Principal Passenger* of the Booking; therefore, cannot be removed from the booking.**<br>
+This passenger would be the *Principal Passenger* of the Booking; therefore, this passenger cannot be removed from the booking.**<br>
 The user enters:
-the date of travel
-whether it is a return or one-way journey
-the number of adults (at least one)
-the number of children
-the number of infants - *there can only be one infant for each adult*
+* the date of travel
+* whether it is a return or one-way journey
+* the number of adults (at least one)
+* the number of children
+* the number of infants - *there can only be one infant for each adult*
 
 #### Create a Booking
 
@@ -460,7 +462,7 @@ Note: the user has the option to *Cancel* proceeding with the Booking
 ### Search Bookings
 
 <details>
-<summary>You can search by PNR</summary>
+<summary>The user can search by PNR</summary>
 <br/>
    
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/28e910ee-8156-433d-af8b-6d5fadcdaa3e)
@@ -469,13 +471,13 @@ Note: the user has the option to *Cancel* proceeding with the Booking
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/0393c2b9-9763-4f5c-8d75-fee1ad82b15a)
 
-<summary>You can search by the First Name of the Principal Passenger (Adult 1)</summary>
+<summary>The user can search by the First Name of the Principal Passenger (Adult 1)</summary>
 
 <br/>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/46d99b88-b556-4a2e-94d8-0959e1574eac)
 
-<summary>You can search by the Last Name of the Principal Passenger (Adult 1)</summary>
+<summary>The user can search by the Last Name of the Principal Passenger (Adult 1)</summary>
 
 <br/>
 
@@ -655,7 +657,7 @@ Now when the user views **Booking CGF64F** the user can see that *David Smith* h
 
 ### Validation and Messages
 
-Validation is applied throughout when entering Booking and Passenger information. Suitable messages, based on *Django Messaging system*, are displayed to guide the user accordingly.
+Validation is applied throughout the process of entering Booking and Passenger Details. Suitable messages, based on *Django Messaging system*, are displayed to guide the user accordingly.
 
 #### Creating Bookings
 
@@ -679,7 +681,7 @@ Note: The same validation is applied to the *Returning Date*
 
    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/cfd46e5f-c44c-4d59-833a-b9087dbe2be2)
 
-<summary>Same day journey - entering an earlier Return Time than the Departure Time e.g. 13:30pm and 11:00am</summary>
+<summary>Same Day Return Journey - entering an earlier Return Time than the Departure Time e.g. 13:30pm and 11:00am</summary>
 <br/> 
 
    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/fa80a9d7-0a96-475f-8a5f-e74f56810113)
@@ -699,7 +701,7 @@ Note: The same validation is applied to the *Returning Date*
 
 <br/> 
 
-<summary>The Return Time cannot be less than 90 minutes from the Departure Time</summary>
+<summary>Same Day Return Journey - The Return Time cannot be less than 90 minutes from the Departure Time</summary>
 <br/>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/39d819b1-895e-4e27-97ec-0ef187d0b8e8)
@@ -870,7 +872,7 @@ Note: The same validation is applied to the *Returning Date*
 * [Django](https://www.djangoproject.com/)   
     * Django was used as the web framework.
 * [Semantic UI](https://semantic-ui.com/)
-    * Semantic UI was used the design, styling and responsiveness of this website.
+    * Semantic UI was used for the design, styling and responsiveness of the website.
 * [Cloudinary](https://cloudinary.com/)
     * Cloudinary was used for image management.
 
@@ -890,17 +892,15 @@ Note: The same validation is applied to the *Returning Date*
 ------
 
 ## Future Features
-* Be able to add new passengers to an existing booking
-* Be able to *change* passenger type e.g. *Adult to Child, Child to Infant, Child to Adult* and vice versa
+* Fully Flexible Editing of Bookings. That is,
+* * Be able to add new passengers to an existing booking
+* * Be able to *change* passenger type e.g. *Adult to Child, Child to Infant, Child to Adult* and vice versa
 
 ### Limitations
 
 ## Testing
 
 Please refer to [TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md)
-
-
-### Internal Errors
 
 ## Code Validation
 
@@ -1019,7 +1019,7 @@ This is your deployed app in operation
 
 
 ## Credits
-+ I visited the websites of [BA](https://www.britishairways.com/travel/home/public/en_gb/)'s and [EasyJet](https://www.easyjet.com/en) to get an idea of layout the forms and the phraseology of error messages
++ I visited the websites of [BA](https://www.britishairways.com/travel/home/public/en_gb/) and [EasyJet](https://www.easyjet.com/en) to get an idea of the layout of forms and the phraseology of error messages
 + The Isle of Man Logo was downloaded from [icon-icons](https://icon-icons.com/icon/isle-of-man/17195) - *Free for personal use*
 + The background image I used is courtesy of London City Airport
 + Used [Stack Overflow](https://stackoverflow.com/) to investigate various solutions especially
