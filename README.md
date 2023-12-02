@@ -942,6 +942,8 @@ Note: The same validation is applied to the *Returning Date*
 
 
    </details>
+
+
 ------
 
 ### Registration
@@ -1020,11 +1022,12 @@ Note: The same validation is applied to the *Returning Date*
 ------
 
 ## Future Features
-* Fully Flexible Editing of Bookings without the constraint of a mandatort *Principal Pax*. That is,
+* Fully Flexible Editing of Bookings without the constraint of a mandatory *Principal Pax*. That is,
 * * Be able to add new passengers to an existing booking
 * * Delete any passenger from a booking
 * * Be able to *change* passenger type e.g. *Adult to Child, Child to Infant, Child to Adult* and vice versa
 * Search for a booking by the name of any passenger who is part of the booking
+* Give the user the option to change their password
 
 ### Limitations
 
