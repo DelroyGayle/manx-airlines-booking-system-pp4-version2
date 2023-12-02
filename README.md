@@ -23,7 +23,7 @@
    6. [Edit Bookings](#edit-bookings)
    7. [Delete Bookings](#delete-bookings)
    8. [Validation and Messages](#validation-and-messages)
-   9. [Database Usage](#database-usage)
+   
 6. [Technologies Used](#technologies-used)
     1. [Languages](#languages)
     2. [Libraries and Frameworks](#libraries-and-frameworks)
@@ -886,8 +886,6 @@ Note: The same validation is applied to the *Returning Date*
    </details>
 ------
 
-### Database Usage
-------
 
 ## Technologies Used
 

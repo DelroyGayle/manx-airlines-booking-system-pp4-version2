@@ -18,7 +18,6 @@ def row_of_N_seats(number_needed, allocated, available):
     # Set the bits to 1 to represent 'taken' seats
     bitrange = range(result[0], result[0] + number_needed)
     available.invert(bitrange)
-    # print(bitrange)
 
     """
     Airlines generally seat passengers from the back of the aircraft
@@ -39,8 +38,6 @@ def row_of_N_seats(number_needed, allocated, available):
     start = end - number_needed + 1
     seat_range = range(start, end + 1)
     allocated += [*seat_range]
-    # print(allocated)
-    # print(available.bin)
     return (True, allocated, available)
 
 

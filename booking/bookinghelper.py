@@ -409,14 +409,14 @@ def reset_common_fields():
     Common.paxdetails_editmode = None
 
 
-def create_transaction_record():
+def create_transaction_record(username):
     """ Record the Fees charged into the Transaction database """
     # New Instance
     trans_record = Transaction()
     trans_record.pnr = Common.save_context["pnr"]
     trans_record.amount = Common.save_context["total_price"]
     # TODO
-    trans_record.username = "username"
+    trans_record.username = username
     # Write the new Transaction record
     trans_record.save()
 
@@ -690,7 +690,7 @@ def create_new_records(request):
     """
 
     create_new_booking_pax_records()
-    create_transaction_record()
+    create_transaction_record(request.user)
     update_schedule_database()
 
     # Indicate success
@@ -889,8 +889,7 @@ def adults_formset_validated(cleaned_data, request):
                                             "contact_number", BAD_TELNO)
 
         # This solution found at
-        # https://stackoverflow.com/questions/3217682/
-        # how-to-validate-an-email-address-in-django
+        # https://stackoverflow.com/questions/3217682/how-to-validate-an-email-address-in-django
 
             if email:
                 try:
@@ -1556,14 +1555,13 @@ def all_formsets_valid(request, adults_formset,
         return (False, None)
 
     # Validate BagsRemarks Form
-    print(100, bags_remarks_form)
+    print("BR1", bags_remarks_form) # TODO
     if not bags_remarks_form.is_valid:
         display_formset_errors(request, "Bag/Remarks",
                                         bags_remarks_form.errors)
         return (False, None)
 
-    # DDG
-    print(200, bags_remarks_form)
+    print("BR2", bags_remarks_form.cleaned_data) # TODO
     return (True, bags_remarks_form.cleaned_data)
 
 
@@ -1595,9 +1593,8 @@ def handle_pax_details_POST(request,
                                              infants_formset,
                                              bags_remarks_form)
     if are_all_forms_valid[0]:
-        ## DDG
-        print(300, are_all_forms_valid)
         cleaned_data = are_all_forms_valid[1]
+        print("CD", cleaned_data) # TODO
         Common.save_context["bags"] = cleaned_data.get("bags")
         Common.save_context["remarks"] = cleaned_data.get("remarks")
         context_copy = request.POST.copy()  # Because of Immutability
@@ -2188,7 +2185,7 @@ def update_pax_details(request):
                    number_of_adults,
                    number_of_children,
                    number_of_infants)
-    create_transaction_record()
+    create_transaction_record(request.user)
 
     update_schedule_seating(number_outbound_deleted,
                             number_inbound_deleted)
