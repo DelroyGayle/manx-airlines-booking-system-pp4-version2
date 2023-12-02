@@ -8,7 +8,7 @@
 1. [Introduction](#introduction)
 2. [Glossary](#glossary)
 3. [User Stories](#user-stories)
-4. [UX - User Experience](#ux-user-experience)
+4. [UX-User Experience](#ux-user-experience)
    1. [Wireframes](#wireframes)
    3. [Agile Design](#agile-design)
    3. [Database Design](#database-design)
@@ -26,7 +26,7 @@
    9. [Database Usage](#database-usage)
 6. [Technologies Used](#technologies-used)
     1. [Languages](#languages)
-    2. [Libraries and Frameworks](#languages-and-frameworks)
+    2. [Libraries and Frameworks](#libraries-and-frameworks)
 7. [Future Features](#future-features)
 8. [Testing](#testing)
     1. [Please Go To TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md)
@@ -43,7 +43,7 @@ I would like to implement a Booking/Reservation system<br>so that a Travel Agent
 
 Throughout the travel industry, travel agents use GDS ( [Global Distribution Systems](https://www.travelperk.com/corporate-travel-glossary/global-distribution-system/) ) and travel reservation systems such as [Amadeus](https://amadeus.com/en/portfolio/hospitality/crs-central-reservation-system), [Galileo](https://en.wikipedia.org/wiki/Galileo_GDS) and [Sabre](https://en.wikipedia.org/wiki/Sabre_(travel_reservation_system)) in order to create travel bookings for passengers.
 
-So, my project is an attempt to create a *toy travel reservation/booking system* for a fictitious airline called **Manx Airlines**.<br>
+So, my project is an attempt to create a *toy travel reservation/booking system*<br/> for a fictitious airline called **Manx Airlines**.<br>
 Manx Airlines offer three flights everyday to the Isle of Man and vice versa.
 
 The Daily Flight Schedules are:
@@ -113,7 +113,7 @@ Here are a sample of some of the terms used:
 
 ------
 
-## UX - User Experience
+## UX-User Experience
 
 ### Wireframes
 
@@ -334,6 +334,10 @@ Such as the cost of the flight, extra baggage, editing changes
 - date_created = DateField(auto_now=True)
 - username = models.CharField(40 characters)
 
+### Framework
+
+I chose to use [Semantic UI](https://semantic-ui.com/) because of this framework's approach of using *natural languages like noun/modifier relationships, word order, and plurality to link concepts intuitively*. This approach resonated with me far better as opposed to using abbreviations as seen in other frameworks. Semantic UI also has a great variety of components to choose from when designing a website. Semantic UI therefore handles the rendering of the webpages of my project on the relevant media whether it be desktop, tablet or mobile. The fonts (e.g. Lato) and colours used come as part of this framework.
+
 ## Features
 
 ### Airline Criteria 
@@ -359,10 +363,36 @@ In the Airline Travel Industry, all airlines generally adhere to the following c
 7. The Booking **must** contain at least **one Adult Passenger.** No Child nor Infant can travel on Manx Airlines without an Adult Passenger.
 8. The First Passenger on the Booking *Adult 1* is designated as **the Principal Passenger of the Booking**.<br/>
    * As such, this passenger is a mandatory part of the booking and cannot be removed.
-   * If for example, the passenger does need to be *removed* from the booking, then that booking needs to be **deleted** and a **new** booking needs to be made.
+   * If for example, the passenger does need to be *removed* from the booking, then that booking needs to be **deleted** and a **new** booking altogether needs to be made.
    * However, *Adult 1's* name  can be edited with regards to a name of a new passenger.
 9. An Infant Passenger must be at least 14 days old to travel.
 
+### Fees
+
+What follows are the fees regarding travelling with **Manx Airlines**
+This application generates quotes according to these fees.
+
+#### Create Booking Fees
+| Passenger Type     | Age Group | Fee |
+| ------------- | ------------- |------------- | 
+| Adults | Age 16+ | £100 |
+| Children | Age 2-15 | £60 |
+| Infants | Age < 2 | £30 |
+| | **Other Fees** | |
+| Bags | | £30 |
+
+
+#### Edit Booking Fees
+| Edit    |  Fee |
+| ------------- | ------------- |
+| Passengers Details| £20 per passenger |
+| Extra Bags | £30 each |
+| Admin Fee | £20 | 
+| Wheelchair Details | £0
+
+**All *changes to/editing of* passenger details (*except for wheelchair*) are subject to fees**<br>
+* If for example it is solely the passenger's wheelchair details that are changed the fee will be *GBP0.00*
+  
 ### Background Image
 Some of the images of the Features shown may differ slightly since the *Background Image* was added later on.
 
