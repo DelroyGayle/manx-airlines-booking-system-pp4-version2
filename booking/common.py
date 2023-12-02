@@ -11,6 +11,9 @@ class Common:
     """
 
 # Class Variables
+    MAXIMUM_PAX = 20
+    MAXIMUM_MESSAGE = (f"There can be no more than "
+                       f"{MAXIMUM_PAX} passengers in a booking.")
     initialised = None
     outbound_flights = None
     inbound_flights = None
@@ -109,16 +112,6 @@ class Common:
                                                each.flight_from,
                                                each.flight_STA,
                                                each.flight_to))
-
-        # TODO
-        print("OUT", outbound_flights)
-        print(out_time_options1)
-        print(out_time_options2)
-        print("in", inbound_flights)
-        print(in_time_options1)
-        print(in_time_options2)
-        # TODO
-        #  newdict["numberof_oneway_flights"] = len(all_flight_entries) // 2
 
         # Store the results in Class variables
         Common.flight_info = newdict

@@ -15,20 +15,12 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
 from .models import Booking, Passenger
-from .models import Flight
+from .models import Schedule, Transaction
 
-from .forms import BookingForm, CreateBookingForm
 from .forms import AdultsForm, MinorsForm
 from .forms import HiddenForm
 from .forms import BagsRemarks
-###########
 from .forms import AdultsEditForm, MinorsEditForm
-
-# TODO
-# from django.http import HttpResponseRedirect
-from django.contrib import messages
-from .models import Booking, Passenger
-from .models import Flight, Schedule, Transaction
 
 from .common import Common
 from datetime import datetime, date
@@ -36,10 +28,6 @@ from dateutil.relativedelta import relativedelta
 from bitstring import BitArray
 from random import randint
 import re
-
-
-#  ############# TODO
-
 
 # Constants
 
@@ -1437,6 +1425,35 @@ def setup_formsets_for_create(request):
             context)
 
 
+def validate_bagrem_again(bags_remarks_form):
+    """
+    There is an intermittent error that occurs which I cannot explain
+    regarding 'bags_remarks_form'
+    Even though this routine is called AFTER successful cleaning of data
+    i.e. after this IF statement:
+        if not bags_remarks_form.is_valid:
+            display_formset_errors(request, "Bag/Remarks",
+                                        bags_remarks_form.errors)
+            return (False, None)
+    ....
+    At this stage the data of 'bags_remarks_form' ought to have been cleaned
+    therefore 'bags_remarks_form.cleaned_data' ought to exist!
+    However, occasionally I get 500 errors at this stage due to
+    the 'non-existence' of 'bags_remarks_form.cleaned_data'
+
+    So my work-around is to create a version of
+    'bags_remarks_form.cleaned_data'
+    regardless of whether it exists at this stage since its contents
+    ought to have been cleaned!
+    """
+
+    bags_remarks_cleaned_copy = (
+        {"bags": str(bags_remarks_form.data.get("bagrem-bags")),
+         "remarks": bags_remarks_form.data.get("bagrem-remarks")})
+
+    return bags_remarks_cleaned_copy
+
+
 def all_formsets_valid(request, adults_formset,
                        children_included, children_formset,
                        infants_included, infants_formset,
@@ -1555,14 +1572,21 @@ def all_formsets_valid(request, adults_formset,
         return (False, None)
 
     # Validate BagsRemarks Form
-    print("BR1", bags_remarks_form) # TODO
     if not bags_remarks_form.is_valid:
         display_formset_errors(request, "Bag/Remarks",
                                         bags_remarks_form.errors)
         return (False, None)
 
-    print("BR2", bags_remarks_form.cleaned_data) # TODO
+    """
+    At this stage "bags" and "remarks" ought to be valid & 'cleaned'
+    My work-around:
+    Instead of returning
     return (True, bags_remarks_form.cleaned_data)
+    Return a 'new' copy
+    """
+    bags_remarks_cleaned_copy = (
+            validate_bagrem_again(bags_remarks_form))
+    return (True, bags_remarks_cleaned_copy)
 
 
 def handle_pax_details_POST(request,
@@ -1594,7 +1618,6 @@ def handle_pax_details_POST(request,
                                              bags_remarks_form)
     if are_all_forms_valid[0]:
         cleaned_data = are_all_forms_valid[1]
-        print("CD", cleaned_data) # TODO
         Common.save_context["bags"] = cleaned_data.get("bags")
         Common.save_context["remarks"] = cleaned_data.get("remarks")
         context_copy = request.POST.copy()  # Because of Immutability

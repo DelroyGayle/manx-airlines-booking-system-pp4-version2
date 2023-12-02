@@ -101,11 +101,16 @@ class CreateBookingForm(forms.Form):
         The definition of this field has a 'min' value of one
         so it should never be zero
         Nonetheless just in case
+
+        Also check that there is indeed no more than 20 passengers
         """
         number_of_adults = self.cleaned_data.get("adults")
         if number_of_adults <= 0:
             raise forms.ValidationError(
                         "There must be at least one adult per booking.")
+
+        if number_of_adults > Common.MAXIMUM_PAX:
+            raise forms.ValidationError(Common.MAXIMUM_MESSAGE)
 
         return number_of_adults
 
@@ -114,7 +119,9 @@ class CreateBookingForm(forms.Form):
         Defensive Programming
         The field is validated server-side
         using JavaScript to ensure Infants <= Adults
-        Nonetheless just in case
+        It turns out that the user could still enter a value
+        which is too large i.e. Infants > Adults
+        So this condition is handled here
         """
         number_of_infants = self.cleaned_data.get("infants")
         number_of_adults = self.cleaned_data.get("adults")
@@ -127,7 +134,20 @@ class CreateBookingForm(forms.Form):
 
         return number_of_infants
 
+
+    def clean_children(self):
+        """
+        Check that there is indeed no more than 20 passengers
+        """
+        number_of_adults = self.cleaned_data.get("adults")
+        number_of_children = self.cleaned_data.get("children")
+
+        if (number_of_adults + number_of_children) > Common.MAXIMUM_PAX:
+            raise forms.ValidationError(Common.MAXIMUM_MESSAGE)
+
+        return number_of_children
     ######################################################################
+
     # Initialisations
 
     RETURN = "Y"
