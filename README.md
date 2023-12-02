@@ -917,7 +917,7 @@ Note: The same validation is applied to the *Returning Date*
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/109dabe6-428e-40e4-ac2d-897178663591)
 
-<summary>A Child Passenger must be under 16 years of age  at the time of the Departure Date of Travel e.g. e.g. for the 19/11/2023</summary>
+<summary>A Child Passenger must be under 16 years of age  at the time of the Departure Date of Travel e.g. for the 19/11/2023</summary>
 <br/> 
 
    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/1ba7d907-c32e-46da-8035-2cdac7643a9f)
@@ -1002,8 +1002,6 @@ Note: The same validation is applied to the *Returning Date*
     * Semantic UI was used for the design, styling and responsiveness of the website.
 * [Cloudinary](https://cloudinary.com/)
     * Cloudinary was used for image management.
-* [WhiteNoise](https://whitenoise.readthedocs.io/)
-   * WhiteNoise was used for the manageofment of static images.
 
 #### Other tools and frameworks
 
