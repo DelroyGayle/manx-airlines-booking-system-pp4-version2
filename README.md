@@ -266,6 +266,14 @@ This model contains the available Flight Routing offered by Manx Airlines
  - capacity = PositiveSmallIntegerField - represents the aircraft passenger capacity
  - - for this project, the capacity is **96**
 
+<details>
+   <summary>Admin view of the Flight database</summary>
+   <br/>
+   
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/c860d063-d1c5-4e2c-9137-9900524a0443)
+
+</details>
+
 #### Schedule Model
 
 This model contains each scheduled flight as per Booking
@@ -275,6 +283,14 @@ This model contains each scheduled flight as per Booking
 - seatmap = CharField(24 characters)
 - - the seatmap of the aircraft is represented by a *96-bit-string* which in turn is  represented as a *24-character hex-string*
 - - see [TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md) further details
+
+<details>
+   <summary>Admin view of the Schedule database</summary>
+   <br/>
+   
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/19dd9b47-7d35-4e2a-abc6-0eff8ac5c011)
+
+</details>
 
 #### Booking Model
 
@@ -299,6 +315,15 @@ This model contains all the Bookings that are made by the user according to pass
 - departure_time = CharField(4 characters) - Standard Time of Departure e.g. **0800**
 - arrival_time = CharField((4 characters) - Standard Time of Departure e.g. **0945**
 - remarks = TextField - Remarks and SSRs added to the Booking
+
+
+<details>
+   <summary>Admin view of the Booking database</summary>
+   <br/>
+   
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/4a4639b8-d235-4536-a0ab-db9ea0e006e5)
+
+</details>
 
 #### Passenger Model
 
@@ -330,6 +355,14 @@ This model contains each individual Passenger Details
 - - Is this passenger travelling with their **own** wheelchair? If so, what type of wheelchair is it?
 - - *Blank for No, M for WCMP, L for WCLB, D for WCBD, W for WCBW*
 
+<details>
+   <summary>Admin view of the Passenger database</summary>
+   <br/>
+   
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/3eceb9b3-af6f-4dbd-bf8a-e8bba32c8da6)
+
+</details>
+
 #### Transaction Model
 
 This model contains all the fees and charges that the user has made<br/>
@@ -338,6 +371,14 @@ Such as the cost of the flight, extra baggage, editing changes
 - amount = DecimalField(max_digits=6, decimal_places=2, default=0)
 - date_created = DateField(auto_now=True)
 - username = models.CharField(40 characters)
+
+<details>
+   <summary>Admin view of the Transaction database</summary>
+   <br/>
+   
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/5d6f5026-d4ae-4c1d-82e4-c7fe5c8c5be4)
+
+</details>
 
 ### Framework
 
@@ -1147,7 +1188,7 @@ I found this solution at [Stack Overflow](https://stackoverflow.com/questions/34
 ### Known Bugs
 
 If the user clicks the *back button* whilst navigating this App, such an action may cause an *Error 500*!<br/>
-If this happens, press Ctrl-F5 and then hit the home button, in order to continue.<br/>
+If this happens, press Ctrl-F5 and then hit the Logo (the Home Button), in order to continue.<br/>
 To avoid such an error, please use *the Home Button and the Create Booking* options to navigate this App.
 
 ------
