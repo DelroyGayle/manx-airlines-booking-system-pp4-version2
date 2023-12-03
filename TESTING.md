@@ -32,6 +32,7 @@ This was performed using Code Institute's [PEP8 Linter](https://pep8ci.herokuapp
 ## Lighthouse
 
 I used Lighthouse within the Chrome Developer Tools to test the performance, accessibility and SEO of the website.
+This test was performed before the authentication profile was added.
 
 <details>
   <summary>Lighthouse Report</summary>
@@ -43,9 +44,9 @@ I used Lighthouse within the Chrome Developer Tools to test the performance, acc
 ## Additional Testing Comments
 + Carried out tests of the program on both the local terminal and the Code Institute Heroku terminal.
 + Chrome DevTools was used throughout the development process for testing purposes.
-+ Added Custom 404 and 500 pages just in case such errors occur
++ Added Custom [404](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/templates/includes/404_not_found.html) and [500](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/templates/includes/500_error.html) pages just in case such errors occur.
   
-## Manual Testing
+## Manual Testing - Mock Employer App to begin with
 
 ### Epic: *Set up a mock-up system to begin with that demonstrates CRUD functionality*
 
@@ -89,7 +90,6 @@ This is broken down into the following
 <summary>Screenshot</summary>
   
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/5e82ae15-1dfd-4424-8fef-71d027c6dc3f)
-
 
 </details>
 
@@ -175,6 +175,8 @@ This is broken down into the following
 
 ----
 
+## Manual Testing of the Manx Airlines Travel Agency Booking System
+
 ### Epic: *Create Bookings*
 
 This is broken down into the following
@@ -197,6 +199,95 @@ User Tasks:
   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/94f86cd6-17c0-4488-8ca5-39fbb4525f7c)
 
 </details>
+
+
+| Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
+| ------------- | ------------- | -------------    | ------------- | ------------- |
+| T09 | Create Booking | Create a Booking with 3 PAX, bags and remarks.| Confirmation Form regarding Booking | PASS |
+
+<details>
+ 
+  <summary>Creating a Booking - First Page - Flight Details and Number of PAX</summary>
+  
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/9f48c63f-af8e-4134-8791-52535c96d320)
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/16b90e4e-9128-4a74-824f-16038e4b5006)
+
+<summary>Creating a Booking - Second Page - Enter Passenger Details - Adult, Child, Infant, Bags and Remarks</summary>
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/fad66edc-fc39-44dd-b4fe-0e45d6057dbc)
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/27d2220d-4974-4d98-8fdc-a1eb34321906)
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ae233a53-3a3e-4060-b47b-8f3f8eea0dd5)
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/daa38270-6e9a-4718-a774-8fcc08bc95cb)
+
+</details>
+
+
+| Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
+| ------------- | ------------- | -------------    | ------------- | ------------- |
+| T10 | Confirm Booking | Make a Booking then Click *Agree and pay now* | Booking created. In Admin, expect to see all the records created by this action. | PASS |
+
+<details>
+
+<summary>Confirmation Form of the Booking being made</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/f8d0031a-dd58-42f6-9584-e402022d3a85)
+
+<summary>Success Message showing that the Booking has been made</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a79e7ee2-c7c5-4b34-935b-bb81e9c3d80c)
+
+</details>
+
+Admin View of the Booking and Passengers Records
+
+<details>
+<summary>Admin view of the Booking record</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/564be75a-8a37-40e2-8a91-d8e4635dee82)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/6878835d-b191-4fad-b0b0-e9b02b349b1e)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/74d78d46-02bc-4d7c-86ce-2793b3cf3693)
+
+<summary>Admin view of the Passenger records</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/dd51e2ec-69a8-4180-ac45-24d54ea32fdf)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/3cccbf1a-ea40-4707-a9d4-52fea8efa175)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/81fbecbe-2bdb-4a83-8468-d4e8d9720fd6)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/69ce8b19-454c-489d-95e5-4fc5e5c99f9d)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/49d3efc2-f1ad-429c-a5e0-aa56a49a02ef)
+
+</details>
+
+Admin View of the Transaction and Schedule Records
+<details>
+<summary>Admin view of the Transaction record</summary>
+
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a5779787-cbfc-4a00-9918-9c93c3dea426)
+
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/f423230d-be3f-4ae3-b110-896e01373d22)
+
+<summary>Admin view of the Schedule records and Seatmaps</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/82969fd2-b940-44c4-b06d-b38cecd698f7)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a0d21ac1-e688-41e4-9ceb-31400fba1ab4)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ecd0b996-860a-4ac2-81a6-b73302a7881c)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/cb95778e-79b2-4b14-be24-c71f7b2e124c)
+
+</details>
+
+
 ---
 
-## Automated Testing
+
