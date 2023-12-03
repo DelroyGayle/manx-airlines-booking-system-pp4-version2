@@ -359,6 +359,10 @@ def search_bookings(request):
     3) The Principal Pax (Adult 1)'s Last Name
     """
 
+    messages.add_message(request, messages.ERROR, 'Line 1')
+    messages.add_message(request, messages.ERROR, 'Line 2')
+    messages.add_message(request, messages.ERROR, 'Line 3')
+    raise Http404()
     query = request.GET.get("query").strip()
     # Blank Search
     if not query:

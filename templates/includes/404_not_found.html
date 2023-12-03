@@ -1,3 +1,15 @@
-<h2>It appears that you are lost</h2>
+{% if messages %}
+
+    <h2>Internal Error Has Occurred</h2>
+    <h2>Please report the following message to the site administrator</h2>
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><h3>{{ message }}</h3></li>
+        {% endfor %}
+    </ul>
+
+    {% else %}
+    <h2>It appears that you are lost</h2>
+{% endif %}
 
 <p>Please <a href={% url 'home' %}>Return Home</a></p>
