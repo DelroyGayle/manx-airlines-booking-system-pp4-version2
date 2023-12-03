@@ -324,11 +324,11 @@ def view_booking(request, id):
                    # EG 17NOV23
                    outbound_date=(booking.outbound_date.strftime("%d%b%y")
                                   .upper()),
-                   # These 'time' fields are not part of 
+                   # These 'time' fields are not part of
                    # the 'update' process so set to ""
                    departing_time="", returning_time="")
     if booking.return_flight:
-        display["return_option"] = "Y"        
+        display["return_option"] = "Y"
         display["inbound_date"] = (booking.inbound_date.strftime("%d%b%y")
                                    .upper())
     else:

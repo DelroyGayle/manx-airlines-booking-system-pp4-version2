@@ -36,6 +36,7 @@
     1. [Please Go To TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md)
 9. [Bugs](#bugs)
      1. [Solved Bugs](#solved-bugs)
+     2. [Known Bugs](#known-bugs)
 10. [Deployment](#deployment)
 11. [Credits](#credits)
 12. [Acknowledgements](#acknowledgements)
@@ -385,6 +386,15 @@ This application generates quotes according to these fees.
 | | **Other Fees** | |
 | Bags | | £30 |
 
+- Please note: the price of a bag (£30) is the same regardless of whether a return or one-way journey.
+- However, the passenger prices are for each *leg* of the journey, regardless of whether adult, child or infant.
+- For example, 
+- One adult on a return flight - the cost would be £200 - with a bag - £230
+- One-way journey - £100 - with a bag - £130
+- One adult and child on a return flight - the cost would be £320 - with a bag - £350
+- One-way journey - £160 - with a bag - £190
+
+
 
 #### Edit Booking Fees
 | Edit    |  Fee |
@@ -396,6 +406,8 @@ This application generates quotes according to these fees.
 
 **All *changes to/editing of* passenger details (*except for wheelchair*) are subject to fees**<br>
 * If for example it is solely the passenger's wheelchair details that are changed the fee will be *GBP0.00*
+
+All fees and charges made by this App are recorded in the Transaction database in order for an Audit Trail to be created.<br>Every transaction record contains: the date the transaction was made, the Booking PNR, the amount and the 'user name'.
   
 ### Background Image
 Some of the images of the Features shown may differ slightly since the *Background Image* was added later on.
@@ -1042,7 +1054,29 @@ Note: The same validation is applied to the *Returning Date*
 * [Code Institute's GitHub full template](https://github.com/Code-Institute-Org/python-essentials-template) in order to run Django and Python on Heroku
 * [RapidTables Hex to Binary converter](https://www.rapidtables.com/convert/number/hex-to-binary.html) in order to convert from hex numbers to binary & vice versa
 
+#### requirements.txt
 
+```
+asgiref==3.7.2
+bitarray==2.8.3
+bitstring==4.1.3
+cloudinary==1.36.0
+dj-database-url==0.5.0
+dj3-cloudinary-storage==0.0.6
+Django==3.2.23
+django-allauth==0.41.0
+gunicorn==21.2.0
+oauthlib==3.2.2
+psycopg2==2.9.9
+PyJWT==2.8.0
+python-dateutil==2.8.2
+python3-openid==3.2.0
+pytz==2023.3.post1
+requests-oauthlib==1.3.1
+sqlparse==0.4.4
+urllib3==1.26.15
+
+```
 ------
 
 ## Future Features
@@ -1052,6 +1086,8 @@ Note: The same validation is applied to the *Returning Date*
 * * Be able to *change* passenger type e.g. *Adult to Child, Child to Infant, Child to Adult* and vice versa
 * Search for a booking by the name of any passenger who is part of the booking
 * Give the user the option to change their password
+* Warn users when leaving a page if there are any unsaved changes
+
 
 ### Limitations
 
@@ -1108,6 +1144,11 @@ I found this solution at [Stack Overflow](https://stackoverflow.com/questions/34
 </details>
 
 
+### Known Bugs
+
+If the user clicks the *back button* whilst navigating this App, such an action may cause an *Error 500*!<br/>
+If this happens, press Ctrl-F5 and then hit the home button, in order to continue.<br/>
+To avoid such an error, please use *the Home Button and the Create Booking* options to navigate this App.
 
 ------
 

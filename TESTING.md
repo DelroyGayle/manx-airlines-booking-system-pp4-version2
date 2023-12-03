@@ -3,6 +3,14 @@
 ## HTML Validation
 This was performed using [W3C HTML Validator](https://validator.w3.org/nu/)
 
+* There were confilcts with the validator and Django Template Language, for example
+
+* Spaces following % produced "Non-space characters found without seeing a doctype first."
+
+* Besides these conflicts I changed all my <article>'s and <section>'s to <div>'s
+
+* Warning: The type attribute is unnecessary for JavaScript resources.
+
 ## CSS Validation
 
 This was performed using [W3C CSS Validator](https://jigsaw.w3.org/css-validator/)
@@ -13,7 +21,7 @@ This was performed using [W3C CSS Validator](https://jigsaw.w3.org/css-validator
 
 This was performed using [JSHint](https://jshint.com/)
 
-- No issues flagged during JavaScript validation
+- infantsCheck is not unused since it is needed in ...templates/booking/create-booking-form.html
 
  ## Python Validation
 
@@ -35,6 +43,7 @@ I used Lighthouse within the Chrome Developer Tools to test the performance, acc
 ## Additional Testing Comments
 + Carried out tests of the program on both the local terminal and the Code Institute Heroku terminal.
 + Chrome DevTools was used throughout the development process for testing purposes.
++ Added Custom 404 and 500 pages just in case such errors occur
   
 ## Manual Testing
 

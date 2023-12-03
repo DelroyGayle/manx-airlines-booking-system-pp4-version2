@@ -585,7 +585,7 @@ def create_pax_instance(booking, dataset_name, key, paxno, pax_type,
     order_number += 1
     infant_status_number += 1
 
-    # SSR: # Blank or R for WHCR, S for WCHS, C for WCHC
+    # SSR: # Blank or R for WCHR, S for WCHS, C for WCHC
     pax.wheelchair_ssr = data["wheelchair_ssr"]
 
     # Type: Blank or M for WCMP, L for WCLB; D for WCBD; W for WCBW
@@ -1693,7 +1693,7 @@ def handle_editpax_GET(request, id, booking):
         returning_date = datetime.strptime(returning_date, "%d%b%y").date()
         return_option = "Y"
     else:
-        # Set to the same nonnull value 
+        # Set to the same nonnull value
         # since these dates are not part of the 'update' process
         returning_date = departing_date
         return_option = "N"
@@ -1766,8 +1766,7 @@ def handle_editpax_GET(request, id, booking):
             # Set to misc. values e..g. 0800, 1830
             # since time fields are not part of the 'update' process
             "departing_time": "0800",
-            "returning_time": "1830"
-           }
+            "returning_time": "1830"}
 
     hiddenForm = HiddenForm(form)
     initial_dict = {"bags": context["booking"]["number_of_bags"],
@@ -1927,7 +1926,7 @@ def update_pax_records():
 
     context = Common.save_context
 
-    # Delete all the Passengers on the Booking
+    # Delete all the Passengers in the Booking
     booking_id = context["booking"]["id"]
     Passenger.objects.filter(pnr_id=booking_id).delete()
 

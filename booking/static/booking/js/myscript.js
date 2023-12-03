@@ -1,3 +1,5 @@
+/*jshint esversion: 11 */
+
 // Hide/Show elements depending on '#theReturn'
 
 function hide_returning_option() {
@@ -58,7 +60,6 @@ function checkReturnFlightOption() {
 }
 
 function add_heading(idElement, number, heading) {
-        adultNumber = `${heading} $(number)`;
         idElement.parent().before( `<h3 class=\"ui centered header\"><em>${heading} ${number}</em></h3>` );
 }
 
@@ -79,7 +80,7 @@ function add_headings_to_pax(idElement) {
         do {
             add_heading(idElement, paxno + 1, "Child");
             paxno++;
-            idElement = $( `#id_child-${paxno}-title` )
+            idElement = $( `#id_child-${paxno}-title` );
         } while (idElement.length);
     }
 
@@ -98,16 +99,16 @@ function add_headings_to_pax(idElement) {
 function setup_page() {
     // If it is a page showing the Passenger Types
     // Then add a Heading to each set of Adults, Children and Infants
-    const titlePresent = $( "#id_adult-0-title" )
+    const titlePresent = $( "#id_adult-0-title" );
     if (titlePresent.length) {
-        add_headings_to_pax(titlePresent)
+        add_headings_to_pax(titlePresent);
     }
 
     /* Adult 1 Passenger is a Mandatory part of the Booking
        Adult 1 cannot be removed - therefore disable and hide the option
     */
     
-    const adult0 = document.getElementById("id_adult-0-remove_pax")
+    const adult0 = document.getElementById("id_adult-0-remove_pax");
     if (adult0) {
         adult0.disabled = true;
         adult0.hidden=true;
@@ -121,10 +122,10 @@ Id not checked, remove strike-thru
 */
 function toggleStrikeThru(theActualElement, elementStringId) {
        // Construct element's First Name ID
-       let elementFirstName = `${elementStringId}first_name`
+       let elementFirstName = `${elementStringId}first_name`;
        elementFirstName = document.getElementById(elementFirstName);
        // Construct element's Last Name ID
-       let elementLastName = `${elementStringId}last_name`
+       let elementLastName = `${elementStringId}last_name`;
        elementLastName = document.getElementById(elementLastName);
 
        if (theActualElement.checked) {
@@ -156,16 +157,16 @@ function setTheInfant(infantElement, adultElement, elementStringId, thenumber) {
             }
 
        // Construct Adult's First Name ID
-       let adultFirstName = `id_adult-${thenumber}-first_name`
+       let adultFirstName = `id_adult-${thenumber}-first_name`;
        adultFirstName = document.getElementById(adultFirstName);
        // Construct Adult's Last Name ID
-       let adultLastName = `id_adult-${thenumber}-last_name`
+       let adultLastName = `id_adult-${thenumber}-last_name`;
        adultLastName = document.getElementById(adultLastName);
        // Construct infant's First Name ID
-       let infantFirstName = `id_infant-${thenumber}-first_name`
+       let infantFirstName = `id_infant-${thenumber}-first_name`;
        infantFirstName = document.getElementById(infantFirstName);
        // Construct infant's Last Name ID
-       let infantLastName = `id_infant-${thenumber}-last_name`
+       let infantLastName = `id_infant-${thenumber}-last_name`;
        infantLastName = document.getElementById(infantLastName);
 
        if (adultElement.checked) {
@@ -185,7 +186,7 @@ function setTheInfant(infantElement, adultElement, elementStringId, thenumber) {
 
 const openTooManyInfantsModal = () => {
     $(".ui.modal.toomanyinfants").modal("show");
-}
+};
 
 $(document).ready( function() {
     checkReturnFlightOption();
@@ -206,7 +207,7 @@ document.addEventListener('click',function(e) {
             const adultId = e.target.id;
             const adultElement = e.target;
             const thenumber = pattern.exec(adultId);
-            const elementStringId = `id_adult-${thenumber[1]}-` // e.g. "id_adult-1-"
+            const elementStringId = `id_adult-${thenumber[1]}-`; // e.g. "id_adult-1-"
             const infantId = `id_infant-${thenumber[1]}-remove_pax`;
             const infantElement = document.getElementById(infantId);
             // Ensure the corresponding Infant element corresponds with the Adult
@@ -225,9 +226,9 @@ document.addEventListener('click',function(e) {
             const theId = e.target.id;
             const theElement = e.target;
             const theMatched = pattern.exec(theId);
-            const theStringId = theMatched[1] // e.g. "id_child-0-"
-            toggleStrikeThru(theElement, theStringId)
-            return
+            const theStringId = theMatched[1]; // e.g. "id_child-0-"
+            toggleStrikeThru(theElement, theStringId);
+            return;
         }
     }
  );
