@@ -291,9 +291,9 @@ This model contains all the Bookings that are made by the user according to pass
 - fare_quote = DecimalField(max_digits=6, decimal_places=2, default=0) - the actual price of the Booking
 - ticket_class = CharField(max_length=1, default="Y") - always **Y** for economy
 - cabin_class = CharField(max_length=1, default="Y") - always **Y** for economy
-- number_of_adults = PositiveSmallIntegerField - the number of adults on the Booking
-- number_of_children = PositiveSmallIntegerField - the number of children on the Booking
-- number_of_infants = PositiveSmallIntegerField - the number of infants on the Booking
+- number_of_adults = PositiveSmallIntegerField - the number of adults in the Booking
+- number_of_children = PositiveSmallIntegerField - the number of children in the Booking
+- number_of_infants = PositiveSmallIntegerField - the number of infants in the Booking
 - number_of_bags = PositiveSmallIntegerField - baggage allowance as requested by the passenger
 - departure_time = CharField(4 characters) - Standard Time of Departure e.g. **0800**
 - arrival_time = CharField((4 characters) - Standard Time of Departure e.g. **0945**
@@ -365,7 +365,7 @@ In the Airline Travel Industry, all airlines generally adhere to the following c
 5. A maximum interval of 180 days is allowed between the Departure Date and the Return Date.
 6. The Return Time cannot be less than **90 minutes** from the Departure Time.
 7. The Booking **must** contain at least **one Adult Passenger.** No Child nor Infant can travel on Manx Airlines without an Adult Passenger.
-8. The First Passenger on the Booking *Adult 1* is designated as **the Principal Passenger of the Booking**.<br/>
+8. The First Passenger in the Booking *Adult 1* is designated as **the Principal Passenger of the Booking**.<br/>
    * As such, this passenger is a mandatory part of the booking and cannot be removed.
    * If for example, the passenger does need to be *removed* from the booking, then that booking needs to be **deleted** and a **new** booking altogether needs to be made.
    * However, *Adult 1's* name  can be edited with regards to a name of a new passenger.
@@ -428,7 +428,7 @@ On the far left is **the Logo for the Isle of Man**.<br/>
 The logo acts as a *Home Button*. By clicking the logo, the user is returned to the Home Page.<br/>
 On the far right is the option to Log Out.
 
-If a user is not logged in the user will not be able to process any bookings! None of the above options will appear to a user who is not logged in.
+If a user is not logged in the user will not be able to process any bookings! <br/>None of the above options will appear to a user who is not logged in.
 
 <details>
    <summary>Navigation Bar</summary>
@@ -469,8 +469,9 @@ In order to retrieve any Booking for *Viewing and Updating* the user must *Searc
 ### Create Bookings
 
 Firstly, the user needs to enter the dates of travel and the number of passengers.</br>
-**It is mandatory that there is at least one adult passenger on a booking.<br/>
+**It is mandatory that there is at least one adult passenger in a booking.** <br/>
 This passenger would be the *Principal Passenger* of the Booking; therefore, this passenger cannot be removed from the booking.**<br>
+
 The user enters:
 * the date of travel
 * whether it is a return or one-way journey
@@ -491,7 +492,7 @@ The user enters:
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ceb8e8b7-e55f-4c96-91a4-a8f6b8064d37)
 
-<summary>Adults, Children and Infants - then Press Continue</summary>
+<summary>Adults, Children and Infants - then click Continue</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ee9d7b31-7742-49d4-8980-d710a42a6fa7)
 
@@ -500,22 +501,22 @@ The user enters:
 
 #### Enter Passenger Details
 
+   For Adult Passengers, there is the option of either Telephone Number or Email Address<br>
+   **At least one of these contact details are mandatory for the *Adult 1* Passenger** <br>
+   Whilst for a Child or Infant Passenger, the Date of Birth needs to be entered
+
 <details>
 <summary>Enter the First and Last Name of each passenger</summary>
 <br/>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/cf138aa1-45df-4882-bfd0-19374ca50f01)
 
-
-   For Adult Passengers, there is the option of either Telephone Number or Email Address<br>
-   **At least one of these contact details are mandatory for the *Adult 1* Passenger**
-
 <br/>
 <summary>Return or one-way journey</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ceb8e8b7-e55f-4c96-91a4-a8f6b8064d37)
 
-<summary>Adults, Children and Infants - then Press Continue</summary>
+<summary>Adults, Children and Infants - then click Continue</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ee9d7b31-7742-49d4-8980-d710a42a6fa7)
 
@@ -530,8 +531,12 @@ The user enters:
 
 #### Confirm the Booking
 
+**Every Booking has its own unique PNR**
+
+Note: the user has the option to *Cancel* proceeding with the Booking
+
 <details>
-<summary>A Fare Quote will be generated which needs confirmation - Press Agree and pay now</summary>
+<summary>A Fare Quote will be generated which needs confirmation - click Agree and pay now</summary>
 <br/>
    
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/5a11c6ae-2524-4171-971b-46db46f37370)
@@ -540,14 +545,14 @@ The user enters:
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/fbc27496-dd50-4c38-b1d7-b9b1eeeb5918)
 
-**Every Booking has its own unique PNR**
-
-Note: the user has the option to *Cancel* proceeding with the Booking
 </details>
 
    ---
 
 ### Search Bookings
+
+Note: the Search option is *case-insensitive* <br>
+Once the user has searched for the relevant booking, the user then has to click *View* to see the Booking
 
 <details>
 <summary>The user can search by PNR</summary>
@@ -583,8 +588,28 @@ Then the user has to click View to see the Booking
 
 ### View Bookings
 
+The View shows
+1. The Booking's 6-character PNR (Passenger Name Record)
+2. The date the Booking was created
+3. The flight(s) selected for the Booking - showing the dates
+
+Then the Passengers' Details are shown as follows :-
+1. The name of each passenger followed by their status
+2.  * The status is of the form HK *\<number\>* - each adult and child passenger would be given their own number
+    * Whilst an infant, will have the same status/number of the adult that the infant is assigned to
+    * Passenger Type is shown as: **ADULT, CHILD or INFANT**
+3. Date of Birth of a Child or Infant Passenger
+4. Adult Passenger's Contact Details
+5. Passenger's Allocated Seat Number(s) (An Infant sits on a passenger's laps i.e. Infants are not allocated seats)
+6. Passenger's Wheelchair SSRs (Optional)
+7. Purchased Baggage Allowance (Optional)
+8. Any Remarks attached to the Booking (Optional)
+   
+Then the user has an option to *Edit* or *Delete* the Booking
+
+
 <details>
-<summary>After a search the user has the option to View the selected Booking</summary>
+<summary>View the selected Booking</summary>
 
 <br/>
 
@@ -592,41 +617,15 @@ Then the user has to click View to see the Booking
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/bc1f53cb-3b35-4318-8008-1d45945a8e1a)
 
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/876c50f4-1e8a-4004-87f3-564e21e4a079)
 
 <br/><br/>
-The View shows
-1. The Booking's 6-character PNR (Passenger Name Record)
-2. The date the Booking was created
-3. The flight(s) selected for the Booking
-
-Then the Passengers' Details are shown as follows :-
-1. The name of each passenger followed by their status
-2.  * The status is of the form HK *\<number\>* - each adult and child passenger would be given their own number
-    * Whilst an infant, will have the same status/number of the adult that the infant is assigned to
-3. Date of Birth of a Child or Infant Passenger
-4. Adult's Passenger's Contact Details
-5. Passenger's Wheelchair Details
-6. Passenger's Allocated Seat Number (An Infant sits on a passenger's laps i.e. Infants are not allocated seats)
-7. Purchased Baggage Allowance
-8. Any particular Remarks attached to the Booking
-   
-Then the user has an option to *Edit* or *Delete* the Booking
 
 </details>
 
 ### Edit Bookings
 
-<details>
-<summary>All Passenger Details that had been previously entered are now available for editing</summary>
-
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/26711b57-2839-4c08-946e-19be7205dd0d)
-
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/c63757ee-1517-49e6-a407-66db9c141626)
-
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/539ffc70-d06f-4049-9fa3-38db30434be0)
-
-
-<br/>
+All Passenger Details that had been previously entered are now available for editing
 
 That is,
 * Title
@@ -638,16 +637,32 @@ That is,
 * Baggage Allowance
 * Remarks
 
-**All *changes to/editing of* details (*except for wheelchair*) are subject to fees**<br>
+There is also the option to **remove a passenger** from the booking.<br/>This applies to all passengers *except for Adult 1* - *the Principal Pax* <br/>
+(Note: **Adult 1** - the checkbox is both *disabled and hidden*)
+
+**All *changes to/editing of* details (*except for wheelchair details*) are subject to fees.** <br/>
+These fees also apply to the **removing of passengers** from the booking.<br/>
 The fees are
-* GBP 20.00 each - for changes to a passenger's details
+* GBP 20.00 each - for changes to a passenger's details or removal of passenger
 * GBP 30.00 for each extra bag purchased
-* Some changes subject to GBP20.00 Admin fee
+* Some changes are subject to GBP20.00 Admin fee
 * If for example it is solely the passenger's wheelchair details that are changed the fee will be *GBP0.00*
 <br/><br/>
 
 
-<summary>Removal of Passengers</summary>
+<details>
+<summary>Edit Passenger Details</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/26711b57-2839-4c08-946e-19be7205dd0d)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/c63757ee-1517-49e6-a407-66db9c141626)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/539ffc70-d06f-4049-9fa3-38db30434be0)
+
+
+<br/>
+
+<summary>Removal of a Passenger</summary>
 
 During Editing, Passengers can be removed from a Booking</br>(All *except* the Principal Passenger - **Adult 1** - the checkbox is both *disabled and hidden*)
 
@@ -681,7 +696,7 @@ That said, any individual passenger can be selected for removal from a booking e
 
 * Any individual Adult, Child or Infant can be selected by clicking its corresponding checkbox for removal
 
-The user then presses *Continue* to proceed with any edit changes
+The user then clicks *Continue* to proceed with any edit changes
 
 </details>
 
@@ -703,8 +718,12 @@ The user then presses *Continue* to proceed with any edit changes
 
 #### Confirm the Changes
 
+Change Fees will be generated which needs confirmation - click Agree and pay now
+
+Note: the user has the option to *Cancel* changes
+
 <details>
-<summary>Change Fees will be generated which needs confirmation - Press Agree and pay now</summary>
+<summary>Change Fees will be generated which needs confirmation - click Agree and pay now</summary>
 <br/>
 
 Using the example above: **Booking CGF64F**
@@ -715,8 +734,6 @@ Using the example above: **Booking CGF64F**
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/3caaa321-3b28-4ed9-a600-38270ca06439)
 
-Note: the user has the option to *Cancel* changes
-
 Now when the user views **Booking CGF64F** the user can see that *David Smith* has been removed. Moreover, baggage and remarks have been added to the booking
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/f3340e60-f067-45c8-b221-4c0515b6939a)
@@ -724,6 +741,11 @@ Now when the user views **Booking CGF64F** the user can see that *David Smith* h
 </details>
   
 ### Delete Bookings
+
+When viewing a Booking the user has the option to delete the Booking <br>
+If the user clicks Yes, a message will be displayed to confirm that the Booking has been deleted <br>
+Note: the user has the option to Cancel
+
 
 <details>
 <summary>When viewing a Booking the user has the option to delete the Booking</summary>
@@ -735,7 +757,7 @@ Now when the user views **Booking CGF64F** the user can see that *David Smith* h
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/23661f04-e21e-4f9b-9175-4baa2f666f52)
 
-<summary>If the user presses Yes, a message will be displayed to confirm that the Booking has been deleted</summary>
+<summary>If the user clicks Yes, a message will be displayed to confirm that the Booking has been deleted</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/00806c8d-dd4a-4761-a166-f5c0a78a8e42)
 
