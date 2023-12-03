@@ -564,9 +564,9 @@ This is broken down into the following
 <details>
   <summary>User Stories</summary>
 
-  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/d02560ce-863d-46e5-b13d-90082efb77a5)
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b9be01cc-62e8-4f9e-84b9-80cc00ffc195)
 
-  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/7f748bc1-5c02-427d-a0f4-38c13ba8632c)
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/7690e35a-1030-4ddc-8449-f510ba655682)
   
 </details>
 
@@ -575,27 +575,25 @@ User Tasks:
 2. Demonstrate the forms used to Edit a Booking
 3. Show each stage of a Booking being Edited
 
-
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b9be01cc-62e8-4f9e-84b9-80cc00ffc195)
-
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/7690e35a-1030-4ddc-8449-f510ba655682)
-
 #### Delete a Booking
 
-BEFORE
-This flight shows 5 passengers
+##### Before Deletion
+
+<detail>
+ 
+<summary>This flight shows 5 passengers</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/7f6b3d46-def4-4594-bf45-74ba3639afc2)
 
-These 3 passengers are on this flight - Booking QPJXWV
-
-Seatmap
+<summmary>Seatmap</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/fa59c5c3-11cc-494a-8f30-fbfbf374dc1a)
 
+<summary>These 3 passengers are on this flight - Booking QPJXWV</summary>
+
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/51ac79a8-3edf-44ee-918d-75832b5a5667)
 
-View the Booking
+<summary>View the Booking</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a21e6494-d495-4819-a00e-3b6bdddcdd2a)
 
@@ -603,22 +601,42 @@ View the Booking
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/8b8ab4bc-c3c2-447a-ab6e-a7424dbb54ee)
 
-Click Delete
+<summary>Click Delete</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b17f5aec-a773-4ea8-8f62-3b0caeba6300)
 
-Click Yes
+<summary>Click Yes - Booking Deleted Successfully</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/3913d007-b6e2-4be6-a9e3-9a9d47fb2f7a)
 
+</details>
 
 
+##### After Deletion
 
+<detail>
+ 
+<summary>This flight shows 5-3 = 2 passengers</summary>
 
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/e0272621-15f8-437d-967c-344a4d17f26f)
 
+<summmary>Seatmap - 2 allocated seats</summary>
 
-AFTER
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/336013ae-aa82-4e74-b1d5-04b4240ad0fc)
 
+<summary>The two remaining 'seated' passengers belong to Booking EVZM6K</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/88e3fbb7-599c-4efe-9a3c-f9b8ccace553)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/51ac79a8-3edf-44ee-918d-75832b5a5667)
+
+</details>
+
+Note: Infants are **allocated seats** - hence Booking EVZM6K rightfully shows 2 seated passengers.
+The Booking consists of two adults and two infants!
+
+So, Booking QPJXWV has been deleted including all the passengers associated with that booking! 
+<summary>View the Booking</summary>
 
 
 #### Edit A Booking
