@@ -1688,8 +1688,12 @@ def handle_editpax_GET(request, id, booking):
     if "inbound_date" in Common.save_context["display"]:
         returning_date = Common.save_context["display"]["inbound_date"]
         returning_date = datetime.strptime(returning_date, "%d%b%y").date()
+        return_option = "Y"
     else:
-        returning_date = None
+        # Set to the same nonnull value 
+        # since these dates are not part of the 'update' process
+        returning_date = departing_date
+        return_option = "N"
 
     context = {}
     context["booking"] = booking.__dict__
@@ -1752,7 +1756,16 @@ def handle_editpax_GET(request, id, booking):
     # Update the 'context' in order for
     # the form to be displayed and processed
     form = {"adults": number_of_adults, "children": number_of_children,
-            "infants": number_of_infants}
+            "infants": number_of_infants,
+            "return_option": return_option,
+            "departing_date": departing_date,
+            "returning_date": returning_date,
+            # Set to misc. values e..g. 0800, 1830
+            # since time fields are not part of the 'update' process
+            "departing_time": "0800",
+            "returning_time": "1830"
+           }
+
     hiddenForm = HiddenForm(form)
     initial_dict = {"bags": context["booking"]["number_of_bags"],
                     "remarks": context["booking"]["remarks"]}

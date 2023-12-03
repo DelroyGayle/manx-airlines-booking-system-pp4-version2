@@ -323,10 +323,16 @@ def view_booking(request, id):
     display = dict(created_at=booking.created_at.strftime("%d%b%y").upper(),
                    # EG 17NOV23
                    outbound_date=(booking.outbound_date.strftime("%d%b%y")
-                                  .upper()))
+                                  .upper()),
+                   # These 'time' fields are not part of 
+                   # the 'update' process so set to ""
+                   departing_time="", returning_time="")
     if booking.return_flight:
+        display["return_option"] = "Y"        
         display["inbound_date"] = (booking.inbound_date.strftime("%d%b%y")
                                    .upper())
+    else:
+        display["return_option"] = "N"
 
     passenger_list = queryset.values()
     count = 0
