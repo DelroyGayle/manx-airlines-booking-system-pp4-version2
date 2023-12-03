@@ -111,6 +111,7 @@ function setup_page() {
     if (adult0) {
         adult0.disabled = true;
         adult0.hidden=true;
+        $('label[for="id_adult-0-remove_pax"]').hide();
     }    
 }
 

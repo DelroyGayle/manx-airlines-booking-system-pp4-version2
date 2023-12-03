@@ -1,7 +1,7 @@
 # Create your views here.
 
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Q, OuterRef, Subquery
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -83,7 +83,7 @@ def is_booking_form_valid(form, request):
         # User has selected today's date - check the time HH:MM
         timenow = datetime.now().strftime("%H%M")
         depart_time = cleaned_data["departing_time"]
-        time_diff = m.calc_time_difference(depart_time, timenow)  # TODO
+        time_diff = m.calc_time_difference(depart_time, timenow)
         if time_diff < 0:
             message_error("Departing Time - The time of the outbound flight "
                           "cannot be in the past.",
@@ -160,7 +160,6 @@ def create_booking_form(request):
     if request.method == "POST":
         #  create a form instance and populate it with data from the request:
         # check whether it is valid:
-        # TODO
         is_form_valid, saved_data = is_booking_form_valid(form, request)
         if is_form_valid:
             context = {"booking": form.cleaned_data}
@@ -208,7 +207,6 @@ def create_booking_form(request):
 
             # Save a copy in order to fetch any values as and when needed
             Common.save_context = context
-            # TODO
             return render(request, "booking/passenger-details-form.html",
                           context)
 
@@ -279,12 +277,11 @@ def confirm_booking_form(request):
     if request.method == "POST":
         if "cancel" in request.POST:
             return HttpResponseRedirect(reverse("home"))
-        # TODO
+
         else:
             # Create new record Booking/Passenger Records
             # Create new Transaction Record
             # Update Schedule Database
-            # TODO
             m.create_new_records(request)
             # Then show home page
             return HttpResponseRedirect(reverse("home"))
@@ -309,7 +306,6 @@ def confirm_changes_form(request):
             m.reset_common_fields()  # RESET!
             # Home Page
             return HttpResponseRedirect(reverse("home"))
-        # TODO
         else:
             m.update_pax_details(request)
             # Then show home page
@@ -359,10 +355,6 @@ def search_bookings(request):
     3) The Principal Pax (Adult 1)'s Last Name
     """
 
-    messages.add_message(request, messages.ERROR, 'Line 1')
-    messages.add_message(request, messages.ERROR, 'Line 2')
-    messages.add_message(request, messages.ERROR, 'Line 3')
-    raise Http404()
     query = request.GET.get("query").strip()
     # Blank Search
     if not query:

@@ -24,28 +24,11 @@ small span {
     display: block;
 }
 
-ul.errorlist {display:none;}
-
-/* TODO #homepage */
-/*
-@media only screen and (min-width: 600px)  {
-    #homepage {
-        height: 70vh;
-    }
-} 
-*/
-
 .strike-thru {
     text-decoration-line: line-through;
     text-decoration-color: red;
     text-decoration-style: wavy;    
  }
-
-/* TODO */
-.errorlist {
-    display: none;
-    color:red
-  }
   
 /* Used to centre the forms */
 

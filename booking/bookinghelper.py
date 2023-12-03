@@ -146,8 +146,10 @@ def find_N_seats(number_needed, allocated, available):
     # Then repeat 'find_N_seats' for the remainder
 
     result = row_of_N_seats(1, allocated, available)
-    # Finding one seat at this stage should not fail
-    # TODO
+    """
+    Finding one seat at this stage should not fail
+    TODO: Error 500 if this is not the case!
+    """
 
     return find_N_seats(minus1,
                         allocated + result[1], result[2])
@@ -171,7 +173,11 @@ def seat_number(number):
             raise ValueError
         divided_by4 = divmod(number, 4)
         result = f"{divided_by4[0] + 1}{chr(divided_by4[1] + 65)}"
-    except ValueError:  # TODO
+    except ValueError:
+        """
+        TODO: Error 500 If This Happens!
+        """
+
         result = ""
     finally:
         return result
@@ -216,7 +222,10 @@ def convert_bitarray_to_hexstring(bit_array):
     into a 24-character hex-string to be written to the Schedule file
     """
     return str(bit_array.hex.upper())
-    # TODO - 24 CHARACTER CHECK
+    """
+    The hex-string ought to be 24 characters long
+    TODO: Error 500 if this is not the case!
+    """
 
 
 def report_unavailability(request, direction, date_formatted, thetime):
@@ -282,7 +291,6 @@ def check_availability(request, departing, outbound_date,
         Common.outbound_allocated_seats = result[1]
         Common.outbound_allocated_seats.reverse()  # Descending Order
         Common.outbound_seatmap = convert_bitarray_to_hexstring(result[2])
-        # TODO
         Common.outbound_total_booked += numberof_seats_needed
 
     if cleaned_data["return_option"] != "Y":
@@ -495,7 +503,7 @@ def create_booking_instance(pnr):
                                  else 0)
     number_of_infants = booking.number_of_infants
 
-    booking.number_of_bags = Common.save_context["bags"]
+    booking.number_of_bags = int(Common.save_context["bags"])
     booking.departure_time = (
         Common.flight_info[outbound_flightno]["flight_STD"])
     booking.arrival_time = Common.flight_info[outbound_flightno]["flight_STA"]
@@ -597,11 +605,14 @@ def write_passenger_record(booking, passenger_type, plural, pax_type,
     Common.save_context["adults_data"]
     Common.save_context["children_data"]
     Common.save_context["infants_data"]
+
+    For each passenger allocate new seats
+    for both the outbound and optionally the inbound flights
     """
-    # SEATNO TODO seat_numbers
+
     dataset_name = f"{plural}_data"  # EG "adults_data"
     paxno = 0
-    key = f"{passenger_type}-{paxno}-"  # TODO
+    key = f"{passenger_type}-{paxno}-"
     infant_status_number = 1
     while paxno < number_of_pax_type:
         outbound_seatno, inbound_seatno = (
@@ -698,7 +709,11 @@ def freeup_seats(thedate, flightno, seat_numbers_list):
     queryset = Schedule.objects.filter(flight_date=thedate,
                                        flight_number=flightno)
     if len(queryset) == 0:
-        return  # Defensive - should exist
+        """
+        Defensive - should always exist i.e. length nonzero
+        TODO: Error 500 If Zero!
+        """
+        return
 
     schedule = queryset[0]
     bit_array = convert_string_to_bitarray(schedule.seatmap)
@@ -706,7 +721,10 @@ def freeup_seats(thedate, flightno, seat_numbers_list):
 
     for seatpos in seat_numbers_list:
         if seatpos < 0 or seatpos >= CAPACITY:
-            # Defensive - should be between 0-95
+            """
+            Defensive - should be between 0-95
+            TODO: Error 500 If This Is Not The Case
+            """
             continue
 
         # For the correct 'leftmost' position
@@ -716,7 +734,11 @@ def freeup_seats(thedate, flightno, seat_numbers_list):
 
     seatmap = convert_bitarray_to_hexstring(bit_array)
 
-    if removed_seats_count == 0:  # Defensive - should be nonzero
+    if removed_seats_count == 0:
+        """
+        Defensive - should be nonzero
+        TODO: Error 500 If This Is Not The Case
+        """
         return
 
     schedule.seatmap = seatmap
@@ -733,6 +755,7 @@ def list_pax_seatnos(passenger_record, key):
     for each_seatnum in passenger_record:
         # Defensive - 'outbound_seat_number', 'inbound_seat_number'
         # ought to be present
+        # TODO: Suggest Error 500 if this is not the case
         if each_seatnum[key]:
             seat_numbers_list.append(from_seat_to_number(each_seatnum[key]))
 
@@ -810,7 +833,6 @@ def append_to_dict(dict, key, item):
 
 def name_validation(fields_dict, accum_dict, errors_found):
     """ Handle the Formsets' Validation of First and Last Names """
-# def adults_formset_validated(cleaned_data, request):  # TODO
 
     # First Name Validation
     temp_field = fields_dict.get("first_name", "").replace(" ", "")
@@ -1146,7 +1168,7 @@ def compute_total_price(children_included, infants_included):
                     f"{number_of_infants} x GBP{infant_price:3.2f} = "
                     f"GBP{product:5.2f}")
 
-    number_of_bags = Common.save_context["bags"]
+    number_of_bags = int(Common.save_context["bags"])
     if number_of_bags > 0:
         product = number_of_bags * BAG_PRICE
         total += product
@@ -1625,7 +1647,7 @@ def handle_pax_details_POST(request,
                                                         infants_included,
                                                         context_copy)
             new_context["pnr"] = Common.save_context["booking"]["pnr"]
-            # TODO: UPDATE THE RECORD!!
+            # Editing: Therefore Proceed with Updating The Record
             Common.save_context["confirm-booking-context"] = context_copy
             return (True, new_context)
 
@@ -1635,8 +1657,8 @@ def handle_pax_details_POST(request,
                                                     infants_included,
                                                     context_copy)
 
+        # Proceed with Creating a New Record
         Common.save_context["pnr"] = new_context["pnr"]
-        # TODO: CREATE THE RECORD!!
         Common.save_context["confirm-booking-context"] = context_copy
         return (True, new_context)
 
@@ -1929,11 +1951,14 @@ def update_pax_records():
         # e.g. 'adult-1-remove_pax': ['on']
         key = f"adult-{count}-remove_pax"
         if newdata.get(key):
-            # (NOTE: Should never be 'adult-0-remove_pax': ['on']
-            # That is, -0-
-            # This is because the first Adult passenger is
-            # a mandatory part of the booking
-            # Suggest 500 ERROR! TODO)
+            """
+            (NOTE: The value of 'count' should never be 0
+            That is, key should never represent 'adult-0-remove_pax': ['on']
+            That is, -0-
+            This is because the first Adult passenger is
+            a mandatory part of the booking
+            Suggest Error 500)
+            """
 
             number_outbound_seats_deleted += 1
             if "inbound_seat_number" in adults_list[count]:
@@ -1999,8 +2024,10 @@ def update_pax_records():
     adults_list = list(filter(None, adults_list))
     children_list = list(filter(None, children_list))
     infants_list = list(filter(None, infants_list))
-
-    # This value should never be zero! - 500 error?
+    """
+    len(adults_list) should never be zero!
+    TODO: Error 500 If This Happens!
+    """
     number_outbound_seated_adults = len(adults_list)
     # Unlike this value which could be zero
     number_outbound_seated_children = len(children_list)
@@ -2047,7 +2074,7 @@ def update_pax_records():
     # if the Booking contains a return flight
     # number_outbound_seats_deleted
     # number_inbound_seats_deleted
-    # Otherwise 500 error?
+    # TODO: Otherwise Error 500 If This Happens!
 
     # Fetch Booking Instance
     booking = get_object_or_404(Booking, pk=booking_id)
@@ -2127,7 +2154,10 @@ def update_booked_figure_seatmap(schedule,
     bit_array = convert_string_to_bitarray(schedule.seatmap)
     for each_seatno in seatnumbers_list:
         if each_seatno < 0 or each_seatno >= CAPACITY:
-            # Defensive - should be between 0-95
+            """
+            Defensive - should be between 0-95
+            TODO: Error 500 If This Is Not The Case
+            """
             continue
 
         # For the correct 'leftmost' position
