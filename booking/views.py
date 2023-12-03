@@ -1,7 +1,7 @@
 # Create your views here.
 
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.db.models import Q, OuterRef, Subquery
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -470,6 +470,16 @@ def logout_user(request):
     logout(request)
 
     messages.add_message(request, messages.SUCCESS,
-                         'Successfully logged out')
+                         "Successfully logged out")
 
-    return redirect(reverse('login'))
+    return redirect(reverse("login"))
+
+
+def handle_not_found(request, exception):
+    """ 404 Custom Error Handling """
+    return render(request, "includes/404_not_found.html", status=404)
+
+
+def handle_500(request):
+    """ 500 Custom Error Handling """
+    return render(request, "includes/500_error.html", status=500)

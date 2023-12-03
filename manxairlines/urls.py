@@ -28,3 +28,6 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(
                     template_name='users/login.html'), name='login'),
 ]
+
+handler404="booking.views.handle_not_found"
+handler500="booking.views.handle_500"
