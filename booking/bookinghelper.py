@@ -965,7 +965,8 @@ def date_validation_part2(accum_dict, errors_found,
                 "A child should be at least 2 "
                 "and under 16 "
                 f"on the Date of Departure: {output_departing_date} "
-                f"But this passenger will be {difference_in_years}.")
+                f"But this passenger will be {difference_in_years}. "
+                "Please enter an Adult Booking for this passenger.")
             errors_found = True
             accum_dict = append_to_dict(accum_dict,
                                         "date_of_birth", error_message)
@@ -974,10 +975,12 @@ def date_validation_part2(accum_dict, errors_found,
     if not is_child:
         # INFANT
         if difference_in_years >= 2:
+            paxtype = "an Adult" if difference_in_years > 15 else "a Child"
             error_message = (
                 "An infant should be under 2 "
                 f"on the Date of Departure: {output_departing_date} "
-                f"But this passenger will be {difference_in_years}.")
+                f"But this passenger will be {difference_in_years}. "
+                f"Please enter {paxtype} Booking for this passenger.")
             errors_found = True
             accum_dict = append_to_dict(accum_dict,
                                         "date_of_birth", error_message)
