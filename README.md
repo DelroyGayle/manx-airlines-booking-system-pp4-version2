@@ -840,6 +840,21 @@ Note: The same validation is applied to the *Returning Date*
 
    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/8a552933-547d-4b97-84c8-5c858848404e)
 
+   <summary>Attempt to enter more than 20 passengers in a booking </summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/dc5d8842-0fb0-42cf-8f1a-fba229ed6a02)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/317f579f-3749-4121-9348-7478a7e27dfb)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/31ce0552-ee93-438a-9ec4-e963c8833b5a)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/2b2f222e-b654-455f-b471-6918b012992d)
+
+
+
+
+
 
  <summary>Entering a Blank Form or Blank Passenger Details</summary>
 <br/> 
@@ -914,17 +929,14 @@ Note: The same validation is applied to the *Returning Date*
 
    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/d60aa11b-6784-4996-88aa-4c4ef33f85e4)
 
-   <summary>An Infant Passenger must be under 2 years of age at the time of the Departure Date of Travel e.g. for the 03/12/2023</summary>
+   <summary>An Infant Passenger must be under 2 years of age at the time of the Departure Date of Travel e.g. for the 04/12/2023</summary>
 <br/> 
 
-   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/685a043b-f4b2-4343-8482-151ecc8bf46e)
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ad52263e-4074-4b12-9c33-00629f67822e)
 
-   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/88c86db2-8764-4d9a-9601-35dff073b536)
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/944fb559-bdb2-4ea3-8674-97df103b955d)
 
-   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/6d399005-320f-420d-9df3-0ad81e869b5d)
-
-   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/65af5b3e-89b9-4c91-9a44-74d57a1e1a53)
-
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b2743b4d-36bb-4772-ab05-c19847e7b5dc)
 
 
 <summary>An Infant Passenger must be under 2 years of age at the time of the Return Date of Travel e.g. for the 16/12/2023</summary>
@@ -938,21 +950,14 @@ Note: The same validation is applied to the *Returning Date*
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/109dabe6-428e-40e4-ac2d-897178663591)
 
-<summary>A Child Passenger must be under 16 years of age  at the time of the Departure Date of Travel e.g. for the 19/11/2023</summary>
+<summary>A Child Passenger must be under 16 years of age  at the time of the Departure Date of Travel e.g. for the 04/12/2023</summary>
 <br/> 
 
-   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/1ba7d907-c32e-46da-8035-2cdac7643a9f)
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/7f0d29ca-8c32-4ec3-a87e-f75a54397c6e)
 
-   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/c2b408e6-9f92-4e78-b617-9d6da4c75b1c)
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/15ba523d-ea89-4f27-9647-3d858e0edf8f)
 
-<summary>Second Example</summary>
-<br/> 
-
-   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/82a170be-f3cf-441e-a479-aa593c78eda2)
-
-   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/60fd8f17-6f65-4ae9-92c7-188fc5500c93)
-
-<summary>A Child Passenger must be under 16 years at the time of the Return Date of Travel</summary>
+<summary>A Child Passenger must be under 16 years at the time of the Return Date of Travel e.g. for the 24/11/2023</summary>
 <br/> 
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b7ce3e44-db40-4e8b-9a38-37194b7026d5)
