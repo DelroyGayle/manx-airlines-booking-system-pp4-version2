@@ -782,9 +782,8 @@ Validation is applied throughout the process of entering Booking and Passenger D
 
 Note: The same validation is applied to the *Returning Date*
 
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/64cfe8cb-56b8-4a16-9a85-3c4dc00422da)
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/c5ba3fe4-94bf-42db-b9ad-9210310dad08)
 
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b2d6268c-6877-4e1a-a066-1d86db42c92f)
 
 <summary>Illegal Dates</summary>
 <br/> 
@@ -797,7 +796,7 @@ Note: The same validation is applied to the *Returning Date*
    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/fa80a9d7-0a96-475f-8a5f-e74f56810113)
 
    
-<summary>Attempt to make a Booking with an interval more than 180 days</summary>
+<summary>Attempt to make a Booking with an interval of more than 180 days</summary>
 <br/> 
 
  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/10d838cf-a5c6-4069-aeb1-dac28771edce)
@@ -811,7 +810,7 @@ Note: The same validation is applied to the *Returning Date*
 
 <br/> 
 
-<summary>Same Day Return Journey - The Return Time cannot be less than 90 minutes from the Departure Time</summary>
+<summary>Same Day Return Journey - The Return Time cannot be less than 90 minutes from the Departure Time e.g. 09:45am and 11:00am</summary>
 <br/>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/39d819b1-895e-4e27-97ec-0ef187d0b8e8)
@@ -861,7 +860,7 @@ Note: The same validation is applied to the *Returning Date*
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/832b9aa2-d680-40d9-aff9-4c6f4842dce9)
 
-<summary>Names must only consist of Letters, Apostrophes and Hyphens</summary>
+<summary>Names must consist only of Letters, Apostrophes and Hyphens</summary>
 <br/> 
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/e0f1fa9d-ca8a-4c9e-97ca-d6c85087f3e7)
@@ -877,7 +876,7 @@ Note: The same validation is applied to the *Returning Date*
 
    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/1f6dcea1-e58d-4b35-bde6-aa0e1214659f)
 
-   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/e02d2643-4699-4623-b616-425f77c858be)
+   
 
    <summary>Erroneous Telephone Numbers</summary>
 <br/> 
