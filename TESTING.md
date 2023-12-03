@@ -126,7 +126,7 @@ This is broken down into the following
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-| T06 | Search Bookings | Create a Searchbar in order to be able to search for created bookings. Searches are *case insensitive*. | Expect to see matching records or a message showing that no matching criteria found. | PASS |
+| T06 | Search Booking | Create a Searchbar in order to be able to Search for created bookings. Searches are *case insensitive*. | Expect to see matching records or a message showing that no matching criteria found. | PASS |
 
 <details>
 <summary>Searchbar - Demonstrate when no matching records found</summary>
@@ -192,9 +192,11 @@ This is broken down into the following
 
 User Tasks:
 1. Implement Navbar with Isle of Man Logo
-2. Demonstrate the forms used to create a booking
+2. Demonstrate the forms used to Create a Booking
 3. Show each stage of a Booking being created
 4. Demonstrate the validation of the fields entered
+5. Once Bookings have been made, demonstrate that the user can search for Bookings and see the List of Bookings found
+6. Demonstrate that the user can View Bookings
 
 <details>
   <summary>Navbar</summary>
@@ -203,6 +205,7 @@ User Tasks:
 
 </details>
 
+#### Create Booking
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
@@ -296,12 +299,16 @@ Using [RapidTables](https://www.rapidtables.com/convert/number/hex-to-binary.htm
 
 ----
 
+#### Validation
+
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
 | T11 | Validate All Input | Enter various erroneous and invalid values | Suitable Messages should be displayed indicating that validation has been performed. | PASS |
 
 <details>
-   
+
+##### Flight Detail Validation
+
 <summary>Entering Past Dates</summary>
 <br/> 
 
@@ -346,7 +353,7 @@ Note: The same validation is applied to the *Returning Date*
 
 </details>
 
-#### Entering Passenger Details
+##### Passenger Detail Validation
 
 <details>
 
@@ -387,8 +394,6 @@ Note: The same validation is applied to the *Returning Date*
  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/80992d59-a8a6-4527-88f2-5b9382359725)
 
  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/2aa78b99-9b8f-453d-9cb9-c07751b32f50)
-
-
 
 <summary>Blank First Name</summary>
 <br/> 
@@ -496,5 +501,135 @@ Note: The same validation is applied to the *Returning Date*
 
 
 ---
+
+#### PRM SSRs - Wheelchair Details
+
+| Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
+| ------------- | ------------- | -------------    | ------------- | ------------- |
+| T12 | Enter Wheelchair SSRs | Implement a Drop Down Menu whereby the user can enter PRM SSRs. | Show Drop Down Menu. | PASS |
+
+<details>
+
+ <summary>PRM SSRs</summary>
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/f6f58dea-918e-4483-943f-7734ec500824)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/2b80632b-712b-42c4-8da8-200ca8c30a70)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/5cad4431-b47a-42ce-82ee-2d3bfd36c298)
+
+</details>
+
+#### Search Booking
+
+| Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
+| ------------- | ------------- | -------------    | ------------- | ------------- |
+| T13 | Search Bookings | Implement a Searchbar where case-insensitive searches of Bookings can be performed. | Demonstrate Search Functionality and Pagination. | PASS |
+
+For testing purposes, initially all PNRs were prefixed with 'SMI'
+<details>
+ <summary>Search for 'smi'</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/30da195f-6c25-4fe1-9244-7b23363f9d75)
+
+<summary>Pagination</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/689a2afa-0e26-4b2a-81da-dea3a677c734)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/f9366a2d-0e77-4f6b-b04e-8d542a1eae0a)
+
+<Summary>User can search by PNR</Summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/478f722d-a0e9-441d-a6c8-0b64aa45e845)
+
+<Summary>User can search by Adult 1's First Name</Summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a2057aac-09e7-41af-818f-38b3d5be0bc6)
+
+<Summary>User can search by Adult 1's Last Name</Summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/f7328591-b4c9-4bd0-833b-59e2e69e31a5)
+
+</details>
+
+#### View Booking
+
+When a Booking is Viewed, the user has the option to *Edit or Delete a Booking*
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/1b4188d2-d07a-40c2-a7a4-33f161a41d80)
+
+
+### Epic: *Delete and Edit Bookings*
+
+This is broken down into the following
+<details>
+  <summary>User Stories</summary>
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/d02560ce-863d-46e5-b13d-90082efb77a5)
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/7f748bc1-5c02-427d-a0f4-38c13ba8632c)
+  
+</details>
+
+User Tasks:
+1. Demonstrate that the user can Delete Bookings
+2. Demonstrate the forms used to Edit a Booking
+3. Show each stage of a Booking being Edited
+
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b9be01cc-62e8-4f9e-84b9-80cc00ffc195)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/7690e35a-1030-4ddc-8449-f510ba655682)
+
+#### Delete a Booking
+
+BEFORE
+This flight shows 5 passengers
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/7f6b3d46-def4-4594-bf45-74ba3639afc2)
+
+These 3 passengers are on this flight - Booking QPJXWV
+
+Seatmap
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/fa59c5c3-11cc-494a-8f30-fbfbf374dc1a)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/51ac79a8-3edf-44ee-918d-75832b5a5667)
+
+View the Booking
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a21e6494-d495-4819-a00e-3b6bdddcdd2a)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/55f71352-a784-4862-960f-b35f5b7ed747)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/8b8ab4bc-c3c2-447a-ab6e-a7424dbb54ee)
+
+Click Delete
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b17f5aec-a773-4ea8-8f62-3b0caeba6300)
+
+Click Yes
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/3913d007-b6e2-4be6-a9e3-9a9d47fb2f7a)
+
+
+
+
+
+
+
+AFTER
+
+
+
+#### Edit A Booking
+
+
+| Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
+| ------------- | ------------- | -------------    | ------------- | ------------- |
+| T14 | Edit Bookings | View a Booking and Click the *Edit* Button| Demonstrate that the PAX details can be edited and saved. | PASS |
+
+
+
+
 
 
