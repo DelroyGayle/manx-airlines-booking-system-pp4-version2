@@ -324,7 +324,7 @@ This model contains each individual Passenger Details
 - - An Infant has the same status number as their accompanying Adult
 - wheelchair_ssr = CharField(1 character) - Optional Wheelchair Information
 - - That is, is this passenger a PRM?
-- - *Blank for No, R for WHCR, S for WCHS, C for WCHC*
+- - *Blank for No, R for WCHR, S for WCHS, C for WCHC*
 - wheelchair_type = CharField(1 character) - Optional Accompanying Wheelchair Information
 - - Is this passenger travelling with their **own** wheelchair? If so, what type of wheelchair is it?
 - - *Blank for No, M for WCMP, L for WCLB, D for WCBD, W for WCBW*
@@ -347,7 +347,7 @@ I chose to use [Semantic UI](https://semantic-ui.com/) because of this framework
 ### Airline Criteria 
 
 #### Infant Passengers Criteria
-In the Airline Travel Industry, all airlines generally adhere to the following criteria regarding Infant Pasengers :-
+In the Airline Travel Industry, all airlines generally adhere to the following criteria regarding Infant Passengers :-
 
 1. Infants are defined as passengers who are under 2 years of age.
 2. There cannot be more infants on a booking than adults. That is, *one infant per one adult passenger*.
