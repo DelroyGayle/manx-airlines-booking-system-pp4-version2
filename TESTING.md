@@ -1,7 +1,40 @@
 # Testing
 
-+ Passed the code through the PEP8 linter and confirmed there are no problems.
+## HTML Validation
+This was performed using [W3C HTML Validator](https://validator.w3.org/nu/)
+
+## CSS Validation
+
+This was performed using [W3C CSS Validator](https://jigsaw.w3.org/css-validator/)
+
+ - No issues flagged during CSS validation
+
+## JavaScript Validation
+
+This was performed using [JSHint](https://jshint.com/)
+
+- No issues flagged during JavaScript validation
+
+ ## Python Validation
+
+This was performed using Code Institute's [PEP8 Linter](https://pep8ci.herokuapp.com/)
+
+- No issues flagged during JS validation
+
+## Lighthouse
+
+I used Lighthouse within the Chrome Developer Tools to test the performance, accessibility and SEO of the website.
+
+<details>
+  <summary>Lighthouse Report</summary>
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/09b1697c-a33e-42ee-b9f4-9dcf1fa07283)
+
+</details>
+
+## Additional Testing Comments
 + Carried out tests of the program on both the local terminal and the Code Institute Heroku terminal.
++ Chrome DevTools was used throughout the development process for testing purposes.
   
 ## Manual Testing
 
@@ -26,7 +59,7 @@ This is broken down into the following
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-| T01 | Install Django  | Install Django, psycopg2. Create requirements.txt. Name the Project **manxairlines**. Create the App and name it **booking**. Deployed locally. | Expected to see the webpage showing the following message: *The install worked successfully!* | PASS |
+| T01 | Install Django  | Install Django, psycopg2. Create requirements.txt. Name the Project **manxairlines**. Create the App and name it **booking**. Deploy locally. | Expected to see the webpage showing the following message: *The install worked successfully!* | PASS |
 
 <details>
 <summary>Screenshot</summary>
