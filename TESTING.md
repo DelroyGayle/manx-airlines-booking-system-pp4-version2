@@ -177,13 +177,16 @@ This is broken down into the following
 
 ## Manual Testing of the Manx Airlines Travel Agency Booking System
 
-### Epic: *Create Bookings*
+### Epic: *Create and View Bookings*
 
 This is broken down into the following
 <details>
   <summary>User Stories</summary>
 
   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/d02560ce-863d-46e5-b13d-90082efb77a5)
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/7f748bc1-5c02-427d-a0f4-38c13ba8632c)
+  
 
 </details>
 
@@ -203,7 +206,7 @@ User Tasks:
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-| T09 | Create Booking | Create a Booking with 3 PAX, bags and remarks.| Confirmation Form regarding Booking | PASS |
+| T09 | Create Booking | Create a Booking with 3 PAX, bags and remarks.| Confirmation Form regarding Booking. | PASS |
 
 <details>
  
@@ -228,7 +231,7 @@ User Tasks:
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-| T10 | Confirm Booking | Make a Booking then Click *Agree and pay now* | Booking created. In Admin, expect to see all the records created by this action. | PASS |
+| T10 | Confirm Booking | Make a Booking then Click *Agree and pay now*. | Booking created. In Admin, expect to see all the records created by this action. | PASS |
 
 <details>
 
@@ -286,6 +289,210 @@ Admin View of the Transaction and Schedule Records
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/cb95778e-79b2-4b14-be24-c71f7b2e124c)
 
 </details>
+
+Using [RapidTables](https://www.rapidtables.com/convert/number/hex-to-binary.html) the Hex String C000 reading from the left indeed shows that two seats have been allocated.<br>*24 Hex Characters represents 96 Binary Bits which represents 96 seats* - see below for further details.
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/64064f51-7e10-4641-9bdd-d318efc90cb1)
+
+----
+
+| Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
+| ------------- | ------------- | -------------    | ------------- | ------------- |
+| T11 | Validate All Input | Enter various erroneous and invalid values | Suitable Messages should be displayed indicating that validation has been performed. | PASS |
+
+<details>
+   
+<summary>Entering Past Dates</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/895384ff-32e5-4e5b-9956-d9f686ce9241)
+
+<br/> 
+
+Note: The same validation is applied to the *Returning Date*
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/c5ba3fe4-94bf-42db-b9ad-9210310dad08)
+
+
+<summary>Illegal Dates</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/cfd46e5f-c44c-4d59-833a-b9087dbe2be2)
+
+<summary>Same Day Return Journey - entering an earlier Return Time than the Departure Time e.g. 13:30pm and 11:00am</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/fa80a9d7-0a96-475f-8a5f-e74f56810113)
+
+   
+<summary>Attempt to make a Booking with an interval of more than 180 days</summary>
+<br/> 
+
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/10d838cf-a5c6-4069-aeb1-dac28771edce)
+
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/0fa112c4-b722-44ca-b3a1-3f809c6b0e76)
+
+<summary>Attempt to make a Booking too far into the future</summary>
+<br/> 
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/4fde0e59-0cea-49c3-9737-a607c88ffe46)
+
+<br/> 
+
+<summary>Same Day Return Journey - The Return Time cannot be less than 90 minutes from the Departure Time e.g. 09:45am and 11:00am</summary>
+<br/>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/39d819b1-895e-4e27-97ec-0ef187d0b8e8)
+
+</details>
+
+#### Entering Passenger Details
+
+<details>
+
+   <summary>Attempt to add more infants than the number of adults</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/82522b91-5583-49c4-ad98-806712e280b0)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ef338adb-c6cc-4eb7-90e8-13e390864a07)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/eed0ff1d-c609-431c-afd2-644bd056f042)
+
+   <summary>Zero number of Adults</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b3ae4c55-a2a8-45c6-bdff-969d1def16b3)
+
+   <summary>Attempt to make a Child Booking with Zero Adults</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/8a552933-547d-4b97-84c8-5c858848404e)
+
+   <summary>Attempt to enter more than 20 passengers in a booking </summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/dc5d8842-0fb0-42cf-8f1a-fba229ed6a02)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/317f579f-3749-4121-9348-7478a7e27dfb)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/31ce0552-ee93-438a-9ec4-e963c8833b5a)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/2b2f222e-b654-455f-b471-6918b012992d)
+
+
+ <summary>Entering a Blank Form or Blank Passenger Details</summary>
+<br/> 
+
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/80992d59-a8a6-4527-88f2-5b9382359725)
+
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/2aa78b99-9b8f-453d-9cb9-c07751b32f50)
+
+
+
+<summary>Blank First Name</summary>
+<br/> 
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/9e137e6c-c89e-49a3-bc9c-a5cf29a4355e)
+
+<summary>Blank Last Name</summary>
+<br/> 
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/832b9aa2-d680-40d9-aff9-4c6f4842dce9)
+
+<summary>Names must consist only of Letters, Apostrophes and Hyphens</summary>
+<br/> 
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/e0f1fa9d-ca8a-4c9e-97ca-d6c85087f3e7)
+
+<br/> 
+<summary>Email Validation</summary>
+<br/> 
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/5900ed07-693b-4fa9-9af1-82cc71285d7c)
+
+   <summary>Principal Passenger (Adult 1) Contact Details must be entered</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/1f6dcea1-e58d-4b35-bde6-aa0e1214659f)
+
+   
+
+   <summary>Erroneous Telephone Numbers</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b25fb09e-1d56-4dc0-99d0-3b3aaa3e72fb)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/9e894431-939b-47be-a836-b520d02b48f8)
+
+
+</details>
+
+ #### Date of Birth Validation
+
+<details>
+   
+ <summary>Future Date</summary>
+<br/> 
+
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/0fb63bf6-0349-42ee-b48d-e3752e0dc507)
+
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/e5e0ddad-05f1-485f-8e17-c641bd8aa264)
+
+
+ <summary>Date of Birth cannot be Today's Date e.g.</summary>
+<br/> 
+
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ef65f84a-1db9-4639-875d-64dce3916c1b)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a35b78ad-de90-4a91-9008-42fbe152668a)
+
+   <summary>An Infant Passenger must be at least 14 days old to travel e.g. for the 19/11/2023</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/59ecaf0a-3049-4307-b37f-bb06134dbe03)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/d60aa11b-6784-4996-88aa-4c4ef33f85e4)
+
+   <summary>An Infant Passenger must be under 2 years of age at the time of the Departure Date of Travel e.g. for the 04/12/2023</summary>
+<br/> 
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/ad52263e-4074-4b12-9c33-00629f67822e)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/944fb559-bdb2-4ea3-8674-97df103b955d)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b2743b4d-36bb-4772-ab05-c19847e7b5dc)
+
+
+<summary>An Infant Passenger must be under 2 years of age at the time of the Return Date of Travel e.g. for the 16/12/2023</summary>
+<br/> 
+   
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/685a043b-f4b2-4343-8482-151ecc8bf46e)
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/88c86db2-8764-4d9a-9601-35dff073b536)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a7e2cc9a-121a-4559-a4e7-f7a8003237d5)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/109dabe6-428e-40e4-ac2d-897178663591)
+
+<summary>A Child Passenger must be under 16 years of age  at the time of the Departure Date of Travel e.g. for the 04/12/2023</summary>
+<br/> 
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/7f0d29ca-8c32-4ec3-a87e-f75a54397c6e)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/15ba523d-ea89-4f27-9647-3d858e0edf8f)
+
+<summary>A Child Passenger must be under 16 years at the time of the Return Date of Travel e.g. for the 24/11/2023</summary>
+<br/> 
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b7ce3e44-db40-4e8b-9a38-37194b7026d5)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/9bd59f1b-39b0-400d-8ee5-1edd4f917d8b)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/6bc4a6d7-f0bc-4bb8-b043-bb0cfe3b2798)
+
+
+   </details>
 
 
 ---
