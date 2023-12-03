@@ -585,9 +585,11 @@ User Tasks:
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/7f6b3d46-def4-4594-bf45-74ba3639afc2)
 
-<summmary>Seatmap</summary>
+<summmary>Seatmap - 5 bits set showing 5 allocated seats</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/fa59c5c3-11cc-494a-8f30-fbfbf374dc1a)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/1f60d893-0df5-44de-82c7-d9a9cb081544)
 
 <summary>These 3 passengers are on this flight - Booking QPJXWV</summary>
 
@@ -616,13 +618,15 @@ User Tasks:
 
 <detail>
  
-<summary>This flight shows 5-3 = 2 passengers</summary>
+<summary>This flight now shows 5-3 = 2 passengers</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/e0272621-15f8-437d-967c-344a4d17f26f)
 
-<summmary>Seatmap - 2 allocated seats</summary>
+<summmary>Seatmap - 2 bits set showing 2 allocated seats</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/336013ae-aa82-4e74-b1d5-04b4240ad0fc)
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/6c2e039c-d871-49da-8b4a-d7a5f0d4e15b)
 
 <summary>The two remaining 'seated' passengers belong to Booking EVZM6K</summary>
 
@@ -632,11 +636,10 @@ User Tasks:
 
 </details>
 
-Note: Infants are **allocated seats** - hence Booking EVZM6K rightfully shows 2 seated passengers.
-The Booking consists of two adults and two infants!
+Note: Infants are **not** allocated seats - hence Booking EVZM6K rightfully shows 2 seated passengers.
+The Booking consists of two adults (who are allocated seats) and two infants!
 
 So, Booking QPJXWV has been deleted including all the passengers associated with that booking! 
-<summary>View the Booking</summary>
 
 
 #### Edit A Booking
