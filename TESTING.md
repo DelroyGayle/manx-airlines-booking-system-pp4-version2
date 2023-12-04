@@ -304,7 +304,7 @@ Admin View of the Transaction and Schedule Records
 
 </details>
 
-Using [RapidTables](https://www.rapidtables.com/convert/number/hex-to-binary.html) the Hex String C000 reading from the left indeed shows that two seats have been allocated.<br>*24 Hex Characters represents 96 Binary Bits which represents 96 seats* - see below for further details.
+Using [RapidTables](https://www.rapidtables.com/convert/number/hex-to-binary.html) the Hex String C000 reading from the left indeed shows that two seats have been allocated.<br>*24 Hex Characters represents 96 Binary Bits which represents 96 seats* - see [below](#seat-allocation-algorithm) for further details.
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/64064f51-7e10-4641-9bdd-d318efc90cb1)
 
