@@ -1,9 +1,17 @@
 # Testing
 
+1. [HTML Validation](#html-validation)
+2. [CSS Validation](#css-validation)
+3. [JavaScript Validation](#javascript-validation)
+4. [Python Validation](#python-validation)
+5. [Lighthouse](#lighthouse)
+6. [Manual Testing](#manual-testing)
+7. [Seat Allocation Algorithm](#seat-allocation-algorithm)
+   
 ## HTML Validation
 This was performed using [W3C HTML Validator](https://validator.w3.org/nu/)
 
-* There were confilcts with the validator and Django Template Language, for example
+* There were conflicts with the validator and Django Template Language, for example
 
 * Spaces following % produced "Non-space characters found without seeing a doctype first."
 
@@ -23,7 +31,7 @@ This was performed using [JSHint](https://jshint.com/)
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a9008930-a53c-4785-a23c-656f3a89931a)
 
-- infantsCheck is not unused since it is needed in ...templates/booking/create-booking-form.html
+- infantsCheck is not unused since it is needed in ...[templates/booking/create-booking-form.html](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/templates/booking/create-booking-form.html)
 
  ## Python Validation
 
@@ -48,7 +56,9 @@ This test was performed before the authentication profile was added.
 + Chrome DevTools was used throughout the development process for testing purposes.
 + Added Custom [404](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/templates/includes/404_not_found.html) and [500](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/templates/includes/500_error.html) pages just in case such errors occur.
   
-## Manual Testing - Mock Employer App to begin with
+## Manual Testing 
+
+Begin with a **Mock Employer App**
 
 ### Epic: *Set up a mock-up system to begin with that demonstrates CRUD functionality*
 
@@ -105,7 +115,6 @@ This is broken down into the following
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/fba9f7f3-008d-48c9-aea0-4dca6f7312a4)
 
 </details>
-
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
@@ -820,7 +829,136 @@ Also before the Edit there were **two allocated seats on Flight MX0465 29DEC**
 
 CRUD functionality has been demonstrated.
 
-## Seating Allocation Algorithm
+## Seat Allocation Algorithm
+
+I proposed the following algorithm to seat passengers on a 96-seat aircraft.
+- Each seat would be represented by a *binary digit - 1 for allocated, 0 for free* (base 2)
+- 96 bits are represented by 24 Hex Characters (base 16: 0-9, A-F)
+- Therefore, in the Schedule Model, the seatmap is a 24 character Charfield
+
+
+Here is an example showing that seats 24BCD are allocated.
+
+| 95 | 94 | 93 | 92 | ... | 3 | 2 | 1 | 0 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Bit 95 | Bit 94 | Bit 93 | Bit 92 | ... | Bit 3 | Bit 2 | Bit 1 | Bit 0 |
+| 24D | 24C | 24B | 24A | ... |  1D | 1C | 1B | 1A |
+| 1 | 1 | 1 | 0 | ... |  0 | 0 | 0 | 0 |
+  
+- I chose to use a recursive solution where N is the number of seats needed
+- It would first search for a **row** of N *0's* in the Schedule's seatmap
+- If such a row is found, invert the 0's to 1's and return  [**True**, allocated seats, the updated seatmap]
+
+- If N=1 at this stage, then there are no available seats, return [**False**, ...]
+
+- Otherwise, from the range *M = N-1 to 2*,
+-  - **Loop**
+-  - First see if a **row** of *M seats* can be allocated
+   - If Yes, then allocate the other *(N - M) seats by recursively calling this algorithm* - **return the result**
+   - If No, then subtract 1 from M; if it is **M != 1** then repeat the Loop
+   - Otherwise **M == 1** so there is not enough seats available for the Booking being made - return [**False**, ...]
+ 
+If enough seats cannot be allocated then the following sample message would be displayed:
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/e6a30082-7b89-4d2d-aa56-0149ceecfca5)
+
+The user would have to choose an alternative flight date/time.
+
+
+I used the Python module [bitstring](https://pypi.org/project/bitstring/) to do the *bit searching and manipulations*.
+
+[binary.py](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/booking/misctests/binary.py) demonstrates the seven tests that I conducted.
+
+Here is my Python code of the algorithm
+
+```
+"""
+    Airlines generally seat passengers from the back of the aircraft
+    So interpret the leftmost bit as position 95
+    95 94 93 ... 2 1 0
+     0  0  0 ... 0 0 0
+"""
+
+# CAPACITY is 96 - Number of seats in the aircraft
+CAPACITY = 96  # Number of seats in the aircraft
+LEFT_BIT_POS = CAPACITY - 1  # I.E. 95
+
+
+def row_of_N_seats(number_needed, allocated, available):
+    """ Find a 'row' of 'number_needed' seats """
+    zeros = "0b" + "0"*number_needed
+    result = available.find(zeros)
+    if not result:
+        return (False, allocated, available)
+
+    # Set the bits to 1 to represent 'taken' seats
+    bitrange = range(result[0], result[0] + number_needed)
+    available.invert(bitrange)
+
+    """
+    Determine the range of seat positions
+    e.g. 6 seats at position 77
+    77-6+1 = 72
+    so range(72, 78) = 72, 73, 74, 75, 76, 77
+    Then add that range of seats to the 'allocated' list
+    """
+    end = LEFT_BIT_POS - result[0]
+    start = end - number_needed + 1
+    seat_range = range(start, end + 1)
+    allocated += [*seat_range]
+    return (True, allocated, available)
+
+
+def find_N_seats(number_needed, allocated, available):
+    """
+    Find 'N' number of seats
+    N being 'number_needed'
+    'allocated' are all seats found so far
+    'available' is a bitstring depicting what is available
+    This is a recursive algorithm
+    """
+
+    result = row_of_N_seats(number_needed, allocated, available)
+    if result[0]:
+        # Successfully found a row of N seats - so allocation is done!
+        return result
+
+    # if N = 1 then no available seats i.e. the flight is full
+    if number_needed == 1:
+        return (False, allocated, available)
+
+    # Otherwise, starting with M=N-1,
+    # see if it is possible to find a row of M seats
+    # if so, allocate that row of seats
+    # then see if the remainder can be allocated
+    minus1 = number_needed - 1
+    count = number_needed - 1
+    while count != 1:
+        result = row_of_N_seats(count, allocated, available)
+        if not result[0]:
+            # Try a smaller row allocation
+            count != 1
+            continue
+
+        remainder_needed = number_needed - count
+        remainder = find_N_seats(remainder_needed,
+                                 allocated + result[1], result[2])
+        if remainder[0]:
+            # Found all seats!
+            return remainder
+
+    # Not successful in finding any 'row' > 1
+    # Therefore, allocate one seat
+    # Then repeat 'find_N_seats' for the remainder
+
+    result = row_of_N_seats(1, allocated, available)
+
+    return find_N_seats(minus1,
+                        allocated + result[1], result[2])
+```
+
+
+
 
 
 
