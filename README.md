@@ -217,12 +217,22 @@ When the User selects this checkbox - the passenger details are striked-out<br>t
 
 Agile Kanban Board</summary>
 
+The Kanban Projects layout can be viewed [here](https://github.com/users/DelroyGayle/projects/4/views/1)
+
 <details>
-At the start of this project this is how the Kanban Board looked 
+<summary>At the start of this project this is how the Kanban Board looked</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/f4c23961-19b6-4172-bcc0-4d764d394567)
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/4e94438d-35db-4a0e-8319-ba0138a18afd)
+
+</details>
+
+<details>
+
+<summary>At the end this is how the Kanban Board looked</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/c9a267c4-1d07-4536-b216-ae21038053bc)
 
 </details>
 
@@ -446,7 +456,10 @@ This application generates quotes according to these fees.
 | Wheelchair Details | £0
 
 **All *changes to/editing of* passenger details (*except for wheelchair*) are subject to fees**<br>
-* If for example it is solely the passenger's wheelchair details that are changed the fee will be *GBP0.00*
+* Exceptions:
+* * Wheelchair SSR changes
+* * If for example it is solely the passenger's wheelchair details that are changed the fee will be *GBP0.00*
+* There is no charge for *reducing* the number of bags
 
 All fees and charges made by this App are recorded in the Transaction database in order for an Audit Trail to be created.<br>Every transaction record contains: the date the transaction was made, the Booking PNR, the amount and the 'user name'.
   
@@ -1127,8 +1140,12 @@ urllib3==1.26.15
 * * Delete any passenger from a booking
 * * Be able to *change* passenger type e.g. *Adult to Child, Child to Infant, Child to Adult* and vice versa
 * Search for a booking by the name of any passenger who is part of the booking
+* When a user *cancels confirmation* whilst creating a Booking that the App returns them to the *Passenger Details Form* so that the user can continue input
+* When a user *cancels confirmation* whilst editing a Booking that the App returns them to the *Editing Form* so that the user can continue editing
+* Warn users when leaving a page whilst creating/editing Bookings if there are any unsaved changes
+* Better seat allocation after removal of passengers from a Booking - Currently there are *gaps* in a row of seats after *removal*
+* Record Locking Mechanism to handle different users looking at the same Flight Schedule at the same time
 * Give the user the option to change their password
-* Warn users when leaving a page if there are any unsaved changes
 
 
 ### Limitations
@@ -1190,7 +1207,7 @@ I found this solution at [Stack Overflow](https://stackoverflow.com/questions/34
 
 If the user clicks the *back button* whilst navigating this App, such an action may cause an *Error 500*!<br/>
 If this happens, press Ctrl-F5 and then hit the Logo (the Home Button), in order to continue.<br/>
-To avoid such an error, please use *the Home Button and the Create Booking* options to navigate this App.
+To avoid such an error, please use *the Home Button, the Searchbar and the Create Booking* options to navigate this App.
 
 ------
 
