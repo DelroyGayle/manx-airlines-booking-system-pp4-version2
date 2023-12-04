@@ -457,7 +457,7 @@ This application generates quotes according to these fees.
 * * If for example it is solely the passenger's wheelchair details that are changed the fee will be *GBP0.00*
 * There is no charge for *reducing* the number of bags
 
-All fees and charges made by this App are recorded in the Transaction database in order for an Audit Trail to be created.<br>Every transaction record contains: the date the transaction was made, the Booking PNR, the amount and the 'user name'.
+All fees and charges made by this App are recorded in the Transaction database in order for an Audit Trail to be created. <br> Every transaction record contains: the date the transaction was made, the Booking PNR, the amount and the 'user name'.
   
 ### Background Image
 Some of the images of the Features shown may differ slightly since the *Background Image* was added later on.
@@ -1145,8 +1145,6 @@ urllib3==1.26.15
 * Record Locking Mechanism to handle different users looking at the same Flight Schedule at the same time
 * Give the user the option to change their user password
 
-
-### Limitations
 
 ## Testing
 
