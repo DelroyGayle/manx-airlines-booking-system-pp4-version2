@@ -493,16 +493,12 @@ def create_booking_instance(pnr):
     booking.number_of_adults = Common.save_context["booking"]["adults"]
     number_of_adults = booking.number_of_adults
 
-    booking.number_of_children = (Common.save_context["booking"]["children"]
-                                  if Common.save_context["children_included"]
-                                  else 0)
+    booking.number_of_children = Common.save_context["booking"]["children"]
     number_of_children = booking.number_of_children
 
-    booking.number_of_infants = (Common.save_context["booking"]["infants"]
-                                 if Common.save_context["infants_included"]
-                                 else 0)
+    booking.number_of_infants = Common.save_context["booking"]["infants"]
     number_of_infants = booking.number_of_infants
-
+    print(booking.number_of_children, booking.number_of_infants, 501)
     booking.number_of_bags = int(Common.save_context["bags"])
     booking.departure_time = (
         Common.flight_info[outbound_flightno]["flight_STD"])
@@ -1420,6 +1416,7 @@ def setup_formsets_for_create(request):
     adults_formset = AdultsFormSet(request.POST or None, prefix="adult")
 
     # CHILDREN
+    print("CC", Common.save_context )
     children_included = Common.save_context["children_included"]
     if children_included:
         ChildrenFormSet = formset_factory(MinorsForm, extra=0)
