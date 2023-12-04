@@ -404,6 +404,21 @@ def reset_common_fields():
     Common.paxdetails_editmode = None
 
 
+def ensure_included_are_set():
+    """ 
+    Work-around to fix an intermittent error that occurs 
+    which I cannot explain regarding 'children_included'
+    Ensure that both 'children_included & infants-included' 
+    are set with values at this stage
+    """
+    if "children_included" not in Common.save_context:
+        Common.save_context["children_included"] = (
+            Common.save_context["booking"]["children"] > 0)
+    if "infants_included" not in Common.save_context:
+        Common.save_context["infants_included"] = (
+            Common.save_context["booking"]["infants"] > 0)
+
+    
 def create_transaction_record(username):
     """ Record the Fees charged into the Transaction database """
     # New Instance
@@ -1416,7 +1431,7 @@ def setup_formsets_for_create(request):
     adults_formset = AdultsFormSet(request.POST or None, prefix="adult")
 
     # CHILDREN
-    print("CC", Common.save_context )
+    ensure_included_are_set()
     children_included = Common.save_context["children_included"]
     if children_included:
         ChildrenFormSet = formset_factory(MinorsForm, extra=0)
