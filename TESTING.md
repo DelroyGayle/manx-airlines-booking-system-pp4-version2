@@ -31,7 +31,7 @@ This was performed using [JSHint](https://jshint.com/)
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a9008930-a53c-4785-a23c-656f3a89931a)
 
-- infantsCheck is not unused since it is needed in ...[templates/booking/create-booking-form.html](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/templates/booking/create-booking-form.html)
+- **infantsCheck is *not unused*** since it is needed in ...[templates/booking/create-booking-form.html](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/templates/booking/create-booking-form.html)
 
  ## Python Validation
 
@@ -67,7 +67,7 @@ This is broken down into the following
 <details>
   <summary>User Stories</summary>
 
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a542b30f-f782-4cf1-a2b2-c8fdfa597f5c)
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/51c2cb43-0f4e-4bcf-b6b1-756f8f259578)
 
 </details>
 
@@ -194,10 +194,9 @@ This is broken down into the following
 <details>
   <summary>User Stories</summary>
 
-  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/d02560ce-863d-46e5-b13d-90082efb77a5)
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/08800e14-83ad-45aa-b78d-8542215de0f9)
 
-  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/7f748bc1-5c02-427d-a0f4-38c13ba8632c)
-  
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/21afde94-51af-4a89-80db-b600a24e7431) 
 
 </details>
 
@@ -585,9 +584,8 @@ This is broken down into the following
 <details>
   <summary>User Stories</summary>
 
-  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b9be01cc-62e8-4f9e-84b9-80cc00ffc195)
-
-  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/7690e35a-1030-4ddc-8449-f510ba655682)
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/6976ec42-6552-49a8-97f9-0fbebf88bc3a)
+     
   
 </details>
 
@@ -832,8 +830,8 @@ This is broken down into the following
 <details>
   <summary>User Story</summary>
 
-   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a0c5fc7b-cca9-4661-a4f5-bb70dba0be5e)
-
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b42f0e62-f10e-446a-aa65-7719f9f40775)
+   
   
 </details>
 
