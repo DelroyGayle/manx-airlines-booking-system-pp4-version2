@@ -497,16 +497,17 @@ If a user is not logged in the user will not be able to process any bookings! <b
 
    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/4d467cbb-4834-4399-a3a3-c9860e573ebe)
 
-   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/c9a313c7-9e7a-4171-9aee-1bd223a915c4)
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/6ab932f8-34fb-4e26-87b9-32de3c44f72b)
 
-   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/93177538-fcca-45a3-b665-e5428859ae8f)
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b91d687c-fce7-4051-8dec-58b1b2dab417)
+
 
 </details>
 
 ### Home Page
 
 * The Home Page opens up with a *Welcome* from **Manx Airlines** directing the user to use the Navigation Menu Bar.
-* The Footer Text serves as a reminder for the user to inform any potential passengers/customers that *fees are non-refundable, etc.*
+* The Footer Text serves as a reminder for the user to inform any potential passengers/customers <br> that *fees are non-refundable, etc.*
 * **The Logo for the Isle of Man** on the far left is the Home Button.  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/2dd6f21b-1c8f-44f1-95fd-b3f8b9a6591d)
 * Followed by the option to **Create Bookings**.
 * Followed by the **Search Box**.
@@ -517,7 +518,7 @@ The search box enables users to search for Bookings by either
 2. The Principal Passenger's First Name.
 3. The Principal Passenger's Last Name.
 
-In order to retrieve any Booking for *Viewing and Updating* the user must *Search* for the Booking using the designated Search Box.
+In order to retrieve any Booking for *Viewing and Updating* the user must *Search* for the Booking<br> using the designated Search Box.
 <details>
    <summary>
       Home Page
@@ -531,8 +532,8 @@ In order to retrieve any Booking for *Viewing and Updating* the user must *Searc
 ### Create Bookings
 
 Firstly, the user needs to enter the dates of travel and the number of passengers.</br>
-**It is mandatory that there is at least one adult passenger in a booking.** <br/>
-This passenger would be the *Principal Passenger* of the Booking; therefore, this passenger cannot be removed from the booking.**<br>
+**It is mandatory that there is at least one adult passenger in a booking.** - (Labelled as *Adult 1*)<br/>
+This passenger would be the *Principal Passenger* of the Booking; therefore, **this passenger cannot be removed from the booking.**<br>
 
 The user enters:
 * the date of travel
@@ -750,7 +751,7 @@ So if the user *selects* an Adult to be removed the corresponding Infant is auto
 
 In like manner, if the Adult is *deselected* the corresponding Infant would be automatically *deselected* as well.
 
-<summary>Removal of Individual Passengers</summary>summary>
+<summary>Removal of Individual Passengers</summary>
 
 That said, any individual passenger can be selected for removal from a booking e.g.
 * The Infant travelling with Adult 1 can be removed without affecting Adult 1
@@ -785,7 +786,7 @@ Change Fees will be generated which needs confirmation - click Agree and pay now
 Note: the user has the option to *Cancel* changes
 
 <details>
-<summary>Change Fees will be generated which needs confirmation - click Agree and pay now</summary>
+<summary>Please Confirm Changes</summary>
 <br/>
 
 Using the example above: **Booking CGF64F**
@@ -810,7 +811,7 @@ Note: the user has the option to Cancel
 
 
 <details>
-<summary>When viewing a Booking the user has the option to delete the Booking</summary>
+<summary>View Booking</summary>
 <br/>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/f3340e60-f067-45c8-b221-4c0515b6939a)
@@ -1090,6 +1091,8 @@ Note: The same validation is applied to the *Returning Date*
     * Semantic UI was used for the design, styling and responsiveness of the website.
 * [Cloudinary](https://cloudinary.com/)
     * Cloudinary was used for image management.
+* [bitstring](https://pypi.org/project/bitstring/)
+   * Bitstring was used to create my Seat Allocation Algorithm - see [TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md)
 
 #### Other tools and frameworks
 
@@ -1103,7 +1106,7 @@ Note: The same validation is applied to the *Returning Date*
 * [Tiny PNG](https://tinypng.com/) was used to reduce the file size of the background image
 * [Code Institute's GitHub full template](https://github.com/Code-Institute-Org/python-essentials-template) in order to run Django and Python on Heroku
 * [RapidTables Hex to Binary converter](https://www.rapidtables.com/convert/number/hex-to-binary.html) in order to convert from hex numbers to binary & vice versa
-* [bitstring](https://pypi.org/project/bitstring/) was used to create my Seat Allocation Algorithm - see [TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md)
+
 
 #### requirements.txt
 
@@ -1141,7 +1144,7 @@ urllib3==1.26.15
 * Warn users when leaving a page whilst creating/editing Bookings if there are any unsaved changes
 * Better seat allocation after removal of passengers from a Booking - Currently there are *gaps* in a row of seats after *removal*
 * Record Locking Mechanism to handle different users looking at the same Flight Schedule at the same time
-* Give the user the option to change their password
+* Give the user the option to change their user password
 
 
 ### Limitations
@@ -1203,7 +1206,7 @@ I found this solution at [Stack Overflow](https://stackoverflow.com/questions/34
 
 If the user clicks the *back button* whilst navigating this App, such an action may cause an *Error 500*!<br/>
 If this happens, press Ctrl-F5 and then hit the Logo (the Home Button), in order to continue.<br/>
-To avoid such an error, please use *the Home Button, the Search Bar and the Create Booking* options to navigate this App.
+To avoid such an error, please use *the Home Button, the Search Bar and the Create Booking* options <br>to navigate this App.
 
 ------
 
