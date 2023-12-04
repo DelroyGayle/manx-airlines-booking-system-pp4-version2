@@ -217,22 +217,18 @@ When the User selects this checkbox - the passenger details are striked-out<br>t
 
 Agile Kanban Board</summary>
 
-The Kanban Projects layout can be viewed [here](https://github.com/users/DelroyGayle/projects/4/views/1)
+The Kanban Project layout can be viewed [here](https://github.com/users/DelroyGayle/projects/4)
+
+*Twelve User Stories* were implemented - One User Story is assigned for Future Implementation
 
 <details>
-<summary>At the start of this project this is how the Kanban Board looked</summary>
+<summary>Here is the Kanban view of the Twelve User Stories that were implemented</summary>
 
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/f4c23961-19b6-4172-bcc0-4d764d394567)
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/c60fd953-4564-4975-93a0-60639e616588)
 
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/4e94438d-35db-4a0e-8319-ba0138a18afd)
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/f3506b2b-3341-4a9b-9f87-629b3da18cd8)
 
-</details>
-
-<details>
-
-<summary>At the end this is how the Kanban Board looked</summary>
-
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/c9a267c4-1d07-4536-b216-ae21038053bc)
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/9ac7c36e-3c4b-4a93-8c69-ca2d95e31817)
 
 </details>
 
