@@ -137,10 +137,10 @@ This is broken down into the following
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-| T06 | Search Record | Create a Searchbar in order to be able to Search for created records. Searches are *case insensitive*. | Expect to see matching records or a message showing that no matching criteria found. | PASS |
+| T06 | Search Record | Create a Search Bar in order to be able to Search for created records. Searches are *case insensitive*. | Expect to see matching records or a message showing that no matching criteria found. | PASS |
 
 <details>
-<summary>Searchbar - Demonstrate when no matching records found</summary>
+<summary>Search Bar - Demonstrate when no matching records found</summary>
   
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/bee4f3f5-abcc-4959-b767-cd5067f5294f)
 
@@ -533,10 +533,10 @@ Note: The same validation is applied to the *Returning Date*
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-| T13 | Search Bookings | Implement a Searchbar where case-insensitive searches of Bookings can be performed. | Demonstrate Search Functionality and Pagination. | PASS |
+| T13 | Search Bookings | Implement a Search Bar where case-insensitive searches of Bookings can be performed. | Demonstrate Search Functionality and Pagination. | PASS |
 
 <details>
-<summary>Searchbar - Demonstrate when no matching records found</summary>
+<summary>Search Bar - Demonstrate when no matching records found</summary>
   
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/7a73f6b0-0afa-4e7d-92b3-bee30dcfcff9)
 
@@ -554,15 +554,15 @@ For testing purposes, initially all PNRs were prefixed with 'SMI'
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/f9366a2d-0e77-4f6b-b04e-8d542a1eae0a)
 
-<Summary>User can search by PNR</Summary>
+<summary>User can search by PNR</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/478f722d-a0e9-441d-a6c8-0b64aa45e845)
 
-<Summary>User can search by Adult 1's First Name</Summary>
+<summary>User can search by Adult 1's First Name</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a2057aac-09e7-41af-818f-38b3d5be0bc6)
 
-<Summary>User can search by Adult 1's Last Name</Summary>
+<summary>User can search by Adult 1's Last Name</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/f7328591-b4c9-4bd0-833b-59e2e69e31a5)
 
@@ -604,7 +604,7 @@ User Tasks:
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/7f6b3d46-def4-4594-bf45-74ba3639afc2)
 
-<summmary>Seatmap - 5 bits set showing 5 allocated seats</summary>
+<summary>Seatmap - 5 bits set showing 5 allocated seats</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/fa59c5c3-11cc-494a-8f30-fbfbf374dc1a)
 
@@ -641,7 +641,7 @@ User Tasks:
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/e0272621-15f8-437d-967c-344a4d17f26f)
 
-<summmary>Seatmap - 2 bits set showing 2 allocated seats</summary>
+<summary>Seatmap - 2 bits set showing 2 allocated seats</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/336013ae-aa82-4e74-b1d5-04b4240ad0fc)
 
@@ -736,13 +736,13 @@ Demonstrated that Booking QPJXWV has been deleted including all the passengers a
 
 <details>
 
- <Summary>Click Child 1</Summary>
+ <summary>Click Child 1</summary>
 
  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/255eeb95-0be3-48f9-ab6b-586e42f43857)
 
  Note the **red strike-through** indicating that this passenger will be removed.
 
-<Summary>Click Infant 1</Summary>
+<summary>Click Infant 1</summary>
 
  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/350cc3a5-84c9-41f5-8762-831854d90951)
 
@@ -780,13 +780,13 @@ In a Booking, each Infant PAX is assigned to an Adult PAX. If the Adult PAX is s
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/9bded516-d37c-41f5-a5f1-fbee65ee21ed)
 
-<Summary>Click Edit and Select Adult 2</Summary>
+<summary>Click Edit and Select Adult 2</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b86a7d0a-e15b-496f-8bdc-73cb80c1e267)
 
 When one scrolls down the page one will see that Infant 2 has been automatically selected.
 
-<Summary>Infant 2</Summary>
+<summary>Infant 2</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/7a7fdcc9-f427-455f-bee6-baeb4614bf68)
 

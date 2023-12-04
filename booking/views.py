@@ -33,6 +33,7 @@ def homepage(request):
     On the first display of the Home Page
     Initialise various settings
     """
+    m.reset_common_fields()
     if not Common.initialised:
         Common.initialisation()
 

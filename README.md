@@ -25,7 +25,7 @@
    8. [Delete Bookings](#delete-bookings)
    9. [Validation and Messages](#validation-and-messages)
    10. [Registration](#registration)
-   11. [LogIn/LogOut](#loginlogout)
+   11. [Login/Logout](#loginlogout)
 
    
 6. [Technologies Used](#technologies-used)
@@ -139,7 +139,7 @@ Here are a sample of some of the terms used:
 </details>
 
 <details>
-<summary>Passenger Selection Summary Page</summary>
+<summary>Passenger Selection summary Page</summary>
 <br/><br/>  
 
    
@@ -416,7 +416,7 @@ In the Airline Travel Industry, all airlines generally adhere to the following c
 8. The First Passenger in the Booking *Adult 1* is designated as **the Principal Passenger of the Booking**.<br/>
    * As such, this passenger is a mandatory part of the booking and cannot be removed.
    * If for example, the passenger does need to be *removed* from the booking, then that booking needs to be **deleted** and a **new** booking altogether needs to be made.
-   * However, *Adult 1's* name  can be edited with regards to a name of a new passenger.
+   * However, *Adult 1's* name  can be edited with regards to the name of a new passenger.
 9. An Infant Passenger must be at least 14 days old to travel.
 
 ### Fees
@@ -433,7 +433,7 @@ This application generates quotes according to these fees.
 | | **Other Fees** | |
 | Bags | | £30 |
 
-- Please note: the price of a bag (£30) is the same regardless of whether a return or one-way journey.
+- Please note: the price of a bag (£30) is the same regardless of whether it is a return or one-way journey.
 - However, the passenger prices are for each *leg* of the journey, regardless of whether adult, child or infant.
 - For example, 
 - One adult on a return flight - the cost would be £200 - with a bag - £230
@@ -488,7 +488,7 @@ On the far left is **the Logo for the Isle of Man**.<br/>
 </details>
 
 The logo acts as a *Home Button*. By clicking the logo, the user is returned to the Home Page.<br/>
-On the far right is the option to Log Out.
+On the far right is the option to Logout.
 
 If a user is not logged in the user will not be able to process any bookings! <br/>None of the above options will appear to a user who is not logged in.
 
@@ -872,7 +872,7 @@ Note: The same validation is applied to the *Returning Date*
 
 <br/> 
 
-<summary>Same Day Return Journey - The Return Time cannot be less than 90 minutes from the Departure Time e.g. 09:45am and 11:00am</summary>
+<summary>Same Day Return Journey - The Return Time cannot be less than 90 minutes from the Departure Time e.g. 09:45 am and 11:00 am</summary>
 <br/>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/39d819b1-895e-4e27-97ec-0ef187d0b8e8)
@@ -1037,7 +1037,7 @@ Note: The same validation is applied to the *Returning Date*
 ### Registration
 
 * In order for a user to be able to create, read, edit and delete bookings, the user will need to register on the site.
-* Registration is based upon the Django's built-in authentication system.
+* Registration is based upon Django's built-in authentication system.
 * When the user registers the user will get a success message to confirm.
 
 <details>
@@ -1052,10 +1052,10 @@ Note: The same validation is applied to the *Returning Date*
 
 </details>
 
-### LogIn/LogOut
+### Login/Logout
 
 * In order for a user to be able to create, read, edit and delete bookings, the user will need to <br/>log into the App using their username and password.
-* LogIn/LogOut is based upon the Django's built-in authentication system.
+* Login/Logout is based upon Django's built-in authentication system.
 * When the user logs in, the Home Page will appear to the user.
 * When the user logs out, the user will get a success message to confirm.
 
@@ -1065,7 +1065,7 @@ Note: The same validation is applied to the *Returning Date*
    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/75fd5aff-c389-4cc9-a17c-46049e92df60)
 
 
-   <summary>Successful Log Out</summary>
+   <summary>Successful Logout</summary>
 
    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/971ea8e7-e6ff-408e-ac18-20b4786ffef4)
 
@@ -1203,7 +1203,7 @@ I found this solution at [Stack Overflow](https://stackoverflow.com/questions/34
 
 If the user clicks the *back button* whilst navigating this App, such an action may cause an *Error 500*!<br/>
 If this happens, press Ctrl-F5 and then hit the Logo (the Home Button), in order to continue.<br/>
-To avoid such an error, please use *the Home Button, the Searchbar and the Create Booking* options to navigate this App.
+To avoid such an error, please use *the Home Button, the Search Bar and the Create Booking* options to navigate this App.
 
 ------
 
