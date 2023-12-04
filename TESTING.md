@@ -118,7 +118,7 @@ This is broken down into the following
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-| T05 | Create | Create a template and update views.py in order to be able to Create a Record.| In Admin, expect to see a created record. | PASS |
+| T05 | Create | Create a template and update views.py in order to be able to Create a Record. | In Admin, expect to see a created record. | PASS |
 
 <details>
 <summary>Form used to Create a Mock Record</summary>
@@ -220,7 +220,7 @@ User Tasks:
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-| T09 | Create Booking | Create a Booking with 3 PAX, bags and remarks.| Confirmation Form regarding Booking. | PASS |
+| T09 | Create Booking | Create a Booking with 3 PAX, bags and remarks. | Confirmation Form regarding Booking. | PASS |
 
 <details>
  
@@ -667,7 +667,7 @@ Demonstrated that Booking QPJXWV has been deleted including all the passengers a
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-| T14 | Edit Bookings | View a Booking and Click the *Edit* Button| Demonstrate that PAX details can be edited/updated. | PASS |
+| T14 | Edit Bookings | View a Booking and Click the *Edit* Button | Demonstrate that PAX details can be edited/updated. | PASS |
 
 ##### Edit Booking - Scenario 1
 
@@ -824,6 +824,31 @@ Also before the Edit there were **two allocated seats on Flight MX0465 29DEC**
 - If the user wants to make a Booking without the assigned Adult 1 PAX then the Booking has to be deleted and a new Booking created.
 
 ---
+
+
+### Epic: *Register, Login and Logout*
+
+This is broken down into the following
+<details>
+  <summary>User Story</summary>
+
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a0c5fc7b-cca9-4661-a4f5-bb70dba0be5e)
+
+  
+</details>
+
+User Tasks:
+1. Demonstrate that the user can Register in order to use the site
+2. Demonstrate that the user can Login to the site
+3. Demonstrate that the user can Logout from the site
+4. That the endpoints are protected - that only logged-in users can use the site
+
+
+| Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
+| ------------- | ------------- | -------------    | ------------- | ------------- |
+| T16 | Register, Login, LogOut | Using Django's authentication system setup Register/Login?logout functionality. | That the above User Tasks are accomplished. | PASS |
+
+----
 
 ## Conclusion
 
