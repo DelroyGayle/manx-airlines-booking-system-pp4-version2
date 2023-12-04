@@ -1094,6 +1094,7 @@ Note: The same validation is applied to the *Returning Date*
 * [Tiny PNG](https://tinypng.com/) was used to reduce the file size of the background image
 * [Code Institute's GitHub full template](https://github.com/Code-Institute-Org/python-essentials-template) in order to run Django and Python on Heroku
 * [RapidTables Hex to Binary converter](https://www.rapidtables.com/convert/number/hex-to-binary.html) in order to convert from hex numbers to binary & vice versa
+* [bitstring](https://pypi.org/project/bitstring/) was used to create my Seat Allocation Algorithm - see [TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md)
 
 #### requirements.txt
 
