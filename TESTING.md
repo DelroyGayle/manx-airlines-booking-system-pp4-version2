@@ -7,9 +7,9 @@ This was performed using [W3C HTML Validator](https://validator.w3.org/nu/)
 
 * Spaces following % produced "Non-space characters found without seeing a doctype first."
 
-* Besides these conflicts I changed all my <article>'s and <section>'s to <div>'s
+* Besides these conflicts I changed all my \<article\>'s and \<section\>'s to \<div\>'s
 
-* Warning: The type attribute is unnecessary for JavaScript resources.
+* *Warning: The type attribute is unnecessary for JavaScript resources.*
 
 ## CSS Validation
 
@@ -21,13 +21,15 @@ This was performed using [W3C CSS Validator](https://jigsaw.w3.org/css-validator
 
 This was performed using [JSHint](https://jshint.com/)
 
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/a9008930-a53c-4785-a23c-656f3a89931a)
+
 - infantsCheck is not unused since it is needed in ...templates/booking/create-booking-form.html
 
  ## Python Validation
 
 This was performed using Code Institute's [PEP8 Linter](https://pep8ci.herokuapp.com/)
 
-- No issues flagged during JS validation
+- No issues flagged during Python validation
 
 ## Lighthouse
 
@@ -107,7 +109,7 @@ This is broken down into the following
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-| T05 | Create Booking | Create a template and update views.py in order to be able to create a Booking.| In Admin, expect to see a created record. | PASS |
+| T05 | Create | Create a template and update views.py in order to be able to Create a Record.| In Admin, expect to see a created record. | PASS |
 
 <details>
 <summary>Form used to Create a Mock Record</summary>
@@ -126,7 +128,7 @@ This is broken down into the following
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-| T06 | Search Booking | Create a Searchbar in order to be able to Search for created bookings. Searches are *case insensitive*. | Expect to see matching records or a message showing that no matching criteria found. | PASS |
+| T06 | Search Record | Create a Searchbar in order to be able to Search for created records. Searches are *case insensitive*. | Expect to see matching records or a message showing that no matching criteria found. | PASS |
 
 <details>
 <summary>Searchbar - Demonstrate when no matching records found</summary>
@@ -144,7 +146,7 @@ This is broken down into the following
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-| T07 | View Bookings | Once a Booking has been found, view the Booking. | Click the View Button to see a matched record. | PASS |
+| T07 | View Records | Once a Matching Record has been found, view the Record. | Click the View Button to see the matched record. | PASS |
 
 <details>
   <summary>View Waterstons record by clicking the View button. Showing the Edit and Delete options</summary>
@@ -156,7 +158,7 @@ This is broken down into the following
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-| T08 | Delete Bookings | Implement the functionality to delete a record. Give the user the option to cancel the 'Delete' command. | Click the Yes Button to delete a record . | PASS |
+| T08 | Delete Records | Implement the functionality to delete a record. Give the user the option to cancel the 'Delete' command. | Click the Yes Button to delete the record. | PASS |
 
 <details>
   <summary>Showing Yes/Cancel options</summary> 
@@ -195,7 +197,7 @@ User Tasks:
 2. Demonstrate the forms used to Create a Booking
 3. Show each stage of a Booking being created
 4. Demonstrate the validation of the fields entered
-5. Once Bookings have been made, demonstrate that the user can search for Bookings and see the List of Bookings found
+5. Once Bookings have been made, demonstrate that the user can Search for Bookings and see the List of Bookings found
 6. Demonstrate that the user can View Bookings
 
 <details>
@@ -238,7 +240,7 @@ User Tasks:
 
 <details>
 
-<summary>Confirmation Form of the Booking being made</summary>
+<summary>Confirmation Form of the Booking being made - Display the generated PNR</summary>
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/f8d0031a-dd58-42f6-9584-e402022d3a85)
 
@@ -303,7 +305,7 @@ Using [RapidTables](https://www.rapidtables.com/convert/number/hex-to-binary.htm
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-| T11 | Validate All Input | Enter various erroneous and invalid values | Suitable Messages should be displayed indicating that validation has been performed. | PASS |
+| T11 | Validate All Input | Enter various erroneous and invalid values. | Suitable Messages should be displayed indicating that validation has been performed. | PASS |
 
 <details>
 
@@ -525,6 +527,13 @@ Note: The same validation is applied to the *Returning Date*
 | ------------- | ------------- | -------------    | ------------- | ------------- |
 | T13 | Search Bookings | Implement a Searchbar where case-insensitive searches of Bookings can be performed. | Demonstrate Search Functionality and Pagination. | PASS |
 
+<details>
+<summary>Searchbar - Demonstrate when no matching records found</summary>
+  
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/7a73f6b0-0afa-4e7d-92b3-bee30dcfcff9)
+
+</details>
+
 For testing purposes, initially all PNRs were prefixed with 'SMI'
 <details>
  <summary>Search for 'smi'</summary>
@@ -551,6 +560,9 @@ For testing purposes, initially all PNRs were prefixed with 'SMI'
 
 </details>
 
+- Now that the Search Functionality has passed all tests - PNRs no longer have a 'SMI' prefix
+- Instead, **a unique 6 character PNR is generated beginning with a letter**
+  
 #### View Booking
 
 When a Booking is Viewed, the user has the option to *Edit or Delete a Booking*
@@ -632,23 +644,82 @@ User Tasks:
 
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/88e3fbb7-599c-4efe-9a3c-f9b8ccace553)
 
-![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/51ac79a8-3edf-44ee-918d-75832b5a5667)
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/9bded516-d37c-41f5-a5f1-fbee65ee21ed)
 
 </details>
 
 Note: Infants are **not** allocated seats - hence Booking EVZM6K rightfully shows 2 seated passengers.
 The Booking consists of two adults (who are allocated seats) and two infants!
 
-So, Booking QPJXWV has been deleted including all the passengers associated with that booking! 
-
+Demonstrated that Booking QPJXWV has been deleted including all the passengers associated with this booking! 
 
 #### Edit A Booking
 
 
 | Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
 | ------------- | ------------- | -------------    | ------------- | ------------- |
-| T14 | Edit Bookings | View a Booking and Click the *Edit* Button| Demonstrate that the PAX details can be edited and saved. | PASS |
+| T14 | Edit Bookings | View a Booking and Click the *Edit* Button| Demonstrate that PAX details can be edited/updated. | PASS |
 
+##### Edit Booking - Scenario 1
+
+- Create a Booking of 1 Adult, 1 Child, 1 Infant
+- When that is done, Edit the Booking - that is, make some changes to the Booking and update it.
+
+<details>
+  <summary>Create the Booking</summary>
+
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/d9468430-96ac-46a0-a75c-dd0287d5d640)
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/dae66823-22ff-4f94-a832-627dc6b838e7)
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/5e8d730d-d2c2-4677-8b00-b558f1490ad9)
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/8d866adb-ed0b-4adf-b6e5-ee58ac5ccdfc)
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/4291e437-87e0-4217-87fe-ff642cd47ca5)
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/d02de58e-d12e-4644-913a-bbd58a788b30)
+
+  <summary>Confirm the Booking</summary>
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/17f3b2dd-98e5-4e73-bd43-97a3cd0eb568)
+
+  ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/0b20237f-4f6f-4638-9562-b49154ce3e37)
+
+  </details>
+
+  - Mr Jack Jones made a mistake when he initially requested this booking.
+  - Jimmy Jones' name is wrong. It ought to be *James*! Change the name.
+  - Also Mr Jones requests two more bags to be added.
+
+    <details>
+     <summary>Search for the Booking LWQ9Q2</summary>
+
+     ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/5f89d6e0-8360-4568-ae07-5b67e19b47ac)
+
+    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/809d361c-9654-4c42-bdee-afe24a17e712)
+
+    <summary>View the Booking</summary>
+
+    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/1f212573-3404-4827-ad52-6f858dbeeae3)
+
+    <summary>Change the Name and Add two bags</summary>
+
+    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/2c22548f-1a0a-4d65-b42f-086d82fc16d7)
+
+    <summary>Confirm the Changes to the Booking by clicking Agree and pay now</summary>
+
+    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/66ae7aeb-5fda-4fd6-b358-371ec179bf4c)
+
+    <summary>Message confirming that the Update has been done</summary>
+    
+    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/3ed89cde-efa0-494b-bf5a-f34a757d2c65)
+
+    <summary>View Booking to confirm the Update</summary>
+
+    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/3a19cde6-a95e-43ab-9433-53529b923748)
+
+    </details>
 
 
 
