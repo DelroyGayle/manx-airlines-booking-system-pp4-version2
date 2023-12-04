@@ -721,6 +721,107 @@ Demonstrated that Booking QPJXWV has been deleted including all the passengers a
 
     </details>
 
+##### Edit Booking - Scenario 2
+
+- The children are no longer flying
+- Edit the Booking - that is, remove the Child and Infant PAX from the Booking
+- Click *Edit* on the Viewed Booking and proceed with the editing
+
+<details>
+
+ <Summary>Click Child 1</Summary>
+
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/255eeb95-0be3-48f9-ab6b-586e42f43857)
+
+ Note the **red strike-through** indicating that this passenger will be removed.
+
+<Summary>Click Infant 1</Summary>
+
+ ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/350cc3a5-84c9-41f5-8762-831854d90951)
+
+ Note the **red strike-through** indicating that this passenger will be removed.
+
+<summary>Click Continue to view the Confirmation Form</summary> 
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/5be3434c-a247-4979-8da7-6238d1f26c0e)
+
+
+<summary><summary>Click Agree and pay now - Message confirming that the Update has been done</summary>
+    
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/3ed89cde-efa0-494b-bf5a-f34a757d2c65)
+
+<summary>View Booking to confirm the Update</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/8781bbc3-d03e-4833-a7c2-2c39099a2aff)
+
+</details>
+
+In a Booking, each Infant PAX is assigned to an Adult PAX. If the Adult PAX is selected for Removal, the Infant PAX assigned to that Adult *will automatically be selected for removal* as well! Demonstrate and Test this scenario.
+
+----
+
+##### Edit Booking - Scenario 3
+
+
+| Test No. | Feature        | Steps        | Expected Outcome  | Actual Outcome |
+| ------------- | ------------- | -------------    | ------------- | ------------- |
+| T15 | Remove Adult and Infant | Click Remove Pax? on an Adult PAX. | Both the Adult and Infant PAX are removed. | PASS |
+
+<details>
+
+<summary>View Booking EVZM6K</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/9bded516-d37c-41f5-a5f1-fbee65ee21ed)
+
+<Summary>Click Edit and Select Adult 2</Summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/b86a7d0a-e15b-496f-8bdc-73cb80c1e267)
+
+When one scrolls down the page one will see that Infant 2 has been automatically selected.
+
+<Summary>Infant 2</Summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/7a7fdcc9-f427-455f-bee6-baeb4614bf68)
+
+<summary>Click Continue to view the Confirmation Form</summary> 
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/6c9487b5-e588-41a5-a25f-ffd40786de07)
+
+<summary><summary>Click Agree and pay now - Message confirming that the Update has been done</summary>
+    
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/bf043c4e-ac80-4fc3-aa06-cc55e4b03eae)
+
+<summary>View Booking to confirm the Update</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/3b388acc-409f-41bc-aee6-7e631b0f1d0d)
+
+Also before the Edit there were **two allocated seats on Flight MX0465 29DEC**
+
+<summary>View the Schedule Now</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/94c0a88d-01f2-4682-ae7a-3f7b9a36a957)
+
+<summary>View Flight Now</summary>
+
+![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/85492883-50a5-4180-9d03-6542bf7c94ef)
+
+</details>
+
+- Please note: Infants can be removed just as well as any other PAX (*except for Adult 1 - the Principal PAX*)
+- By clicking *Remove Pax?* and proceeding with the Update.
+- That is, the assigned Adult does **not** have to be removed!
+- **All PAX** (*except for Adult 1 - the Principal PAX*) can be removed from the Booking individually.
+- Adult 1 - the Principal PAX can be edited however e.g. Name Change
+- If the user wants to make a Booking without the assigned Adult 1 PAX then the Booking has to be deleted and a new Booking created.
+
+---
+
+## Conclusion
+
+CRUD functionality has been demonstrated.
+
+## Seating Allocation Algorithm
+
 
 
 
