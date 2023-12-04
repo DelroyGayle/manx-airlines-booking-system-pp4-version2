@@ -404,19 +404,23 @@ def reset_common_fields():
     Common.paxdetails_editmode = None
 
 
-def ensure_included_are_set():
+def ensure_included_are_set(request):
     """ 
-    Work-around to fix an intermittent error that occurs 
+    Work-around to fix an intermittent error that occurs
+    'solely' when deployed on Heroku
     which I cannot explain regarding 'children_included'
+
     Ensure that both 'children_included & infants-included' 
     are set with values at this stage
     """
+    print(request.POST)
+    print(request.POST.get("children"), type(request.POST.get("children")))
     if "children_included" not in Common.save_context:
         Common.save_context["children_included"] = (
-            Common.save_context["booking"]["children"] > 0)
+            int(request.POST.get("children")))
     if "infants_included" not in Common.save_context:
         Common.save_context["infants_included"] = (
-            Common.save_context["booking"]["infants"] > 0)
+            int(request.POST.get("infants")))
 
     
 def create_transaction_record(username):
@@ -1431,7 +1435,7 @@ def setup_formsets_for_create(request):
     adults_formset = AdultsFormSet(request.POST or None, prefix="adult")
 
     # CHILDREN
-    ensure_included_are_set()
+    ensure_included_are_set(request)
     children_included = Common.save_context["children_included"]
     if children_included:
         ChildrenFormSet = formset_factory(MinorsForm, extra=0)
