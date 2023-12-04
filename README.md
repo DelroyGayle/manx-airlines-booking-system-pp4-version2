@@ -524,8 +524,7 @@ In order to retrieve any Booking for *Viewing and Updating* the user must *Searc
       Home Page
    </summary>
 
-   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/2f263ea9-80d1-4392-ae07-dd390d5fbfec)
-
+   ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/f16ecae8-6f5d-4966-ac6d-c9e8cc9952e9)
 
 </details>
 
@@ -1092,7 +1091,7 @@ Note: The same validation is applied to the *Returning Date*
 * [Cloudinary](https://cloudinary.com/)
     * Cloudinary was used for image management.
 * [bitstring](https://pypi.org/project/bitstring/)
-   * Bitstring was used to create my Seat Allocation Algorithm - see [TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md)
+   * bitstring was used to create my Seat Allocation Algorithm - see [TESTING.md](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/blob/main/TESTING.md)
 
 #### Other tools and frameworks
 
@@ -1142,7 +1141,7 @@ urllib3==1.26.15
 * When a user *cancels confirmation* whilst creating a Booking that the App returns them to the *Passenger Details Form* so that the user can continue input
 * When a user *cancels confirmation* whilst editing a Booking that the App returns them to the *Editing Form* so that the user can continue editing
 * Warn users when leaving a page whilst creating/editing Bookings if there are any unsaved changes
-* Better seat allocation after removal of passengers from a Booking - Currently there are *gaps* in a row of seats after *removal*
+* Better seat allocation after removal of passengers from a Booking - Currently there are *gaps* in a row of seats after *removal* of passengers
 * Record Locking Mechanism to handle different users looking at the same Flight Schedule at the same time
 * Give the user the option to change their user password
 
