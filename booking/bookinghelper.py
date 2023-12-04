@@ -1790,7 +1790,6 @@ def handle_editpax_GET(request, id, booking):
     Common.save_context["booking"]["departing_date"] = departing_date
     Common.save_context["booking"]["returning_date"] = returning_date
     Common.save_context["original_pax_details"] = pax_initial_list
-
     Common.save_context["children_included"] = number_of_children
     Common.save_context["infants_included"] = number_of_infants
 
