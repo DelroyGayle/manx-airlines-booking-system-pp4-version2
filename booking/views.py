@@ -34,8 +34,12 @@ def homepage(request):
     Initialise various settings
     """
     ### TODO REMOVE m.reset_common_fields()
+    m.reset_common_fields()
     if not Common.initialised:
+        init_class = Common()
         Common.initialisation()
+    else:
+        m.reset_common_fields()
 
     return render(request, "booking/index.html")
 
@@ -208,8 +212,8 @@ def create_booking_form(request):
 
             # Save a copy in order to fetch any values as and when needed
             Common.save_context = context.copy()
-            #context["saveit"] = Common.save_context
-            #context["inb"] = "booking" in Common.save_context
+            context["saveit"] = Common.save_context
+            context["inb"] = "booking" in Common.save_context
             print("CC4", Common.save_context)
             print("CC5", context)
             return render(request, "booking/passenger-details-form.html",
