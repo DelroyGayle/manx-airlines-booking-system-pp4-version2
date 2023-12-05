@@ -33,7 +33,7 @@ def homepage(request):
     On the first display of the Home Page
     Initialise various settings
     """
-    m.reset_common_fields()
+    ### TODO REMOVE m.reset_common_fields()
     if not Common.initialised:
         Common.initialisation()
 
@@ -207,9 +207,9 @@ def create_booking_form(request):
             context["bags_remarks_form"] = bags_remarks_form
 
             # Save a copy in order to fetch any values as and when needed
-            Common.save_context = context
-            context["saveit"] = Common.save_context
-            context["inb"] = "booking" in Common.save_context
+            Common.save_context = context.copy()
+            #context["saveit"] = Common.save_context
+            #context["inb"] = "booking" in Common.save_context
             print("CC4", Common.save_context)
             print("CC5", context)
             return render(request, "booking/passenger-details-form.html",
