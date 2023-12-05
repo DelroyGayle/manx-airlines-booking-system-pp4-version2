@@ -934,14 +934,40 @@ def adults_formset_validated(cleaned_data, request):
     return True
 
 
+def fetch_date_values(request):
+    """ 
+    My attempt to fix a bug that I cannot explain
+    Only shows up in the deployed version on Heroku
+    If for some obscure reason 
+    Common.save_context["booking"] ...
+    is not set fetch the data from 'request'
+    """
+    if "booking" in Common.save_context:
+        return (Common.save_context["booking"]["departing_date"],
+                Common.save_context["booking"]["return_option"],
+                Common.save_context["booking"]["returning_date"])
+
+    return (request.POST.get("departing_date"),
+            request.POST.get("return_option"),
+            request.POST.get("returning_date"),
+        )
+
+
 def date_validation_part2(accum_dict, errors_found,
-                          date_of_birth, is_child):
+                          date_of_birth, is_child,
+                          request):
     """ Handles the date validation for children and infants """
 
     todays_date = datetime.now().date()
-    # datediff = date_of_birth - todays_date
+    """ 
+    My attempt to fix a bug that I cannot explain
+    Only shows up in the deployed version on Heroku
+    """
+    departing_date, return_option, returning_date = (
+         fetch_date_values(request)
+    )
 
-    departing_date = Common.save_context["booking"]["departing_date"]
+    # TODO departing_date = Common.save_context["booking"]["departing_date"]
     output_departing_date = departing_date.strftime("%d/%m/%Y")
     datediff = date_of_birth - todays_date
     days = datediff.days
@@ -1005,13 +1031,16 @@ def date_validation_part2(accum_dict, errors_found,
             return (accum_dict, errors_found)
 
     # Does this Booking have a Return Journey?
-    if Common.save_context["booking"]["return_option"] == "N":
-        # No!
+    # TODO if Common.save_context["booking"]["return_option"] == "N":
+    if return_option == "N":
+        # No Return Journey i.e. One-way!
         return (accum_dict, errors_found)
 
-    # Yes! - Check the D.O.B. against the Return Date
-    returning_date = Common.save_context["booking"]["returning_date"]
+    # Yes! It is a Return Journey
+    # Check the D.O.B. against the Return Date
+    # TODO returning_date = Common.save_context["booking"]["returning_date"]
     output_returning_date = returning_date.strftime("%d/%m/%Y")
+
     # Method to determine the difference in years was found at
     # https://stackoverflow.com/questions/4436957/pythonic-difference-between-two-dates-in-years
     difference_in_years = relativedelta(returning_date, date_of_birth).years
@@ -1087,7 +1116,8 @@ def minors_formset_validated(cleaned_data, is_child_formset, request,):
             accum_dict, errors_found = date_validation_part2(accum_dict,
                                                              errors_found,
                                                              date_of_birth,
-                                                             is_child_formset)
+                                                             is_child_formset,
+                                                             request)
 
         formset_errors.append(accum_dict)
 
