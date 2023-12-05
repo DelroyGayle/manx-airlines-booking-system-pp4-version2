@@ -1151,17 +1151,17 @@ def initialise_formset_context(request):
     context = {}
 
     # ADULTS
-    number_of_adults = Common.save_context["booking"]["adults"]
+    number_of_adults = int(request.POST,get("adults"))
     AdultsFormSet = formset_factory(AdultsForm,
                                     extra=number_of_adults)
     adults_formset = AdultsFormSet(request.POST or None, prefix="adult")
     context["adults_formset"] = adults_formset
 
     # CHILDREN
-    children_included = Common.save_context["children_included"]
+    number_of_children = int(request.POST,get("children"))
+    children_included = number_of_children > 0
     context["children_included"] = children_included
     if children_included:
-        number_of_children = Common.save_context["booking"]["children"]
         ChildrenFormSet = formset_factory(MinorsForm,
                                           extra=number_of_children)
         children_formset = ChildrenFormSet(request.POST or None,
@@ -1169,11 +1169,10 @@ def initialise_formset_context(request):
         context["children_formset"] = children_formset
 
     # INFANTS
-
-    infants_included = Common.save_context["infants_included"]
+    number_of_infants = int(request.POST,get("infants"))
+    infants_included = number_of_infants > 0
     context["infants_included"] = infants_included
     if infants_included:
-        number_of_infants = Common.save_context["booking"]["infants"]
         InfantsFormSet = formset_factory(MinorsForm,
                                          extra=number_of_infants)
         infants_formset = InfantsFormSet(request.POST or None,
