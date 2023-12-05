@@ -208,6 +208,10 @@ def create_booking_form(request):
 
             # Save a copy in order to fetch any values as and when needed
             Common.save_context = context
+            context["saveit"] = Common.save_context
+            context["inb"] = "booking" in Common.save_context
+            print("CC4", Common.save_context)
+            print("CC5", context)
             return render(request, "booking/passenger-details-form.html",
                           context)
 
@@ -468,7 +472,7 @@ def edit_booking(request, id):
 
 @login_required
 def logout_user(request):
-    """ Handle the Log Out of the User """
+    """ Handle the Logout of the User """
 
     logout(request)
 
