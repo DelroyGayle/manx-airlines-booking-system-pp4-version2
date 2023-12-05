@@ -942,15 +942,23 @@ def fetch_date_values(request):
     Common.save_context["booking"] ...
     is not set fetch the data from 'request'
     """
+
+    print(request.POST.get("departing_date"), request.POST.get("returning_date"))
+    print(type(request.POST.get("departing_date")), type(request.POST.get("returning_date")))
     if "booking" in Common.save_context:
         return (Common.save_context["booking"]["departing_date"],
                 Common.save_context["booking"]["return_option"],
                 Common.save_context["booking"]["returning_date"])
 
-    return (request.POST.get("departing_date"),
-            request.POST.get("return_option"),
-            request.POST.get("returning_date"),
-        )
+    departing_date = request.POST.get("departing_date")
+    departing_date = datetime.strptime(departing_date, "%Y-%m-%d").date()
+    if request.POST.get("return_option") == "N":
+        return (departing_date, "N", None)
+
+    returning_date = request.POST.get("returning_date")
+    returning_date = datetime.strptime(returning_date, "%Y-%m-%d").date()
+
+    return (departing_date, "Y", returning_date)
 
 
 def date_validation_part2(accum_dict, errors_found,
@@ -968,6 +976,7 @@ def date_validation_part2(accum_dict, errors_found,
     )
 
     # TODO departing_date = Common.save_context["booking"]["departing_date"]
+    # isinstance(myVar,str)
     output_departing_date = departing_date.strftime("%d/%m/%Y")
     datediff = date_of_birth - todays_date
     days = datediff.days
