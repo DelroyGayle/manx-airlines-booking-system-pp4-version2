@@ -1239,6 +1239,10 @@ def setup_confirm_booking_context(request,
     # Generate a Random Unique 6-character PNR
     # PNR - Passenger Name Record
     context["pnr"] = unique_pnr()
+
+    # BUGFIX: Ensure this value is set here
+    Common.save_context["pnr"] = context["pnr"]
+
     return context
 
 
