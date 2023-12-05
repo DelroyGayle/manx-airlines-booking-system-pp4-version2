@@ -700,6 +700,9 @@ def create_new_records(request):
     reflecting the Booked Passengers
     """
 
+    print(request.POST,703)
+    print(request.POST.get("pnr"))
+    print(Common.save_context)
     create_new_booking_pax_records()
     create_transaction_record(request.user)
     update_schedule_database()
@@ -1222,6 +1225,11 @@ def setup_confirm_booking_context(request,
     to be displayed on the Confirmation Form
     """
 
+    print(1228, request.POST, request.POST.get("return_option"))
+    print("CC2", Common.save_context)
+    # Need a second copy of 'return_option' before proceeding
+    Common.save_context["return_option"] = (
+           Common.save_context["booking"]["return_option"])
     the_fees = compute_total_price(children_included, infants_included)
     context = add_fees_to_context(the_fees)
 
