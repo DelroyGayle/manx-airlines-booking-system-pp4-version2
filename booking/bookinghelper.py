@@ -400,7 +400,7 @@ def heroku_dates_fix(request):
     Common.save_context["booking"]["returning_date"] = newdate
     
 
-def heroku_booking_fix(respect):
+def heroku_booking_fix(request):
     """
     Fix regarding KeyError at /details/ 'booking'
 
@@ -1204,7 +1204,7 @@ def initialise_formset_context(request):
     context = {}
 
     # Heroku fix
-    heroku_booking_fix(respect)
+    heroku_booking_fix(request)
 
     # ADULTS
     number_of_adults = Common.save_context["booking"]["adults"]
