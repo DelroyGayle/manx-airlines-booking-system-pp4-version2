@@ -1956,7 +1956,7 @@ def handle_editpax_GET(request, id, booking):
     departing_date = Common.save_context["display"]["outbound_date"]
 
     messages.add_message(request, messages.ERROR,
-                         Commom.the_outbound_date)
+                         Common.the_outbound_date)
     messages.add_message(request, messages.ERROR,
                          Common.save_context["display"]["outbound_date"])
 
