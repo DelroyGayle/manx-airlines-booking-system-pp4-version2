@@ -1954,6 +1954,12 @@ def handle_editpax_GET(request, id, booking):
 
     # Convert from "16NOV23" format to Datevalue i.e. 16/11/2023
     departing_date = Common.save_context["display"]["outbound_date"]
+
+    messages.add_message(request, messages.ERROR,
+                         Commom.the_outbound_date)
+    messages.add_message(request, messages.ERROR,
+                         Common.save_context["display"]["outbound_date"])
+
     departing_date = datetime.strptime(departing_date,
                                        "%d%b%y").date()
     if "inbound_date" in Common.save_context["display"]:
