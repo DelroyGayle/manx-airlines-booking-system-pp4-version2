@@ -1971,8 +1971,8 @@ def handle_editpax_GET(request, id, booking):
                          Common.save_context["display"]["outbound_date"])
 
     # TODO
-    if departing_date is None:
-        departing_date = "07DEC23"
+    # if departing_date is None:
+    #     departing_date = "07DEC23"
     departing_date = datetime.strptime(departing_date,
                                        "%d%b%y").date()
     if "inbound_date" in Common.save_context["display"]:
@@ -2106,7 +2106,14 @@ def handle_editpax_GET(request, id, booking):
     Common.save_context["infants_included"] = number_of_infants
 
     # Indicate that 'Editing' is being perform
-    ### TODO Common.paxdetails_editmode = True
+    # Definitely needed for Heroku - Heroku fix
+    # TODO
+    messages.add_message(request, messages.ERROR,
+                         "REDO EDITMODE> BEFORE" + str(Common.paxdetails_editmode))
+    Common.paxdetails_editmode = True
+    # TODO
+    messages.add_message(request, messages.ERROR,
+                         "REDO EDITMODE> AFTER" + str(Common.paxdetails_editmode))
     print("ED4", Common.paxdetails_editmode, Common.heroku_editmode)
     return context
 
