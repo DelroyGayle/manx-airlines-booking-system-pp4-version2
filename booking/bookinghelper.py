@@ -2111,6 +2111,7 @@ def setup_formsets_for_edit(request):
 
     result = initialise_for_editing(request)
     context = {}
+    print("rp", request.POST)
 
     # ADULTS
     AdultsFormSet = formset_factory(AdultsForm, extra=0)
@@ -2150,7 +2151,8 @@ def update_pax_records(request):
     """
 
     # Need a second copy of the PNR!
-    Common.save_context["pnr"] = Common.save_context["booking"]["pnr"]
+    Common.save_context["pnr"] = Common.the_pnr
+    print("2ND COPY", Common.the_pnr)
 
     newdata = Common.save_context.get("confirm-booking-context")
 
