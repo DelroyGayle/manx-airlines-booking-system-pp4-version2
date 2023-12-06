@@ -361,7 +361,7 @@ def view_booking(request, id):
         # Heroku fix
         Common.the_return_option = "N"
         # Dummy nonnull value
-        Common.the_inbound_date = display["inbound_date"]
+        Common.the_inbound_date = display["outbound_date"]
 
     passenger_list = queryset.values()
     count = 0
