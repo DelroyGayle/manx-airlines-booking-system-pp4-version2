@@ -556,8 +556,25 @@ def create_booking_instance(request, pnr):
     booking = Booking()
     booking.pnr = pnr
     # Heroku fix
+    # TODO
+    # for key in request.session:
+    #     print("SESS",key)
+    print("CD2", Common.save_context)
+    print("CD3", Common.save_context["depart_pos"])
+    print("CD3A", Common.save_context["return_pos"])
+    print("CD3B", Common.save_context.get("depart_pos"))
+    print("CD3C", Common.save_context.get("return_pos"))
+    print("KEYS")
+    # for key in request.session:
+    #     print("SESS",key)
+    print(type(request.session), request.session.get("depart_pos"),
+    type(request.session.get("depart_pos")))
+    print(request.session)
     depart_pos = Common.save_context.get("depart_pos",
-                        int(request.session["depart_pos"]))
+                        0)
+    # TODO
+    print("DPR", Common.the_depart_pos, Common.the_return_pos, Common.the_return_option,
+    Common.the_total_price)
     # Outbound Flight Info
     outbound_flightno = Common.outbound_listof_flights[depart_pos]
     booking.outbound_date = Common.save_context["booking"]["departing_date"]
@@ -567,14 +584,14 @@ def create_booking_instance(request, pnr):
 
     # Heroku fix
     return_option = Common.save_context.get("return_option",
-                           request.session["return_option"])
+                           Common.the_return_option)
     if return_option == "Y":
         # Inbound Flight Info
         booking.return_flight = True
         booking.inbound_date = Common.save_context["booking"]["returning_date"]
         # Heroku fox
         return_pos = Common.save_context.get("return_pos",
-                        int(request.session["return_pos"]))
+                        1)
         booking.inbound_flightno = Common.inbound_listof_flights[return_pos]
 
     else:
@@ -583,9 +600,9 @@ def create_booking_instance(request, pnr):
         booking.inbound_date = None
         booking.inbound_flightno = ""
 
-    # Heroku fix
+    # Heroku fix TODO
     total_price = Common.save_context.get("total_price",
-                           float(request.session["total_price"]))
+                           0)
     booking.fare_quote = total_price
     booking.ticket_class = "Y"
     booking.cabin_class = "Y"
@@ -741,10 +758,12 @@ def create_new_booking_pax_records(request):
     """
 
     # New Booking Instance
+    # TODO
     print("CC3", request.POST.get("pnr"), request.POST)
     print("CC3A", Common.save_context)
     g = Common.save_context.get("pnr")
     print("pnr=", g)
+    # TODO
     # f = Common.save_context.get("booking")
     # print("F1",f)
     # print("PNR2=",f.get("pnr"))
@@ -1267,6 +1286,8 @@ def compute_total_price(request, children_included, infants_included):
     """
 
     # Heroku fix
+    heroku_booking_fix(request)
+    # Heroku fix
     if not "return_option" in Common.save_context:
         Common.save_context["return_option"] = (
             request.POST.get("return_option"))
@@ -1311,6 +1332,9 @@ def compute_total_price(request, children_included, infants_included):
     # The Actual Total Price
     the_fees_template_values["total_price"] = total
     Common.save_context["total_price"] = total
+    # Heroku fix TODO
+    Common.the_total_price = total
+
     return the_fees_template_values
 
 

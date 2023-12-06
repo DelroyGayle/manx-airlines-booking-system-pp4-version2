@@ -34,6 +34,11 @@ class Common:
     outbound_total_booked = None
     inbound_total_booked = None
     paxdetails_editmode = None
+    # Heroku fix
+    the_depart_pos = None
+    the_return_pos = None
+    the_return_option = None
+    the_total_price = None
 
     def __init__(self):
         pass

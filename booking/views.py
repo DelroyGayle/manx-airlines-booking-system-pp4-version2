@@ -159,14 +159,41 @@ def create_booking_form(request):
     form = CreateBookingForm(request.POST or None)
 
     if request.method == "POST":
-        #  create a form instance and populate it with data from the request:
+        # create a form instance and populate it with data from the request:
         # check whether it is valid:
+        print(164)
         is_form_valid, saved_data = is_booking_form_valid(form, request)
+        print(166, is_form_valid)
+        print(167, saved_data)
+        print(168, is_form_valid)
         if is_form_valid:
             context = {"booking": form.cleaned_data}
             # Update dict 'context' with the contents of dict 'saved_data'
             context |= saved_data
 
+            # Heroku fix:
+            # Another copy of the above Update 
+            # with the contents of dict 'saved_data'
+            print("BEF")
+            for k in request.session:
+                print(175,k,request.session[k])
+            print("SAVE")
+            # for key in saved_data:
+            #     print(178,key,saved_data[key])
+            #     request.session[key] = saved_data[key]
+            # TODO
+            request.session["depart_pos"] = saved_data["depart_pos"]
+            request.session["return_pos"] = saved_data["depart_pos"]
+            request.session["return_option"] = saved_data["return_option"]
+            print("AFT")
+            for k in request.session:
+                print(182,k,request.session[k])
+            # TODO
+            # Heroku fix
+            Common.the_depart_pos = saved_data["depart_pos"]
+            Common.the_return_pos = saved_data["return_pos"]
+            Common.the_return_option = saved_data["return_option"]
+            
             # ADULTS
             number_of_adults = form.cleaned_data["adults"]
             AdultsFormSet = formset_factory(AdultsForm,
@@ -208,7 +235,10 @@ def create_booking_form(request):
 
             # Save a copy in order to fetch any values as and when needed
             Common.save_context = context
+
             ## request.session["save_context"] = context TODO
+            print("CD1", Common.save_context)
+
             return render(request, "booking/passenger-details-form.html",
                           context)
 
