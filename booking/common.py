@@ -39,6 +39,8 @@ class Common:
     the_return_pos = None
     the_return_option = None
     the_total_price = None
+    the_bags = None
+    the_remarks = None
 
     def __init__(self):
         pass

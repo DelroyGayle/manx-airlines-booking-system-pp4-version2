@@ -570,11 +570,14 @@ def create_booking_instance(request, pnr):
     print(type(request.session), request.session.get("depart_pos"),
     type(request.session.get("depart_pos")))
     print(request.session)
+
+    # Heroku fix
     depart_pos = Common.save_context.get("depart_pos",
-                        0)
+                        Common.the_depart_pos)
+
     # TODO
     print("DPR", Common.the_depart_pos, Common.the_return_pos, Common.the_return_option,
-    Common.the_total_price)
+    Common.the_total_price, Common.the_bags, Common.the_remarks)
     # Outbound Flight Info
     outbound_flightno = Common.outbound_listof_flights[depart_pos]
     booking.outbound_date = Common.save_context["booking"]["departing_date"]
@@ -589,9 +592,11 @@ def create_booking_instance(request, pnr):
         # Inbound Flight Info
         booking.return_flight = True
         booking.inbound_date = Common.save_context["booking"]["returning_date"]
+
         # Heroku fox
         return_pos = Common.save_context.get("return_pos",
-                        1)
+                           Common.the_return_pos)
+
         booking.inbound_flightno = Common.inbound_listof_flights[return_pos]
 
     else:
@@ -602,7 +607,10 @@ def create_booking_instance(request, pnr):
 
     # Heroku fix TODO
     total_price = Common.save_context.get("total_price",
-                           0)
+                         Common.the_total_price)
+    # TODO
+    print(Common.the_total_price)
+
     booking.fare_quote = total_price
     booking.ticket_class = "Y"
     booking.cabin_class = "Y"
@@ -619,11 +627,16 @@ def create_booking_instance(request, pnr):
                                  else 0)
     number_of_infants = booking.number_of_infants
 
-    booking.number_of_bags = int(Common.save_context["bags"])
     booking.departure_time = (
         Common.flight_info[outbound_flightno]["flight_STD"])
     booking.arrival_time = Common.flight_info[outbound_flightno]["flight_STA"]
-    booking.remarks = Common.save_context["remarks"].strip().upper()
+    # Heroku fix
+    booking.number_of_bags = Common.save_context.get("bags",
+                                    Common.the_bags)
+    remarks = Common.save_context.get("remarks",
+                    Common.the_remarks)
+
+    booking.remarks = remarks.strip().upper()
     # Write the new Booking record
     booking.save()
 
@@ -1374,6 +1387,42 @@ def setup_confirm_booking_context(request,
     return context
 
 
+def validate_bagrem_again(bags_remarks_form):
+    """
+    Heroku fix:
+    There is an intermittent error that occurs which I cannot explain
+    regarding 'bags_remarks_form'
+    Even though this routine is called
+    AFTER successful validation/cleaning of data
+    i.e. after this IF statement:
+
+        if not bags_remarks_form.is_valid:
+            display_formset_errors(request, "Bag/Remarks",
+                                        bags_remarks_form.errors)
+            return (False, None)
+    ....
+
+    At this stage the data of 'bags_remarks_form' ought to have been cleaned
+    therefore 'bags_remarks_form.cleaned_data' ought to exist!
+    However, occasionally I get 500 errors at this stage due to
+    the 'non-existence' of 'bags_remarks_form.cleaned_data'
+
+    So my work-around is to create a version of
+    'bags_remarks_form.cleaned_data'
+    regardless of whether it exists at this stage since its contents
+    ought to valid i.e. ought to have been cleaned!
+    """
+
+    bags_remarks_cleaned_copy = (
+        {"bags": str(bags_remarks_form.data.get("bagrem-bags")),
+         "remarks": bags_remarks_form.data.get("bagrem-remarks")})
+
+    Common.the_bags = bags_remarks_form.data.get("bagrem-bags")
+    Common.the_remarks = bags_remarks_form.data.get("bagrem-remarks")
+
+    return bags_remarks_cleaned_copy
+
+
 def any_string_changes(string1, string2):
     """
     For both strings: Remove spaces and convert to uppercase
@@ -1603,38 +1652,6 @@ def setup_formsets_for_create(request):
     return (adults_formset, children_formset, infants_formset,
             children_included, infants_included, bags_remarks_form,
             context)
-
-
-def validate_bagrem_again(bags_remarks_form):
-    """
-    There is an intermittent error that occurs which I cannot explain
-    regarding 'bags_remarks_form'
-    Even though this routine is called
-    AFTER successful validation/cleaning of data
-    i.e. after this IF statement:
-
-        if not bags_remarks_form.is_valid:
-            display_formset_errors(request, "Bag/Remarks",
-                                        bags_remarks_form.errors)
-            return (False, None)
-    ....
-
-    At this stage the data of 'bags_remarks_form' ought to have been cleaned
-    therefore 'bags_remarks_form.cleaned_data' ought to exist!
-    However, occasionally I get 500 errors at this stage due to
-    the 'non-existence' of 'bags_remarks_form.cleaned_data'
-
-    So my work-around is to create a version of
-    'bags_remarks_form.cleaned_data'
-    regardless of whether it exists at this stage since its contents
-    ought to valid i.e. ought to have been cleaned!
-    """
-
-    bags_remarks_cleaned_copy = (
-        {"bags": str(bags_remarks_form.data.get("bagrem-bags")),
-         "remarks": bags_remarks_form.data.get("bagrem-remarks")})
-
-    return bags_remarks_cleaned_copy
 
 
 def all_formsets_valid(request, adults_formset,
