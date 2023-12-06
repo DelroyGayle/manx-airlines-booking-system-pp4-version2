@@ -46,6 +46,7 @@ class Common:
     the_inbound_date = None
     the_booking_id = None
     heroku_editmode = None
+    the_original_details = None
 
     # TODO
     context_2ndcopy = None
