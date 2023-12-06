@@ -473,6 +473,21 @@ def heroku_editmode_fix():
         Common.paxdetails_editmode = Common.heroku_editmode
 
 
+def heroku_passengers_fix():
+    """
+    Fix regarding KeyError 'passengers'
+    Ensure that Common.save_context["passengers"]
+    exists with values at this stage
+    """
+    if (hasattr(Common, "save_context") and
+        Common.save_context is not None and
+        hasattr(Common.save_context, "passengers") and
+        Common.save_context["passengers"] is not None):
+        return
+
+    Common.save_context["passengers"] = Common.context_2ndcopy["passengers"]
+
+
 def generate_random_pnr():
     """ Generate a random 6-character PNR """
     n = 5
@@ -1959,7 +1974,8 @@ def handle_editpax_GET(request, id, booking):
                                                else "N")
 
 # TODO
-    pax2 = Common.context_2ndcopy["passengers"]
+
+    heroku_passengers_fix()
 
     # Get all the Passengers related to the Booking
     # At this point 'pax' is a QuerySet
