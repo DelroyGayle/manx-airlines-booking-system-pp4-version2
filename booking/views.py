@@ -256,7 +256,7 @@ def passenger_details_form(request):
     """
     messages.add_message(request, messages.ERROR,
                          str(Common.paxdetails_editmode))
-    heroku_editmode_fix()
+    m.heroku_editmode_fix()
     print("ED5", Common.paxdetails_editmode, Common.heroku_editmode)
 
     (adults_formset, children_formset, infants_formset,
@@ -499,7 +499,9 @@ def edit_booking(request, id):
     # Heroku fix
     Common.the_pnr = booking.pnr
     Common.the_booking_id = booking.id
+    Common.paxdetails_editmode = True
 
+    # TODO
     messages.add_message(request, messages.ERROR,
                          "7A" + str(Common.paxdetails_editmode))
 
@@ -508,6 +510,7 @@ def edit_booking(request, id):
                                             kwargs={"id": booking.pk}))
 
     else:
+        # TODO
         messages.add_message(request, messages.ERROR,
                          "7BPOST" + str(Common.paxdetails_editmode))
         print("ED7b", Common.paxdetails_editmode, Common.heroku_editmode)
