@@ -338,6 +338,35 @@ def check_availability(request, departing, outbound_date,
 
     return all_OK
 
+""" 
+What follows are a series of patches and Work-arounds
+to 'fix' a group of intermittent errors that ONLY occur
+when this App runs on Heroku
+
+I CANNOT reproduced these errors on my machine locally
+These 'errors' ONLY occur on Heroku
+"""
+def heroku_fix_children_included(request):
+    """
+    Fix regarding KeyError 'children_included'
+    Ensure that both 'children_included & infants-included' 
+    are set with values at this stage
+    """
+
+    if (hasattr(Common, "save_context") and
+        "children_included" in Common.save_context and
+        "infants_included" in Common.save_context):
+        return
+    
+    if not hasattr(Common, "save_context"):
+        Common.save_context = {}
+    if "children_included" not in Common.save_context:
+        Common.save_context["children_included"] = (
+            int(request.POST.get("children")) > 0)
+    if "infants_included" not in Common.save_context:
+        Common.save_context["infants_included"] = (
+            int(request.POST.get("infants")) > 0)
+
 
 def generate_random_pnr():
     """ Generate a random 6-character PNR """
@@ -1445,9 +1474,11 @@ def setup_formsets_for_create(request):
     ## TODO
     print("CC2", int(request.POST.get("children")) > 0, request.POST)
     # CHILDREN
+
     # Add Heroku fix
-    children_included = Common.save_context.get("children_included",
-                                   int(request.POST.get("children")) > 0)
+    heroku_fix_children_included(request)
+
+    children_included = Common.save_context["children_included"]
     if children_included:
         ChildrenFormSet = formset_factory(MinorsForm, extra=0)
         children_formset = ChildrenFormSet(request.POST or None,
@@ -1456,9 +1487,7 @@ def setup_formsets_for_create(request):
         children_formset = []
 
     # INFANTS
-    # Add Heroku fix
-    infants_included = Common.save_context.get("infants_included",
-                                   int(request.POST.get("infants")) > 0)
+    infants_included = Common.save_context["infants_included"]
     if infants_included:
         InfantsFormSet = formset_factory(MinorsForm, extra=0)
         infants_formset = InfantsFormSet(request.POST or None, prefix="infant")
