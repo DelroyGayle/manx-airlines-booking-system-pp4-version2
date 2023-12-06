@@ -528,8 +528,13 @@ def create_transaction_record(request):
     """ Record the Fees charged into the Transaction database """
     # New Instance
     trans_record = Transaction()
-    trans_record.pnr = Common.save_context["pnr"]
-    trans_record.amount = Common.save_context["total_price"]
+
+    # Heroku fix
+    print("TP2", Common.the_pnr, Common.the_total_price) # TODO 
+    trans_record.pnr = Common.save_context.get("pnr", Common.the_pnr);    
+    trans_record.amount = Common.save_context.get("total_price", Common.the_total_price)
+
+
     trans_record.username = request.user
     # Write the new Transaction record
     trans_record.save()
@@ -633,7 +638,7 @@ def create_booking_instance(request, pnr):
     total_price = Common.save_context.get("total_price",
                          Common.the_total_price)
     # TODO
-    print(Common.the_total_price)
+    print("TP",Common.the_total_price)
 
     booking.fare_quote = total_price
     booking.ticket_class = "Y"
@@ -805,7 +810,7 @@ def create_new_booking_pax_records(request):
     # print("F1",f)
     # print("PNR2=",f.get("pnr"))
     # Include Heroku fix
-    pnr = Common.save_context.get("pnr", Common.the_pnr);
+    pnr = Common.save_context.get("pnr", Common.the_pnr)
     print("PNR=", pnr) # TODO
     tuple = create_booking_instance(request, pnr)
     booking, number_of_adults, number_of_children, number_of_infants = tuple
@@ -1472,16 +1477,25 @@ def calc_change_fees(request, context, count, key, fees, fee_key,
     if context.get(label, None):
         fees[fee_key] += CHANGE_FEE
         fees["changed"] = True
+        print("REM") # TODO
         return fees
 
     label = f"{key}first_name"
     label = f"{key}last_name"
     paxlist = Common.save_context["original_pax_details"]
+    print("TITLES", context[f"{key}title"], paxlist[pax_number]["title"])
+    print("FN", context[f"{key}first_name"], paxlist[pax_number]["first_name"])
+    print("LN", context[f"{key}last_name"], paxlist[pax_number]["last_name"])
+
     if (context[f"{key}title"] != paxlist[pax_number]["title"] or
         any_string_changes(context[f"{key}first_name"],
                            paxlist[pax_number]["first_name"]) or
         any_string_changes(context[f"{key}last_name"],
                            paxlist[pax_number]["last_name"])):
+        print("NAMES") # TODO
+        print("TITLES", context[f"{key}title"], paxlist[pax_number]["title"])
+        print("FN", context[f"{key}first_name"], paxlist[pax_number]["first_name"])
+        print("LN", context[f"{key}last_name"], paxlist[pax_number]["last_name"])
         fees[fee_key] += CHANGE_FEE
         fees["changed"] = True
         return fees
@@ -1500,10 +1514,15 @@ def calc_change_fees(request, context, count, key, fees, fee_key,
         # Any date of birth changes
         newdate = context[f"{key}date_of_birth"]
         newdate = datetime.strptime(newdate, "%Y-%m-%d").date()
+        # TODO
+        print("dates")
+        print(newdate)
+        print(paxlist[pax_number]["date_of_birth"])
         if (newdate != paxlist[pax_number]["date_of_birth"]):
             fees[fee_key] += CHANGE_FEE
             fees["changed"] = True
 
+    print("FEES", fees) # TODO
     return fees
 
 
@@ -1570,6 +1589,7 @@ def compute_change_fees(request,
                                     key, fees, "infants",
                                     pax_number, True)
             count += 1
+            pax_number += 1
 
         if fees["infants"]:
             # Infants Details have changed
@@ -1601,6 +1621,9 @@ def compute_change_fees(request,
         the_fees_template_values["total_price_string"] = "GBP0.00"
         # The Actual Total Price
         the_fees_template_values["total_price"] = 0
+        Common.save_context["total_price"] = 0
+        # Heroku fix TODO
+        Common.the_total_price = 0
 
     else:
 
@@ -1610,6 +1633,8 @@ def compute_change_fees(request,
         # The Actual Total Price
         the_fees_template_values["total_price"] = total
         Common.save_context["total_price"] = total
+        # Heroku fix TODO
+        Common.the_total_price = total
 
     return the_fees_template_values
 
@@ -1853,6 +1878,10 @@ def handle_pax_details_POST(request,
                                                         infants_included,
                                                         context_copy)
             new_context["pnr"] = Common.save_context["booking"]["pnr"]
+
+            # Heroku fix TODO
+            print(request.POST)
+
             # Editing: Therefore Proceed with Updating The Record
             Common.save_context["confirm-booking-context"] = context_copy
             return (True, new_context)
@@ -1912,9 +1941,29 @@ def handle_editpax_GET(request, id, booking):
                                                else "N")
 
     # Get all the Passengers related to the Booking
+    # At this point 'pax' is a QuerySet
     pax = Common.save_context["passengers"]
+    # Convert the QuerySet to a Dictionary
     pax = pax.__dict__
+    """
+    _result_cache looks like this:
+    '_result_cache': [{'id': 327, 'title': 'MR', 
+    'first_name': 'ALAN', 'last_name': 'SMITH', 'pax_type': 'A', 
+    'pax_number': 1, ...}]
+
+    So, I will use these values to initialise
+    """
+
     pax_initial_list = pax["_result_cache"]
+    # TODO
+    pax2 = Common.context_2ndcopy["passengers"]
+    print("PAX2")
+    print(1,pax2)
+    pax2 = pax2.__dict__
+    print(2,pax2)
+    pax2_initial_list = pax2["_result_cache"]
+    print(3, pax2_initial_list)
+
     count = 0
     # Convert from "12JAN12" format to Datevalue i.e. 12/01/2012
     for paxitem in pax_initial_list:

@@ -42,8 +42,9 @@ class Common:
     the_pnr = None
     the_bags = None
     the_remarks = None
-    the_inbound_date = None
     the_outbound_date = None
+    the_inbound_date = None
+    context_2ndcopy = None
 
     def __init__(self):
         pass

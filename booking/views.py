@@ -378,6 +378,7 @@ def view_booking(request, id):
                "display": display}
     # Keep a Copy for 'Edit Passengers' functionality
     Common.save_context = context
+    Common.context_2ndcopy = context
     print("CC1",context)
     return render(request, "booking/view-booking.html", context)
 
@@ -485,6 +486,10 @@ def edit_booking(request, id):
     booking = get_object_or_404(Booking, pk=id)
     form = BookingForm(instance=booking)
     context = {"booking": booking, "form": form}
+
+    # Heroku fix
+    Common.the_pnr = booking.pnr
+
     if request.method == "POST":
         return HttpResponseRedirect(reverse("view-booking",
                                             kwargs={"id": booking.pk}))
