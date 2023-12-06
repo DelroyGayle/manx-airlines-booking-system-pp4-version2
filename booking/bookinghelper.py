@@ -1225,6 +1225,11 @@ def compute_total_price(request, children_included, infants_included):
     in order that they can be rendered on the Confirmation Form
     """
 
+    # Heroku fix
+    if not "return_option" in Common.save_context:
+        Common.save_context["return_option"] = (
+            request.POST.get("return_option"))
+
     multiple = (2 if Common.save_context["return_option"] == "Y"
                 else 1)
     adult_price = ADULT_PRICE * multiple
