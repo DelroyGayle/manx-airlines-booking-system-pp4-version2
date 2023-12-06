@@ -1960,6 +1960,9 @@ def handle_editpax_GET(request, id, booking):
     messages.add_message(request, messages.ERROR,
                          Common.save_context["display"]["outbound_date"])
 
+    # TODO
+    if departing_date is None:
+        departing_date = datetime.now()
     departing_date = datetime.strptime(departing_date,
                                        "%d%b%y").date()
     if "inbound_date" in Common.save_context["display"]:
