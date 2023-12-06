@@ -346,7 +346,7 @@ when this App runs on Heroku
 I CANNOT reproduced these errors on my machine locally
 These 'errors' ONLY occur on Heroku
 """
-def heroku_fix_children_included(request):
+def heroku_children_included_fix(request):
     """
     Fix regarding KeyError 'children_included'
     Ensure that both 'children_included & infants-included' 
@@ -367,6 +367,38 @@ def heroku_fix_children_included(request):
         Common.save_context["infants_included"] = (
             int(request.POST.get("infants")) > 0)
 
+
+def heroku_dates_fix(request):
+    """
+    Fix regarding KeyError 'booking'
+    Ensure that both Common.save_context["booking"]["departing_date"]
+    and Common.save_context["booking"]["returning_date"]
+    exist with values at this stage
+    """
+
+    if (hasattr(Common, "save_context") and
+        "booking" in Common.save_context and
+        "departing_date" in Common.save_context["booking"] and
+        "returning_date" in Common.save_context["booking"]):
+        return
+    
+    if not hasattr(Common, "save_context"):
+        Common.save_context = {}
+    if "booking" not in Common.save_context:
+        Common.save_context["booking"] = {}
+
+    newdate = request.POST.get("departing_date")
+    newdate = datetime.strptime(newdate, "%Y-%m-%d").date()
+    Common.save_context["booking"]["departing_date"] = newdate
+    return_option = request.POST.get("return_option")
+    Common.save_context["booking"]["return_option"] = return_option
+    if return_option == "N":
+        # dummy nonnull value - one-way journey
+        Common.save_context["booking"]["returning_date"] = newdate
+    newdate = request.POST.get("returning_date")
+    newdate = datetime.strptime(newdate, "%Y-%m-%d").date()
+    Common.save_context["booking"]["returning_date"] = newdate
+    
 
 def generate_random_pnr():
     """ Generate a random 6-character PNR """
@@ -969,6 +1001,8 @@ def date_validation_part2(request, accum_dict, errors_found,
     todays_date = datetime.now().date()
     # datediff = date_of_birth - todays_date
 
+    heroku_dates_fix(request)
+
     departing_date = Common.save_context["booking"]["departing_date"]
     output_departing_date = departing_date.strftime("%d/%m/%Y")
     datediff = date_of_birth - todays_date
@@ -1476,7 +1510,7 @@ def setup_formsets_for_create(request):
     # CHILDREN
 
     # Add Heroku fix
-    heroku_fix_children_included(request)
+    heroku_children_included_fix(request)
 
     children_included = Common.save_context["children_included"]
     if children_included:
