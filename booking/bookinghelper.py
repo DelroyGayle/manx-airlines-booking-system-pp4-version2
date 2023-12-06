@@ -355,11 +355,14 @@ def heroku_children_included_fix(request):
     """
 
     if (hasattr(Common, "save_context") and
+        Common.save_context is not None and
         "children_included" in Common.save_context and
         "infants_included" in Common.save_context):
         return
     
     if not hasattr(Common, "save_context"):
+        Common.save_context = {}
+    if Common.save_context is None:
         Common.save_context = {}
     if "children_included" not in Common.save_context:
         Common.save_context["children_included"] = (
@@ -378,12 +381,15 @@ def heroku_dates_fix(request):
     """
 
     if (hasattr(Common, "save_context") and
+        Common.save_context is not None and
         "booking" in Common.save_context and
         "departing_date" in Common.save_context["booking"] and
         "returning_date" in Common.save_context["booking"]):
         return
     
     if not hasattr(Common, "save_context"):
+        Common.save_context = {}
+    if Common.save_context is None:
         Common.save_context = {}
     if "booking" not in Common.save_context:
         Common.save_context["booking"] = {}
@@ -440,13 +446,15 @@ def heroku_display_fix():
 
     if not hasattr(Common, "save_context"):
         Common.save_context = {}
+    if Common.save_context is None:
+        Common.save_context = {}
     if "display" not in Common.save_context:
         Common.save_context["display"] = {}
-    if "outbound_date" not in Common.save_context:
+    if "outbound_date" not in Common.save_context["display"]:
         Common.save_context["display"]["outbound_date"] = (
               Common.the_outbound_date)
     if ("inbound_date" in Common.save_context["display"] and
-        not Common.save_context["display"]["inbound_date"]):
+        Common.save_context["display"]["inbound_date"] is None):
         Common.save_context["display"]["inbound_date"] = (
               Common.the_inbound_date)
 
