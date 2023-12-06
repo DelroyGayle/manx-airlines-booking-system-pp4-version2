@@ -462,13 +462,17 @@ def heroku_display_fix():
         Common.save_context["display"]["inbound_date"] = (
               Common.the_inbound_date)
 
+        # TODO
+        messages.add_message(request, messages.ERROR,
+                                     "DISPLAY " + Common.the_outbound_date)
+
 
 def heroku_editmode_fix():
     """
     Heroku fix: just in case 'Common.paxdetails_editmode'
     loses its value - ensure they are identical
     """
-
+    return # TODO
     if Common.paxdetails_editmode != Common.heroku_editmode:
         Common.paxdetails_editmode = Common.heroku_editmode
 
@@ -550,6 +554,9 @@ def reset_common_fields(request):
     Common.inbound_seatmap = None
     Common.outbound_allocated_seats = []
     Common.inbound_allocated_seats = []
+    # TODO
+    messages.add_message(request, messages.ERROR,
+                                     "edit mode reset")
     Common.paxdetails_editmode = None
     # Heroku fix
     Common.heroku_editmode = None
@@ -1955,6 +1962,9 @@ def handle_editpax_GET(request, id, booking):
     # Convert from "16NOV23" format to Datevalue i.e. 16/11/2023
     departing_date = Common.save_context["display"]["outbound_date"]
 
+    # TODO
+    messages.add_message(request, messages.ERROR,
+                         "AFTER DISPLAY FIX")
     messages.add_message(request, messages.ERROR,
                          Common.the_outbound_date)
     messages.add_message(request, messages.ERROR,
