@@ -14,38 +14,38 @@
             <div class="ui medium header">
                 Booking: {{ pnr }}
             </div>
-            <section>
+            <div>
                  {% if adults_total %}
-                    <article>
+                    <div>
                         <p>{{ adults_total }}</p>
-                    </article>
+                    </div>
                 {% endif %}
                 {% if children_total %}
-                    <article>
+                    <div>
                         <p>{{ children_total }}</p>
-                    </article>
+                    </div>
                 {% endif %}
                 {% if infants_total %}
-                    <article>
+                    <div>
                         <p>{{ infants_total }}</p>
-                    </article>
+                    </div>
                 {% endif %}
                 {% if bags_total %}
-                    <article>
+                    <div>
                         <p>{{ bags_total }}</p>
-                    </article>
+                    </div>
                 {% endif %}
                 {% if admin_total %}
-                    <article>
+                    <div>
                         <p>{{ admin_total }}</p>
-                    </article>
+                    </div>
                 {% endif %}
                 <hr>
-            </section>
+            </div>
             <div class="ui medium header">Total {{ total_price_string }}</div>
             <small><span>Non-refundable. Changeable subject to fees.</span>
             <span>Prices includes all applicable taxes and fees</span></small>
-            <section id="agreeandpay">
+            <div id="agreeandpay">
                 {% if total_price %}
                     <input type="submit" name="agree" class="ui primary button" value="Agree and pay now">
                 {% else %}
@@ -53,7 +53,7 @@
                 {% endif %}
 
                 <input type="submit" name="cancel" class="ui button red" value="Cancel">
-            </section>
+            </div>
         </form>
     </div>
 </div>

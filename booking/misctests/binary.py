@@ -45,7 +45,7 @@ def find_N_seats(number_needed, allocated, available):
     """
     Find 'N' number of seats
     N being 'number_needed'
-    'allocated' are all seats found so far
+    'allocated' are all the seats found so far
     'available' is a bitstring depicting what is available
     This is a recursive algorithm
     """
@@ -76,7 +76,7 @@ def find_N_seats(number_needed, allocated, available):
         remainder = find_N_seats(remainder_needed,
                                  allocated + result[1], result[2])
         if remainder[0]:
-            # Found all seats!
+            # Found all the seats!
             return remainder
 
     # Not successful in finding any 'row' > 1

@@ -115,7 +115,7 @@ class Passenger(models.Model):
     # Infants have the same status number as the accompanying adult
     status = models.CharField(max_length=4)
     # Optional Wheelchair Info
-    # Blank or R for WHCR, S for WCHS, C for WCHC
+    # Blank or R for WCHR, S for WCHS, C for WCHC
     wheelchair_ssr = models.CharField(max_length=1, blank=True, default="")
     # This field will only be set if 'wheelchair_ssr' is non-blank
     # M for WCMP, L for WCLB; D for WCBD; W for WCBW;

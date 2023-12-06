@@ -387,7 +387,7 @@ def calc_time_difference(return_time, depart_time):
     return return_time - depart_time
 
 
-def reset_common_fields():
+def reset_common_fields(request):
     """
     Reset the following fields which are used
     when creating/amending Bookings and Pax records
@@ -404,13 +404,13 @@ def reset_common_fields():
     Common.paxdetails_editmode = None
 
 
-def create_transaction_record(username):
+def create_transaction_record(request):
     """ Record the Fees charged into the Transaction database """
     # New Instance
     trans_record = Transaction()
     trans_record.pnr = Common.save_context["pnr"]
     trans_record.amount = Common.save_context["total_price"]
-    trans_record.username = username
+    trans_record.username = request.user
     # Write the new Transaction record
     trans_record.save()
 
@@ -433,7 +433,7 @@ def save_schedule_record(id, instance, total_booked, seatmap):
     schedule.save()
 
 
-def update_schedule_database():
+def update_schedule_database(request):
     """
     Update the Schedule Database
     with an updated seatmap for selected Date/Flight
@@ -456,7 +456,7 @@ def update_schedule_database():
                          Common.inbound_seatmap)
 
 
-def create_booking_instance(pnr):
+def create_booking_instance(request, pnr):
     """
     Create the Booking Record instance
     All the Booking information is stored
@@ -515,7 +515,7 @@ def create_booking_instance(pnr):
     return (booking, number_of_adults, number_of_children, number_of_infants)
 
 
-def determine_seatnumber(paxno, pax_type):
+def determine_seatnumber(request, paxno, pax_type):
     """
     Convert the numerical seat number into an aircraft seat number
     EG   0 is 1A, 1 is 1B , 2 is 1C, 3 is 1D, 4 is 2A, ...
@@ -532,7 +532,8 @@ def determine_seatnumber(paxno, pax_type):
     return (outbound_seatno, inbound_seatno)
 
 
-def create_pax_instance(booking, dataset_name, key, paxno, pax_type,
+def create_pax_instance(request,
+                        booking, dataset_name, key, paxno, pax_type,
                         order_number,
                         infant_status_number,
                         outbound_seatno, inbound_seatno):
@@ -594,7 +595,8 @@ def create_pax_instance(booking, dataset_name, key, paxno, pax_type,
     return (pax, order_number, infant_status_number)
 
 
-def write_passenger_record(booking, passenger_type, plural, pax_type,
+def write_passenger_record(request,
+                           booking, passenger_type, plural, pax_type,
                            number_of_pax_type,
                            # First Pax numbered 1, 2nd 2, etc
                            order_number, editing_pax_details):
@@ -616,9 +618,11 @@ def write_passenger_record(booking, passenger_type, plural, pax_type,
     infant_status_number = 1
     while paxno < number_of_pax_type:
         outbound_seatno, inbound_seatno = (
-                            determine_seatnumber(order_number - 1,
+                            determine_seatnumber(request,
+                                                 order_number - 1,
                                                  pax_type))
-        tuple = create_pax_instance(booking, dataset_name, key,
+        tuple = create_pax_instance(request,
+                                    booking, dataset_name, key,
                                     paxno, pax_type,
                                     order_number, infant_status_number,
                                     outbound_seatno, inbound_seatno)
@@ -629,7 +633,7 @@ def write_passenger_record(booking, passenger_type, plural, pax_type,
     return order_number
 
 
-def create_new_booking_pax_records():
+def create_new_booking_pax_records(request):
     """
     Create the Booking Record
     Create a Passenger Record for each passenger attached to the Booking
@@ -638,8 +642,17 @@ def create_new_booking_pax_records():
     """
 
     # New Booking Instance
-    pnr = Common.save_context["pnr"]
-    tuple = create_booking_instance(pnr)
+    print("CC3", request.POST.get("pnr"), request.POST)
+    print("CC3A", Common.save_context)
+    g = Common.save_context.get("pnr")
+    print("pnr=", g)
+    # f = Common.save_context.get("booking")
+    # print("F1",f)
+    # print("PNR2=",f.get("pnr"))
+    # Include Heroku fix
+    pnr = Common.save_context.get("pnr", request.session["pnr"]);
+    print("PNR=", pnr) # TODO
+    tuple = create_booking_instance(request, pnr)
     booking, number_of_adults, number_of_children, number_of_infants = tuple
 
     # Now create the corresponding Passenger Records
@@ -647,7 +660,8 @@ def create_new_booking_pax_records():
     passenger_type = "adult"
     plural = "adults"
     pax_type = "A"
-    order_number = write_passenger_record(booking, passenger_type,
+    order_number = write_passenger_record(request,
+                                          booking, passenger_type,
                                           plural, pax_type,
                                           number_of_adults,
                                           1, False)
@@ -657,7 +671,8 @@ def create_new_booking_pax_records():
         passenger_type = "child"
         plural = "children"
         pax_type = "C"
-        order_number = write_passenger_record(booking, passenger_type,
+        order_number = write_passenger_record(request,
+                                              booking, passenger_type,
                                               plural, pax_type,
                                               number_of_children,
                                               order_number, False)
@@ -667,7 +682,8 @@ def create_new_booking_pax_records():
         passenger_type = "infant"
         plural = "infants"
         pax_type = "I"
-        order_number = write_passenger_record(booking, passenger_type,
+        order_number = write_passenger_record(request,
+                                              booking, passenger_type,
                                               plural, pax_type,
                                               number_of_infants,
                                               order_number, False)
@@ -685,16 +701,16 @@ def create_new_records(request):
     reflecting the Booked Passengers
     """
 
-    create_new_booking_pax_records()
-    create_transaction_record(request.user)
-    update_schedule_database()
+    create_new_booking_pax_records(request)
+    create_transaction_record(request)
+    update_schedule_database(request)
 
     # Indicate success
     messages.add_message(request, messages.SUCCESS,
                          ("Booking {0} Created Successfully"
                           .format(Common.save_context["pnr"])))
 
-    reset_common_fields()  # RESET!
+    reset_common_fields(request)  # RESET!
 
 
 def freeup_seats(thedate, flightno, seat_numbers_list):
@@ -916,7 +932,7 @@ def adults_formset_validated(cleaned_data, request):
     return True
 
 
-def date_validation_part2(accum_dict, errors_found,
+def date_validation_part2(request, accum_dict, errors_found,
                           date_of_birth, is_child):
     """ Handles the date validation for children and infants """
 
@@ -988,10 +1004,11 @@ def date_validation_part2(accum_dict, errors_found,
 
     # Does this Booking have a Return Journey?
     if Common.save_context["booking"]["return_option"] == "N":
-        # No!
+        # No! This is a one-way journey!
         return (accum_dict, errors_found)
 
-    # Yes! - Check the D.O.B. against the Return Date
+    # Yes! - This is a Return Journey!
+    # Check the D.O.B. against the Return Date
     returning_date = Common.save_context["booking"]["returning_date"]
     output_returning_date = returning_date.strftime("%d/%m/%Y")
     # Method to determine the difference in years was found at
@@ -1066,7 +1083,8 @@ def minors_formset_validated(cleaned_data, is_child_formset, request,):
                                         "date_of_birth", BAD_DATE)
 
         else:
-            accum_dict, errors_found = date_validation_part2(accum_dict,
+            accum_dict, errors_found = date_validation_part2(request,
+                                                             accum_dict,
                                                              errors_found,
                                                              date_of_birth,
                                                              is_child_formset)
@@ -1130,7 +1148,7 @@ def initialise_formset_context(request):
     return context
 
 
-def compute_total_price(children_included, infants_included):
+def compute_total_price(request, children_included, infants_included):
     """
     Compute the Total Price of the Booking
 
@@ -1207,7 +1225,8 @@ def setup_confirm_booking_context(request,
     to be displayed on the Confirmation Form
     """
 
-    the_fees = compute_total_price(children_included, infants_included)
+    the_fees = compute_total_price(request,
+                                   children_included, infants_included)
     context = add_fees_to_context(the_fees)
 
     # Update the 'context' with the fees and total price
@@ -1216,6 +1235,8 @@ def setup_confirm_booking_context(request,
     # Generate a Random Unique 6-character PNR
     # PNR - Passenger Name Record
     context["pnr"] = unique_pnr()
+    # Heroku fix
+    request.session["pnr"] = context["pnr"]
     return context
 
 
@@ -1231,7 +1252,7 @@ def any_string_changes(string1, string2):
     return string1 != string2
 
 
-def calc_change_fees(context, count, key, fees, fee_key,
+def calc_change_fees(request, context, count, key, fees, fee_key,
                      pax_number, minors):
     """ Calculate Change Fees
         £20 per pax
@@ -1279,7 +1300,8 @@ def calc_change_fees(context, count, key, fees, fee_key,
     return fees
 
 
-def compute_change_fees(context, children_included, infants_included):
+def compute_change_fees(request,
+                        context, children_included, infants_included):
     """
     Compute the Total Price for Changing the Booking
 
@@ -1303,7 +1325,7 @@ def compute_change_fees(context, children_included, infants_included):
     count = 0
     while count < number_of_adults:
         key = f"adult-{count}-"
-        fees = calc_change_fees(context, count,
+        fees = calc_change_fees(request, context, count,
                                 key, fees, "adults",
                                 pax_number, False)
         count += 1
@@ -1320,7 +1342,7 @@ def compute_change_fees(context, children_included, infants_included):
         count = 0
         while count < number_of_children:
             key = f"child-{count}-"
-            fees = calc_change_fees(context, count,
+            fees = calc_change_fees(request, context, count,
                                     key, fees, "children",
                                     pax_number, True)
             count += 1
@@ -1337,7 +1359,7 @@ def compute_change_fees(context, children_included, infants_included):
         count = 0
         while count < number_of_infants:
             key = f"infant-{count}-"
-            fees = calc_change_fees(context, count,
+            fees = calc_change_fees(request, context, count,
                                     key, fees, "infants",
                                     pax_number, True)
             count += 1
@@ -1395,7 +1417,7 @@ def setup_confirm_changes_context(request,
     to be displayed on the Confirmation Form
     """
 
-    the_fees = compute_change_fees(context, children_included,
+    the_fees = compute_change_fees(request, context, children_included,
                                    infants_included)
     context = add_fees_to_context(the_fees)
 
@@ -1419,6 +1441,8 @@ def setup_formsets_for_create(request):
     AdultsFormSet = formset_factory(AdultsForm, extra=0)
     adults_formset = AdultsFormSet(request.POST or None, prefix="adult")
 
+    ## TODO
+    print("CC2", int(request.POST.get("children")) > 0, request.POST)
     # CHILDREN
     children_included = Common.save_context["children_included"]
     if children_included:
@@ -1782,6 +1806,7 @@ def handle_editpax_GET(request, id, booking):
 
     # Save a copy in order to fetch any values as and when needed
     Common.save_context = context
+    ## request.session["save_context"] = context TODO
 
     # 2nd copies needed for validation purposes
     Common.save_context["booking"]["adults"] = number_of_adults
@@ -1882,35 +1907,7 @@ def setup_formsets_for_edit(request):
             context)
 
 
-def write_new_pax_recs(booking, passenger_type, plural, pax_type,
-                       number_of_pax_type,
-                       # First Pax numbered 1, 2nd 2, etc
-                       order_number=1):
-
-    """
-    Write Out Updated Passenger Records
-    Any Deletions Have Been Applied
-    """
-
-    dataset_name = f"{plural}_data"  # EG "adults_data"
-    paxno = 0
-    key = f"{passenger_type}-{paxno}-"
-    infant_status_number = 1
-    while paxno < number_of_pax_type:
-        outbound_seatno, inbound_seatno = (
-            determine_seatnumber(order_number - 1, pax_type))
-        tuple = create_pax_instance(booking, dataset_name, key,
-                                    paxno, pax_type,
-                                    order_number, infant_status_number,
-                                    outbound_seatno, inbound_seatno)
-        pax, order_number, infant_status_number = tuple
-        pax.save()
-        paxno += 1
-
-    return order_number
-
-
-def update_pax_records():
+def update_pax_records(request):
     """
     Update the Passenger Records with any amendments and deletions
     There will be at least ONE Adult Passenger for each booking
@@ -2112,7 +2109,8 @@ def update_pax_records():
     passenger_type = "adult"
     plural = "adults"
     pax_type = "A"
-    order_number = write_passenger_record(booking, passenger_type,
+    order_number = write_passenger_record(request,
+                                          booking, passenger_type,
                                           plural, pax_type,
                                           number_of_adults, 1, True)
 
@@ -2121,7 +2119,8 @@ def update_pax_records():
         passenger_type = "child"
         plural = "children"
         pax_type = "C"
-        order_number = write_passenger_record(booking, passenger_type,
+        order_number = write_passenger_record(request,
+                                              booking, passenger_type,
                                               plural, pax_type,
                                               number_of_children,
                                               order_number, True)
@@ -2131,7 +2130,8 @@ def update_pax_records():
         passenger_type = "infant"
         plural = "infants"
         pax_type = "I"
-        order_number = write_passenger_record(booking, passenger_type,
+        order_number = write_passenger_record(request,
+                                              booking, passenger_type,
                                               plural, pax_type,
                                               number_of_infants,
                                               order_number, True)
@@ -2143,7 +2143,7 @@ def update_pax_records():
             number_inbound_seats_deleted)
 
 
-def update_booking(booking,
+def update_booking(request, booking,
                    number_of_adults, number_of_children,
                    number_of_infants):
     """
@@ -2186,7 +2186,8 @@ def update_booked_figure_seatmap(schedule,
     schedule.save()
 
 
-def update_schedule_seating(number_outbound_deleted,
+def update_schedule_seating(request,
+                            number_outbound_deleted,
                             number_inbound_deleted):
     """
     Update the Schedule Database with any seat changes
@@ -2244,15 +2245,16 @@ def update_pax_details(request):
      number_of_adults, number_of_children,
      number_of_infants,
      number_outbound_deleted,
-     number_inbound_deleted) = update_pax_records()
+     number_inbound_deleted) = update_pax_records(request)
 
-    update_booking(booking,
+    update_booking(request, booking,
                    number_of_adults,
                    number_of_children,
                    number_of_infants)
-    create_transaction_record(request.user)
+    create_transaction_record(request)
 
-    update_schedule_seating(number_outbound_deleted,
+    update_schedule_seating(request,
+                            number_outbound_deleted,
                             number_inbound_deleted)
 
     # Indicate success
@@ -2260,4 +2262,4 @@ def update_pax_details(request):
                          ("Booking {0} Updated Successfully"
                           .format(Common.save_context["pnr"])))
 
-    reset_common_fields()  # RESET!
+    reset_common_fields(request)  # RESET!

@@ -33,7 +33,7 @@ def homepage(request):
     On the first display of the Home Page
     Initialise various settings
     """
-    m.reset_common_fields()
+    m.reset_common_fields(request)
     if not Common.initialised:
         Common.initialisation()
 
@@ -152,7 +152,7 @@ def is_booking_form_valid(form, request):
 def create_booking_form(request):
     """ The Handling of the Create Bookings Form """
 
-    m.reset_common_fields()
+    m.reset_common_fields(request)
     if not Common.initialised:
         Common.initialisation()
 
@@ -208,6 +208,7 @@ def create_booking_form(request):
 
             # Save a copy in order to fetch any values as and when needed
             Common.save_context = context
+            ## request.session["save_context"] = context TODO
             return render(request, "booking/passenger-details-form.html",
                           context)
 
@@ -304,7 +305,7 @@ def confirm_changes_form(request):
 
     if request.method == "POST":
         if "cancel" in request.POST:
-            m.reset_common_fields()  # RESET!
+            m.reset_common_fields(request)  # RESET!
             # Home Page
             return HttpResponseRedirect(reverse("home"))
         else:
@@ -350,6 +351,8 @@ def view_booking(request, id):
                "display": display}
     # Keep a Copy for 'Edit Passengers' functionality
     Common.save_context = context
+    ## request.session["save_context"] = context TODO
+    print("CC1",context)
     return render(request, "booking/view-booking.html", context)
 
 
