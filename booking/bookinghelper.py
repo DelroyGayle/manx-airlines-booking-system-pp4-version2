@@ -1962,7 +1962,7 @@ def handle_editpax_GET(request, id, booking):
 
     # TODO
     if departing_date is None:
-        departing_date = datetime.now()
+        departing_date = "07DEC23"
     departing_date = datetime.strptime(departing_date,
                                        "%d%b%y").date()
     if "inbound_date" in Common.save_context["display"]:

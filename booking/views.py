@@ -258,7 +258,7 @@ def passenger_details_form(request):
     messages.add_message(request, messages.ERROR,
                          "EDITMODE>" + str(Common.paxdetails_editmode))
     messages.add_message(request, messages.ERROR,
-                         "EDITMODE2>" + str(Common.heroku_editmode_editmode))
+                         "EDITMODE2>" + str(Common.heroku_editmode))
     m.heroku_editmode_fix()
     print("ED5", Common.paxdetails_editmode, Common.heroku_editmode)
 
