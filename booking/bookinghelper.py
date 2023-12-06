@@ -560,8 +560,8 @@ def create_booking_instance(request, pnr):
     # for key in request.session:
     #     print("SESS",key)
     print("CD2", Common.save_context)
-    print("CD3", Common.save_context["depart_pos"])
-    print("CD3A", Common.save_context["return_pos"])
+    # print("CD3", Common.save_context["depart_pos"])
+    # print("CD3A", Common.save_context["return_pos"])
     print("CD3B", Common.save_context.get("depart_pos"))
     print("CD3C", Common.save_context.get("return_pos"))
     print("KEYS")
