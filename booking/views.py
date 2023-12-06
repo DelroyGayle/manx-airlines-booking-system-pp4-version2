@@ -255,12 +255,20 @@ def passenger_details_form(request):
     If Validation failed, Continue viewing the Passengers' Details
     """
 
+    # Heroku fix: just in case 'Common.paxdetails_editmode'
+    # loses its value - update - ensure they are the same
+    if Common.paxdetails_editmode != Common.heroku_editmode:
+        Common.paxdetails_editmode = Common.heroku_editmode
+
+    print("ED5", Common.paxdetails_editmode, Common.heroku_editmode)
+
     (adults_formset, children_formset, infants_formset,
      children_included, infants_included,
      bags_remarks_form, context) = (
-            m.setup_formsets_for_create(request)
+                m.setup_formsets_for_create(request)
             if not Common.paxdetails_editmode
-            else m.setup_formsets_for_edit(request))
+            else 
+                m.setup_formsets_for_edit(request))
 
     if request.method == "POST":
         result = m.handle_pax_details_POST(request,
@@ -272,6 +280,8 @@ def passenger_details_form(request):
                                            bags_remarks_form)
         is_valid, context = result
         if is_valid:
+            print("EDITMODE", Common.paxdetails_editmode)
+            print("ED6", Common.paxdetails_editmode, Common.heroku_editmode)
             if not Common.paxdetails_editmode:
                 return render(request, "booking/confirm-booking-form.html",
                               context)
@@ -347,6 +357,8 @@ def view_booking(request, id):
 
     # Heroku fix
     Common.the_outbound_date = display["outbound_date"]
+    Common.the_pnr = booking.pnr
+    Common.the_booking_id = booking.id
 
     if booking.return_flight:
         display["return_option"] = "Y"
@@ -489,14 +501,18 @@ def edit_booking(request, id):
 
     # Heroku fix
     Common.the_pnr = booking.pnr
-
+    Common.the_booking_id = booking.id
 
     if request.method == "POST":
         return HttpResponseRedirect(reverse("view-booking",
                                             kwargs={"id": booking.pk}))
 
     else:
+        print("ED7b", Common.paxdetails_editmode, Common.heroku_editmode)
         Common.paxdetails_editmode = True # TODO
+        # Heroku fix
+        Common.heroku_editmode = True
+        print("ED8", Common.paxdetails_editmode, Common.heroku_editmode)
         context = m.handle_editpax_GET(request, id, booking)
 
     return render(request, "booking/edit-booking.html", context)

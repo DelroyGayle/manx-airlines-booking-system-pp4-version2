@@ -433,6 +433,7 @@ def heroku_booking_fix(request):
     Common.save_context["booking"]["infants"] = (
         int(request.POST.get("infants")))
 
+
 def heroku_display_fix():
     """
     Fix regarding KeyError 'display' at /edit/
@@ -453,10 +454,23 @@ def heroku_display_fix():
     if "outbound_date" not in Common.save_context["display"]:
         Common.save_context["display"]["outbound_date"] = (
               Common.the_outbound_date)
+    if Common.save_context["display"]["outbound_date"] is None:
+        Common.save_context["display"]["outbound_date"] = (
+              Common.the_outbound_date)
     if ("inbound_date" in Common.save_context["display"] and
         Common.save_context["display"]["inbound_date"] is None):
         Common.save_context["display"]["inbound_date"] = (
               Common.the_inbound_date)
+
+
+def heroku_editmode_fix():
+    """
+    Heroku fix: just in case 'Common.paxdetails_editmode'
+    loses its value - ensure they are identical
+    """
+
+    if Common.paxdetails_editmode != Common.heroku_editmode:
+        Common.paxdetails_editmode = Common.heroku_editmode
 
 
 def generate_random_pnr():
@@ -522,6 +536,8 @@ def reset_common_fields(request):
     Common.outbound_allocated_seats = []
     Common.inbound_allocated_seats = []
     Common.paxdetails_editmode = None
+    # Heroku fix
+    Common.heroku_editmode = None
 
 
 def create_transaction_record(request):
@@ -1268,6 +1284,7 @@ def initialise_formset_context(request):
     Create the 'context' to be used by the Passenger Details Template
     Necessary preset values have been saved in 'Common.save_context'
     """
+    print("ED2", Common.paxdetails_editmode, Common.heroku_editmode)
     if Common.paxdetails_editmode:
         # Editing Pax Details
         return initialise_for_editing(request)
@@ -1872,6 +1889,7 @@ def handle_pax_details_POST(request,
         context_copy = request.POST.copy()  # Because of Immutability
 
         # Is it Editing Pax Details?
+        print("ED3", Common.paxdetails_editmode, Common.heroku_editmode)
         if Common.paxdetails_editmode:
             new_context = setup_confirm_changes_context(request,
                                                         children_included,
@@ -2051,6 +2069,7 @@ def handle_editpax_GET(request, id, booking):
 
     # Indicate that 'Editing' is being perform
     ### TODO Common.paxdetails_editmode = True
+    print("ED4", Common.paxdetails_editmode, Common.heroku_editmode)
     return context
 
 
@@ -2155,11 +2174,10 @@ def update_pax_records(request):
     print("2ND COPY", Common.the_pnr)
 
     newdata = Common.save_context.get("confirm-booking-context")
-
     context = Common.save_context
 
     # Delete all the Passengers in the Booking
-    booking_id = context["booking"]["id"]
+    booking_id = Common.the_booking_id
     Passenger.objects.filter(pnr_id=booking_id).delete()
 
     outbound_seats_list = []
