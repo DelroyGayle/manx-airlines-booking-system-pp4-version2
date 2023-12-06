@@ -44,6 +44,9 @@ class Common:
     the_remarks = None
     the_outbound_date = None
     the_inbound_date = None
+    the_booking_id = None
+
+    # TODO
     context_2ndcopy = None
 
     def __init__(self):
