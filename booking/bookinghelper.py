@@ -350,7 +350,7 @@ def heroku_children_included_fix(request):
     """
     Fix regarding KeyError 'children_included'
     Ensure that both 'children_included & infants-included' 
-    are set with values at this stage
+    exist with values at this stage
     """
 
     if (hasattr(Common, "save_context") and
@@ -399,6 +399,33 @@ def heroku_dates_fix(request):
     newdate = datetime.strptime(newdate, "%Y-%m-%d").date()
     Common.save_context["booking"]["returning_date"] = newdate
     
+
+def heroku_booking_fix(respect):
+    """
+    Fix regarding KeyError at /details/ 'booking'
+
+    Ensure that both 'children_included & infants-included' 
+    exist with values at this stage
+    Ensure that 
+    Common.save_context["booking"]["adults"]
+    Common.save_context["booking"]["children"]
+    Common.save_context["booking"]["infants"]
+    all exist with values at this stage
+    """
+
+    heroku_children_included_fix(request)
+    if ("adults" in Common.save_context["booking"] and
+        "children" in Common.save_context["booking"] and
+        "infants") in Common.save_context["booking"]:
+        return
+    
+    Common.save_context["booking"]["adults"] = (
+        int(request.POST.get("adults")))
+    Common.save_context["booking"]["children"] = (
+        int(request.POST.get("children")))
+    Common.save_context["booking"]["infants"] = (
+        int(request.POST.get("infants")))
+ 
 
 def generate_random_pnr():
     """ Generate a random 6-character PNR """
@@ -1001,6 +1028,7 @@ def date_validation_part2(request, accum_dict, errors_found,
     todays_date = datetime.now().date()
     # datediff = date_of_birth - todays_date
 
+    # Heroku fix
     heroku_dates_fix(request)
 
     departing_date = Common.save_context["booking"]["departing_date"]
@@ -1174,6 +1202,9 @@ def initialise_formset_context(request):
         return initialise_for_editing(request)
 
     context = {}
+
+    # Heroku fix
+    heroku_booking_fix(respect)
 
     # ADULTS
     number_of_adults = Common.save_context["booking"]["adults"]
