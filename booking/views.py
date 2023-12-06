@@ -254,8 +254,11 @@ def passenger_details_form(request):
 
     If Validation failed, Continue viewing the Passengers' Details
     """
+    # TODO
     messages.add_message(request, messages.ERROR,
-                         str(Common.paxdetails_editmode))
+                         "EDITMODE>" + str(Common.paxdetails_editmode))
+    messages.add_message(request, messages.ERROR,
+                         "EDITMODE2>" + str(Common.heroku_editmode_editmode))
     m.heroku_editmode_fix()
     print("ED5", Common.paxdetails_editmode, Common.heroku_editmode)
 
