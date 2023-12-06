@@ -1958,6 +1958,9 @@ def handle_editpax_GET(request, id, booking):
                       context["booking"]["return_flight"])
                                                else "N")
 
+# TODO
+    pax2 = Common.context_2ndcopy["passengers"]
+
     # Get all the Passengers related to the Booking
     # At this point 'pax' is a QuerySet
     pax = Common.save_context["passengers"]

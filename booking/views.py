@@ -254,12 +254,9 @@ def passenger_details_form(request):
 
     If Validation failed, Continue viewing the Passengers' Details
     """
-
-    # Heroku fix: just in case 'Common.paxdetails_editmode'
-    # loses its value - update - ensure they are the same
-    if Common.paxdetails_editmode != Common.heroku_editmode:
-        Common.paxdetails_editmode = Common.heroku_editmode
-
+    messages.add_message(request, messages.ERROR,
+                         str(Common.paxdetails_editmode))
+    heroku_editmode_fix()
     print("ED5", Common.paxdetails_editmode, Common.heroku_editmode)
 
     (adults_formset, children_formset, infants_formset,
@@ -503,11 +500,16 @@ def edit_booking(request, id):
     Common.the_pnr = booking.pnr
     Common.the_booking_id = booking.id
 
+    messages.add_message(request, messages.ERROR,
+                         "7A" + str(Common.paxdetails_editmode))
+
     if request.method == "POST":
         return HttpResponseRedirect(reverse("view-booking",
                                             kwargs={"id": booking.pk}))
 
     else:
+        messages.add_message(request, messages.ERROR,
+                         "7BPOST" + str(Common.paxdetails_editmode))
         print("ED7b", Common.paxdetails_editmode, Common.heroku_editmode)
         Common.paxdetails_editmode = True # TODO
         # Heroku fix
