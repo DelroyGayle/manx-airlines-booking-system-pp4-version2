@@ -2207,6 +2207,14 @@ def update_pax_records(request):
     Then write out the updated data taking into consideration any deletions
     """
 
+    # TODO
+    messages.add_message(request, messages.ERROR,
+                         "PNR1 " + Common.the_pnr)
+    messages.add_message(request, messages.ERROR,
+                         hasattr(Common, "save_context"))
+    messages.add_message(request, messages.ERROR,
+                         Common.save_context.get("confirm-booking-context"))
+
     # Need a second copy of the PNR!
     Common.save_context["pnr"] = Common.the_pnr
     print("2ND COPY", Common.the_pnr)
