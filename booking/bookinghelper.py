@@ -395,6 +395,7 @@ def reset_common_fields(request):
     would hold many values
     """
     Common.save_context = {}
+    request.session = {}
     Common.outbound_schedule_instance = None
     Common.inbound_schedule_instance = None
     Common.outbound_seatmap = None
@@ -1444,7 +1445,9 @@ def setup_formsets_for_create(request):
     ## TODO
     print("CC2", int(request.POST.get("children")) > 0, request.POST)
     # CHILDREN
-    children_included = Common.save_context["children_included"]
+    # Add Heroku fix
+    children_included = Common.save_context.get("children_included",
+                                   int(request.POST.get("children")) > 0)
     if children_included:
         ChildrenFormSet = formset_factory(MinorsForm, extra=0)
         children_formset = ChildrenFormSet(request.POST or None,
@@ -1453,7 +1456,9 @@ def setup_formsets_for_create(request):
         children_formset = []
 
     # INFANTS
-    infants_included = Common.save_context["infants_included"]
+    # Add Heroku fix
+    infants_included = Common.save_context.get("infants_included",
+                                   int(request.POST.get("infants")) > 0)
     if infants_included:
         InfantsFormSet = formset_factory(MinorsForm, extra=0)
         infants_formset = InfantsFormSet(request.POST or None, prefix="infant")
