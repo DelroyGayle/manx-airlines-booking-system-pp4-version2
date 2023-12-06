@@ -2050,7 +2050,7 @@ def handle_editpax_GET(request, id, booking):
     Common.save_context["infants_included"] = number_of_infants
 
     # Indicate that 'Editing' is being perform
-    Common.paxdetails_editmode = True
+    ### TODO Common.paxdetails_editmode = True
     return context
 
 

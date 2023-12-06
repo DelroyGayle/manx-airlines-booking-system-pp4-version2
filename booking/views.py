@@ -490,11 +490,13 @@ def edit_booking(request, id):
     # Heroku fix
     Common.the_pnr = booking.pnr
 
+
     if request.method == "POST":
         return HttpResponseRedirect(reverse("view-booking",
                                             kwargs={"id": booking.pk}))
 
     else:
+        Common.paxdetails_editmode = True # TODO
         context = m.handle_editpax_GET(request, id, booking)
 
     return render(request, "booking/edit-booking.html", context)
