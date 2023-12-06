@@ -555,7 +555,9 @@ def create_booking_instance(request, pnr):
     # New Instance
     booking = Booking()
     booking.pnr = pnr
-    depart_pos = Common.save_context["depart_pos"]
+    # Heroku fix
+    depart_pos = Common.save_context.get("depart_pos",
+                        int(request.session["depart_pos"]))
     # Outbound Flight Info
     outbound_flightno = Common.outbound_listof_flights[depart_pos]
     booking.outbound_date = Common.save_context["booking"]["departing_date"]
@@ -563,11 +565,16 @@ def create_booking_instance(request, pnr):
     booking.flight_from = Common.flight_info[outbound_flightno]["flight_from"]
     booking.flight_to = Common.flight_info[outbound_flightno]["flight_to"]
 
-    if Common.save_context["return_option"] == "Y":
+    # Heroku fix
+    return_option = Common.save_context.get("return_option",
+                           request.session["return_option"])
+    if return_option == "Y":
         # Inbound Flight Info
         booking.return_flight = True
         booking.inbound_date = Common.save_context["booking"]["returning_date"]
-        return_pos = Common.save_context["return_pos"]
+        # Heroku fox
+        return_pos = Common.save_context.get("return_pos",
+                        int(request.session["return_pos"]))
         booking.inbound_flightno = Common.inbound_listof_flights[return_pos]
 
     else:
@@ -576,7 +583,10 @@ def create_booking_instance(request, pnr):
         booking.inbound_date = None
         booking.inbound_flightno = ""
 
-    booking.fare_quote = Common.save_context["total_price"]
+    # Heroku fix
+    total_price = Common.save_context.get("total_price",
+                           float(request.session["total_price"]))
+    booking.fare_quote = total_price
     booking.ticket_class = "Y"
     booking.cabin_class = "Y"
     booking.number_of_adults = Common.save_context["booking"]["adults"]
