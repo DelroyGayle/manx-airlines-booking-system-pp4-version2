@@ -34,13 +34,16 @@ class Common:
     outbound_total_booked = None
     inbound_total_booked = None
     paxdetails_editmode = None
-    # Heroku fix
+    # New Class Variables for Heroku fix
     the_depart_pos = None
     the_return_pos = None
     the_return_option = None
     the_total_price = None
+    the_pnr = None
     the_bags = None
     the_remarks = None
+    the_inbound_date = None
+    the_outbound_date = None
 
     def __init__(self):
         pass

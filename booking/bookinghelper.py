@@ -346,6 +346,7 @@ when this App runs on Heroku
 I CANNOT reproduced these errors on my machine locally
 These 'errors' ONLY occur on Heroku
 """
+
 def heroku_children_included_fix(request):
     """
     Fix regarding KeyError 'children_included'
@@ -425,7 +426,30 @@ def heroku_booking_fix(request):
         int(request.POST.get("children")))
     Common.save_context["booking"]["infants"] = (
         int(request.POST.get("infants")))
- 
+
+def heroku_display_fix():
+    """
+    Fix regarding KeyError 'display' at /edit/
+    Ensure that 
+    Common.save_context["display"]["outbound_date"]
+    exists with a value
+    And if applicable
+    Common.save_context["display"]["inbound_date"]
+    exists with a value
+    """
+
+    if not hasattr(Common, "save_context"):
+        Common.save_context = {}
+    if "display" not in Common.save_context:
+        Common.save_context["display"] = {}
+    if "outbound_date" not in Common.save_context:
+        Common.save_context["display"]["outbound_date"] = (
+              Common.the_outbound_date)
+    if ("inbound_date" in Common.save_context["display"] and
+        not Common.save_context["display"]["inbound_date"]):
+        Common.save_context["display"]["inbound_date"] = (
+              Common.the_inbound_date)
+
 
 def generate_random_pnr():
     """ Generate a random 6-character PNR """
@@ -483,7 +507,6 @@ def reset_common_fields(request):
     would hold many values
     """
     Common.save_context = {}
-    request.session = {}
     Common.outbound_schedule_instance = None
     Common.inbound_schedule_instance = None
     Common.outbound_seatmap = None
@@ -557,19 +580,12 @@ def create_booking_instance(request, pnr):
     booking.pnr = pnr
     # Heroku fix
     # TODO
-    # for key in request.session:
-    #     print("SESS",key)
     print("CD2", Common.save_context)
     # print("CD3", Common.save_context["depart_pos"])
     # print("CD3A", Common.save_context["return_pos"])
     print("CD3B", Common.save_context.get("depart_pos"))
     print("CD3C", Common.save_context.get("return_pos"))
     print("KEYS")
-    # for key in request.session:
-    #     print("SESS",key)
-    print(type(request.session), request.session.get("depart_pos"),
-    type(request.session.get("depart_pos")))
-    print(request.session)
 
     # Heroku fix
     depart_pos = Common.save_context.get("depart_pos",
@@ -593,7 +609,7 @@ def create_booking_instance(request, pnr):
         booking.return_flight = True
         booking.inbound_date = Common.save_context["booking"]["returning_date"]
 
-        # Heroku fox
+        # Heroku fix
         return_pos = Common.save_context.get("return_pos",
                            Common.the_return_pos)
 
@@ -781,7 +797,7 @@ def create_new_booking_pax_records(request):
     # print("F1",f)
     # print("PNR2=",f.get("pnr"))
     # Include Heroku fix
-    pnr = Common.save_context.get("pnr", request.session["pnr"]);
+    pnr = Common.save_context.get("pnr", Common.the_pnr);
     print("PNR=", pnr) # TODO
     tuple = create_booking_instance(request, pnr)
     booking, number_of_adults, number_of_children, number_of_infants = tuple
@@ -1383,7 +1399,7 @@ def setup_confirm_booking_context(request,
     # PNR - Passenger Name Record
     context["pnr"] = unique_pnr()
     # Heroku fix
-    request.session["pnr"] = context["pnr"]
+    Common.the_pnr = context["pnr"]
     return context
 
 
@@ -1863,6 +1879,9 @@ def handle_editpax_GET(request, id, booking):
     can be displayed
     """
 
+    # Heroku fix
+    heroku_display_fix()
+
     # Convert from "16NOV23" format to Datevalue i.e. 16/11/2023
     departing_date = Common.save_context["display"]["outbound_date"]
     departing_date = datetime.strptime(departing_date,
@@ -1961,7 +1980,6 @@ def handle_editpax_GET(request, id, booking):
 
     # Save a copy in order to fetch any values as and when needed
     Common.save_context = context
-    ## request.session["save_context"] = context TODO
 
     # 2nd copies needed for validation purposes
     Common.save_context["booking"]["adults"] = number_of_adults

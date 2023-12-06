@@ -174,20 +174,6 @@ def create_booking_form(request):
             # Heroku fix:
             # Another copy of the above Update 
             # with the contents of dict 'saved_data'
-            print("BEF")
-            for k in request.session:
-                print(175,k,request.session[k])
-            print("SAVE")
-            # for key in saved_data:
-            #     print(178,key,saved_data[key])
-            #     request.session[key] = saved_data[key]
-            # TODO
-            request.session["depart_pos"] = saved_data["depart_pos"]
-            request.session["return_pos"] = saved_data["depart_pos"]
-            request.session["return_option"] = saved_data["return_option"]
-            print("AFT")
-            for k in request.session:
-                print(182,k,request.session[k])
             # TODO
             # Heroku fix
             Common.the_depart_pos = saved_data["depart_pos"]
@@ -236,7 +222,6 @@ def create_booking_form(request):
             # Save a copy in order to fetch any values as and when needed
             Common.save_context = context
 
-            ## request.session["save_context"] = context TODO
             print("CD1", Common.save_context)
 
             return render(request, "booking/passenger-details-form.html",
@@ -359,12 +344,24 @@ def view_booking(request, id):
                    # These 'time' fields are not part of
                    # the 'update' process so set to ""
                    departing_time="", returning_time="")
+
+    # Heroku fix
+    Common.the_outbound_date = display["outbound_date"]
+
     if booking.return_flight:
         display["return_option"] = "Y"
         display["inbound_date"] = (booking.inbound_date.strftime("%d%b%y")
                                    .upper())
+        # Heroku fix
+        Common.the_return_option = "Y"
+        Common.the_inbound_date = display["inbound_date"]
+
     else:
         display["return_option"] = "N"
+        # Heroku fix
+        Common.the_return_option = "N"
+        # Dummy nonnull value
+        Common.the_inbound_date = display["inbound_date"]
 
     passenger_list = queryset.values()
     count = 0
@@ -381,7 +378,6 @@ def view_booking(request, id):
                "display": display}
     # Keep a Copy for 'Edit Passengers' functionality
     Common.save_context = context
-    ## request.session["save_context"] = context TODO
     print("CC1",context)
     return render(request, "booking/view-booking.html", context)
 

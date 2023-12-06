@@ -76,8 +76,6 @@ MIDDLEWARE = [
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/login'
-SESSION_SAVE_EVERY_REQUEST = True
-
 
 ROOT_URLCONF = 'manxairlines.urls'
 
