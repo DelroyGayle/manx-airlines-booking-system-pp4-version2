@@ -425,7 +425,7 @@ def heroku_booking_fix(request):
         Common.save_context["booking"] is not None and
         "adults" in Common.save_context["booking"] and
         "children" in Common.save_context["booking"] and
-        "infants") in Common.save_context["booking"]:
+        "infants" in Common.save_context["booking"]):
         return
     
     if "booking" not in Common.save_context:
