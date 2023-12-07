@@ -47,8 +47,8 @@ class Common:
     the_booking_id = None
     heroku_editmode = None
     the_original_details = None
-    Common.the_hidden = None
-    Common.the_bags_remarks = None
+    the_hidden = None
+    the_bags_remarks = None
 
     # TODO ???
     context_2ndcopy = None
