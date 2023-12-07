@@ -1,3 +1,0 @@
-Had many issues trying to get 'Cloudinary' to work on Heroku
-After speaking with Tutor Support
-it transpired that Heroku needed a file in the folder - any file would do!
