@@ -524,6 +524,26 @@ def heroku_details_fix():
     print("CHECK2", Common.the_original_details) # TODO
 
 
+def heroku_hidden_fix():
+    """
+    Fix regarding KeyError "hidden_form"
+    Ensure that Common.save_context["hidden_form"]
+    exists with a value at this stage
+    """
+
+    if (hasattr(Common, "save_context") and
+        Common.save_context is not None and
+        "hidden_form" in Common.save_context and
+        Common.save_context["hidden_form"] is not None):
+        return
+    
+    if not hasattr(Common, "save_context"):
+        Common.save_context = {}
+    if Common.save_context is None:
+        Common.save_context = {}
+    Common.save_context["hidden_form"] = Common.the_hidden
+
+
 def generate_random_pnr():
     """ Generate a random 6-character PNR """
     n = 5
@@ -1382,6 +1402,10 @@ def initialise_formset_context(request):
 
     bags_remarks_form = BagsRemarks(request.POST or None, prefix="bagrem")
     context["bags_remarks_form"] = bags_remarks_form
+
+    # Heroku fix
+    heroku_hidden_fix()
+
     context["hidden_form"] = Common.save_context["hidden_form"]
 
     return context
@@ -2126,6 +2150,10 @@ def handle_editpax_GET(request, id, booking):
     context["hidden_form"] = hiddenForm
     context["bags_remarks_form"] = bags_remarks_form
 
+    # Heroku fix
+    Common.the_hidden = hiddenForm
+    Common.the_bags_remarks = bags_remarks_form # TODO?
+
     # Save a copy in order to fetch any values as and when needed
     Common.save_context = context
 
@@ -2200,6 +2228,10 @@ def initialise_for_editing(request):
 
     bags_remarks_form = BagsRemarks(request.POST or None, prefix="bagrem")
     context["bags_remarks_form"] = bags_remarks_form
+
+    # Heroku fix
+    heroku_hidden_fix()
+
     context["hidden_form"] = Common.save_context["hidden_form"]
 
     return context
