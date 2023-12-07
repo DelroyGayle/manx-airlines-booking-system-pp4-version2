@@ -492,24 +492,28 @@ def heroku_passengers_fix():
     Common.save_context["passengers"] = Common.context_2ndcopy["passengers"]
 
 
-def heroku_details_fix(context):
+def heroku_details_fix():
     """
     Fix regarding KeyError 'passengers'
-    Ensure that context["original_pax_details"]
+    Fix regarding KeyError 'original_pax_details'
+    Ensure that Common.save_context["original_pax_details"]
     exists with values at this stage
-    If not, use Common.the_original_details
-
-    Note: I have changed the original code
-    to accommodate this - so keep this one
     """
 
-    print("CHECK1", context["original_pax_details"])
-    print("CHECK2", Common.the_original_details)
-    if (hasattr(context, "original_pax_details") and
-        context["original_pax_details"] is not None):
-        return context["original_pax_details"]
-    else:
-        return Common.the_original_details
+    if (hasattr(Common, "save_context") and
+        Common.save_context is not None and
+        "original_pax_details" in Common.save_context):
+        print("CHECK1", Common.save_context["original_pax_details"]) # TODO
+        return
+    
+    if not hasattr(Common, "save_context"):
+        Common.save_context = {}
+    if Common.save_context is None:
+        Common.save_context = {}
+    Common.save_context["original_pax_details"] = (
+        Common.the_original_details
+    )
+    print("CHECK2", Common.the_original_details) # TODO
 
 
 def generate_random_pnr():
@@ -2249,8 +2253,7 @@ def update_pax_records(request):
     print("2ND COPY", Common.the_pnr)
 
     newdata = Common.save_context.get("confirm-booking-context")
-    context = Common.save_context
-
+    
     # Delete all the Passengers in the Booking
     booking_id = Common.the_booking_id
     Passenger.objects.filter(pnr_id=booking_id).delete()
@@ -2261,8 +2264,10 @@ def update_pax_records(request):
     number_inbound_seats_deleted = 0
     #    pax_orig_data_list = context["original_pax_details"]
     # TODO
-    pax_orig_data_list = heroku_details_fix(context)
-
+    # Derived from Common.save_context["original_pax_details"]
+    # Heroku fix
+    heroku_details_fix()
+    pax_orig_data_list = Common.save_context["original_pax_details"]
     # Fetch all Adults into one list
     adults_list = list(filter(lambda f: (f["pax_type"] == "A"),
                               pax_orig_data_list))
