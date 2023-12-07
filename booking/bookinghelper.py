@@ -2043,7 +2043,12 @@ def handle_editpax_GET(request, id, booking):
     if departing_date is None:
         # Heroku fix
         heroku_display_fix()
+        # TODO
         departing_date = Common.the_outbound_date
+        messages.add_message(request, messages.ERROR,
+                         "NONE CHECK")
+        messages.add_message(request, messages.ERROR,
+                         departing_date)
 
     departing_date = datetime.strptime(departing_date,
                                        "%d%b%y").date()
