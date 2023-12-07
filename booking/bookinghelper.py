@@ -472,6 +472,10 @@ def heroku_editmode_fix():
     Heroku fix: just in case 'Common.paxdetails_editmode'
     loses its value - ensure they are identical
     """
+    messages.add_message(request, messages.ERROR,
+                         "EFIX" + str(Common.paxdetails_editmode))
+    messages.add_message(request, messages.ERROR,
+                         "EFIX2" + str(Common.heroku_editmode))
     return # TODO
     if Common.paxdetails_editmode != Common.heroku_editmode:
         Common.paxdetails_editmode = Common.heroku_editmode
@@ -584,6 +588,7 @@ def reset_common_fields(request):
     Common.paxdetails_editmode = None
     # Heroku fix
     Common.heroku_editmode = None
+    del request.session["editmode"]
 
 
 def create_transaction_record(request):
@@ -2152,6 +2157,9 @@ def initialise_for_editing(request):
     """
 
     context = {}
+
+    # Heroku fix
+    heroku_booking_fix(request)
 
     # ADULTS
     number_of_adults = Common.save_context["booking"]["adults"]
