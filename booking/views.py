@@ -454,6 +454,7 @@ def delete_booking(request, id):
     return render(request, "booking/delete-booking.html", context)
 
 
+@login_required
 def edit_booking(request, id):
     """ Update a Booking """
     booking = get_object_or_404(Booking, pk=id)

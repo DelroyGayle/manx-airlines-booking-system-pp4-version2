@@ -1363,6 +1363,7 @@ def compute_change_fees(request,
                                     key, fees, "infants",
                                     pax_number, True)
             count += 1
+            pax_number += 1
 
         if fees["infants"]:
             # Infants Details have changed
