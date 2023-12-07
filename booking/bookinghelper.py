@@ -2037,6 +2037,8 @@ def handle_editpax_GET(request, id, booking):
 
     # Heroku fix TODO
     if departing_date is None:
+        # Heroku fix
+        heroku_display_fix()
         departing_date = Common.the_outbound_date
 
     departing_date = datetime.strptime(departing_date,
