@@ -259,7 +259,7 @@ def passenger_details_form(request):
                          "EDITMODE>" + str(Common.paxdetails_editmode))
     messages.add_message(request, messages.ERROR,
                          "EDITMODE2>" + str(Common.heroku_editmode))
-    m.heroku_editmode_fix() ## TODO
+    m.heroku_editmode_fix(request) ## TODO
     print("ED5", Common.paxdetails_editmode, Common.heroku_editmode)
     if request.session.pop("editmode", None):
         print("YES EDIT MODE ON")
