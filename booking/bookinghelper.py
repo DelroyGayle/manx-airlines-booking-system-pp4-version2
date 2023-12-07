@@ -2004,9 +2004,10 @@ def handle_editpax_GET(request, id, booking):
     messages.add_message(request, messages.ERROR,
                          Common.save_context["display"]["outbound_date"])
 
-    # TODO
-    # if departing_date is None:
-    #     departing_date = "07DEC23"
+    # Heroku fix TODO
+    if departing_date is None:
+        departing_date = Common.the_outbound_date
+
     departing_date = datetime.strptime(departing_date,
                                        "%d%b%y").date()
     if "inbound_date" in Common.save_context["display"]:
