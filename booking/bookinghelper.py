@@ -508,10 +508,15 @@ def heroku_details_fix():
     exists with values at this stage
     """
 
+    messages.add_message(request, messages.ERROR,
+                                     type(Common.the_original_details))
+
     if (hasattr(Common, "save_context") and
         Common.save_context is not None and
         "original_pax_details" in Common.save_context):
         print("CHECK1", Common.save_context["original_pax_details"]) # TODO
+        messages.add_message(request, messages.ERROR,
+                                     type(Common.save_context["original_pax_details"]))
         return
     
     if not hasattr(Common, "save_context"):
@@ -522,6 +527,8 @@ def heroku_details_fix():
         Common.the_original_details
     )
     print("CHECK2", Common.the_original_details) # TODO
+    messages.add_message(request, messages.ERROR,
+                                     type(Common.save_context["original_pax_details"]))
 
 
 def heroku_hidden_fix():
