@@ -33,7 +33,9 @@ DEBUG = False
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 SITE_ID = 1
 
-ALLOWED_HOSTS = ['8000-delroygayle-manxairline-vn632gnu8y1.ws-eu106.gitpod.io']
+NEW
+ALLOWED_HOSTS = ['manx-airlines-pp4.onrender.com',
+                 '8000-delroygayle-manxairline-vn632gnu8y1.ws-eu106.gitpod.io']
 
 
 # Application definition
