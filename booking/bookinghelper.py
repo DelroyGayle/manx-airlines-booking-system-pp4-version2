@@ -1586,6 +1586,10 @@ def calc_change_fees(request, context, count, key, fees, fee_key,
 
     label = f"{key}first_name"
     label = f"{key}last_name"
+
+    # Heroku fix
+    heroku_details_fix(request)
+
     paxlist = Common.save_context["original_pax_details"]
     print("TITLES", context[f"{key}title"], paxlist[pax_number]["title"])
     print("FN", context[f"{key}first_name"], paxlist[pax_number]["first_name"])
