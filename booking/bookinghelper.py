@@ -492,6 +492,26 @@ def heroku_passengers_fix():
     Common.save_context["passengers"] = Common.context_2ndcopy["passengers"]
 
 
+def heroku_details_fix(context):
+    """
+    Fix regarding KeyError 'passengers'
+    Ensure that context["original_pax_details"]
+    exists with values at this stage
+    If not, use Common.the_original_details
+
+    Note: I have changed the original code
+    to accommodate this - so keep this one
+    """
+
+    print("CHECK1", context["original_pax_details"])
+    print("CHECK2", Common.the_original_details)
+    if (hasattr(context, "original_pax_details") and
+        context["original_pax_details"] is not None):
+        return context["original_pax_details"]
+    else:
+        return Common.the_original_details
+
+
 def generate_random_pnr():
     """ Generate a random 6-character PNR """
     n = 5
@@ -2101,6 +2121,8 @@ def handle_editpax_GET(request, id, booking):
     Common.save_context["booking"]["departing_date"] = departing_date
     Common.save_context["booking"]["returning_date"] = returning_date
     Common.save_context["original_pax_details"] = pax_initial_list
+    # Heroku fix
+    Common.the_original_details = pax_initial_list
 
     Common.save_context["children_included"] = number_of_children
     Common.save_context["infants_included"] = number_of_infants
@@ -2237,7 +2259,9 @@ def update_pax_records(request):
     inbound_seats_list = []
     number_outbound_seats_deleted = 0
     number_inbound_seats_deleted = 0
-    pax_orig_data_list = context["original_pax_details"]
+    #    pax_orig_data_list = context["original_pax_details"]
+    # TODO
+    pax_orig_data_list = heroku_details_fix(context)
 
     # Fetch all Adults into one list
     adults_list = list(filter(lambda f: (f["pax_type"] == "A"),
