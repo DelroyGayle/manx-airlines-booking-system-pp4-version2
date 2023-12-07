@@ -467,7 +467,7 @@ def heroku_display_fix():
                                      "DISPLAY " + Common.the_outbound_date)
 
 
-def heroku_editmode_fix():
+def heroku_editmode_fix(request):
     """
     Heroku fix: just in case 'Common.paxdetails_editmode'
     loses its value - ensure they are identical
@@ -588,7 +588,8 @@ def reset_common_fields(request):
     Common.paxdetails_editmode = None
     # Heroku fix
     Common.heroku_editmode = None
-    del request.session["editmode"]
+    # Remove/Delete it if it exists
+    request.session.pop("editmode", None)
 
 
 def create_transaction_record(request):
