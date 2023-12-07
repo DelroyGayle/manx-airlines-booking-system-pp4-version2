@@ -421,11 +421,15 @@ def heroku_booking_fix(request):
     """
 
     heroku_children_included_fix(request)
-    if ("adults" in Common.save_context["booking"] and
+    if (hasattr(Common.save_context, "booking") and
+        Common.save_context["booking"] is not None and
+        "adults" in Common.save_context["booking"] and
         "children" in Common.save_context["booking"] and
         "infants") in Common.save_context["booking"]:
         return
     
+    if "booking" not in Common.save_context:
+        Common.save_context["booking"] = {}
     Common.save_context["booking"]["adults"] = (
         int(request.POST.get("adults")))
     Common.save_context["booking"]["children"] = (
