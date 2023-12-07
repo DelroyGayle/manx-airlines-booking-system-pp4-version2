@@ -500,7 +500,7 @@ def heroku_passengers_fix():
     Common.save_context["passengers"] = Common.context_2ndcopy["passengers"]
 
 
-def heroku_details_fix():
+def heroku_details_fix(request):
     """
     Fix regarding KeyError 'passengers'
     Fix regarding KeyError 'original_pax_details'
@@ -2319,7 +2319,7 @@ def update_pax_records(request):
     # TODO
     # Derived from Common.save_context["original_pax_details"]
     # Heroku fix
-    heroku_details_fix()
+    heroku_details_fix(request)
     pax_orig_data_list = Common.save_context["original_pax_details"]
     # Fetch all Adults into one list
     adults_list = list(filter(lambda f: (f["pax_type"] == "A"),
