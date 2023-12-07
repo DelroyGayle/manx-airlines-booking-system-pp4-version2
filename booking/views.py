@@ -259,8 +259,17 @@ def passenger_details_form(request):
                          "EDITMODE>" + str(Common.paxdetails_editmode))
     messages.add_message(request, messages.ERROR,
                          "EDITMODE2>" + str(Common.heroku_editmode))
-    m.heroku_editmode_fix()
+    m.heroku_editmode_fix() ## TODO
     print("ED5", Common.paxdetails_editmode, Common.heroku_editmode)
+    if request.session.pop("editmode", None):
+        print("YES EDIT MODE ON")
+        messages.add_message(request, messages.ERROR,
+                         "EDITMODE ON" + str(Common.paxdetails_editmode))
+        Common.paxdetails_editmode = True ## TODO
+    else:
+        print("NO EDIT MODE OFF")
+        messages.add_message(request, messages.ERROR,
+                         "EDITMODE OFF" + str(Common.paxdetails_editmode))
 
     (adults_formset, children_formset, infants_formset,
      children_included, infants_included,
@@ -504,6 +513,7 @@ def edit_booking(request, id):
     Common.the_pnr = booking.pnr
     Common.the_booking_id = booking.id
     Common.paxdetails_editmode = True
+    Common.heroku_editmode = True
 
     # TODO
     messages.add_message(request, messages.ERROR,
@@ -523,6 +533,7 @@ def edit_booking(request, id):
         Common.heroku_editmode = True
         print("ED8", Common.paxdetails_editmode, Common.heroku_editmode)
         context = m.handle_editpax_GET(request, id, booking)
+        request.session["editmode"] = True
 
     return render(request, "booking/edit-booking.html", context)
 
