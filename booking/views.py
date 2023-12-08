@@ -208,7 +208,6 @@ def create_booking_form(request):
 
             # Save a copy in order to fetch any values as and when needed
             Common.save_context = context
-            ## request.session["save_context"] = context TODO
             return render(request, "booking/passenger-details-form.html",
                           context)
 
@@ -351,8 +350,6 @@ def view_booking(request, id):
                "display": display}
     # Keep a Copy for 'Edit Passengers' functionality
     Common.save_context = context
-    ## request.session["save_context"] = context TODO
-    print("CC1",context)
     return render(request, "booking/view-booking.html", context)
 
 

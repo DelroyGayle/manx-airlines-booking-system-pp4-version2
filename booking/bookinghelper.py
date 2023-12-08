@@ -642,16 +642,7 @@ def create_new_booking_pax_records(request):
     """
 
     # New Booking Instance
-    print("CC3", request.POST.get("pnr"), request.POST)
-    print("CC3A", Common.save_context)
-    g = Common.save_context.get("pnr")
-    print("pnr=", g)
-    # f = Common.save_context.get("booking")
-    # print("F1",f)
-    # print("PNR2=",f.get("pnr"))
-    # Include Heroku fix
-    pnr = Common.save_context.get("pnr", request.session["pnr"]);
-    print("PNR=", pnr) # TODO
+    pnr = Common.save_context["pnr"]
     tuple = create_booking_instance(request, pnr)
     booking, number_of_adults, number_of_children, number_of_infants = tuple
 
@@ -1235,8 +1226,6 @@ def setup_confirm_booking_context(request,
     # Generate a Random Unique 6-character PNR
     # PNR - Passenger Name Record
     context["pnr"] = unique_pnr()
-    # Heroku fix
-    request.session["pnr"] = context["pnr"]
     return context
 
 
@@ -1442,8 +1431,6 @@ def setup_formsets_for_create(request):
     AdultsFormSet = formset_factory(AdultsForm, extra=0)
     adults_formset = AdultsFormSet(request.POST or None, prefix="adult")
 
-    ## TODO
-    print("CC2", int(request.POST.get("children")) > 0, request.POST)
     # CHILDREN
     children_included = Common.save_context["children_included"]
     if children_included:
@@ -1807,7 +1794,6 @@ def handle_editpax_GET(request, id, booking):
 
     # Save a copy in order to fetch any values as and when needed
     Common.save_context = context
-    ## request.session["save_context"] = context TODO
 
     # 2nd copies needed for validation purposes
     Common.save_context["booking"]["adults"] = number_of_adults
