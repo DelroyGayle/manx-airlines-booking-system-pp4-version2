@@ -1,7 +1,7 @@
 # Manx Airlines Travel Agent Booking System
 ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/07ac5c40-4984-43df-9b3a-6c6688723c37)
 
-[View live website](https://manx-airlines-bookings-c1e4c5533a20.herokuapp.com/)
+[View live website](https://manx-airlines-pp4.onrender.com/)
 
 ## Table of Contents
 
@@ -236,7 +236,7 @@ Epics, User Stories and their related Tasks are further explained in [TESTING.md
 
 ### Database Design
 
-The site uses a Back-end database with the usage of ElephantSQL Postgres for the deployed site
+The site uses a Back-end database with the usage of [ElephantSQL Postgres](https://www.elephantsql.com/) for the deployed site
 <details>
 <summary>Database Schema Diagram</summary>
 <br/><br/>  
@@ -1097,13 +1097,15 @@ Note: The same validation is applied to the *Returning Date*
 
 * [GitHub](https://github.com/) for hosting the site
 * [Gitpod](https://www.gitpod.io/) for editing the files
-* [Heroku](https://heroku.com) for the deployment of the site
+* [Heroku](https://heroku.com) for the initial deployment of the site
+* [Render](https://render.com/) for the final deployment of the site
 * [Jquery](https://jquery.com/) for scripting purposes
+* [ElephantSQL Postgres](https://www.elephantsql.com/) was used for the SQL Database
 * [Balsamiq:](https://balsamiq.com/) was used to create the wireframes
 * [DrawSQL](https://drawsql.app/) was used to draw the SQL tables
 * [Am I Responsive](http://ami.responsivedesign.is/) was used for creating the multi-device mock-up shown at the top of this README.md file
 * [Tiny PNG](https://tinypng.com/) was used to reduce the file size of the background image
-* [Code Institute's GitHub full template](https://github.com/Code-Institute-Org/python-essentials-template) in order to run Django and Python on Heroku
+* [Code Institute's GitHub full template](https://github.com/Code-Institute-Org/python-essentials-template) in order to run Django and Python on Heroku/Render
 * [RapidTables Hex to Binary converter](https://www.rapidtables.com/convert/number/hex-to-binary.html) in order to convert from hex numbers to binary & vice versa
 
 
@@ -1128,6 +1130,7 @@ pytz==2023.3.post1
 requests-oauthlib==1.3.1
 sqlparse==0.4.4
 urllib3==1.26.15
+whitenoise==5.3.0
 
 ```
 ------
@@ -1209,66 +1212,71 @@ To avoid such an error, please use *the Home Button, the Search Bar and the Crea
 
 ## Deployment
 
-The project is deployed on Heroku. These are the steps in order to deploy on Heroku:
-1. Regarding your project:
-    + create a Procfile with the following one line entry
-    ```
-    web: node index.js
-    ```
+The project is deployed on Render. 
+All credit goes to Sophia Iroegbu and her tutorial [How to Deploy a Django App on Render](https://www.freecodecamp.org/news/deploying-a-django-app-to-render/) which worked flawlessly.<br><br>
+These are the steps in order to deploy on Render:
+1. Regarding your project - ensure you have PostgreSQL Database setup - for my project, [ElephantSQL Postgres](https://www.elephantsql.com/) was used
+     + However alternatively there is an option to create a PostgreSQL database within Render
+2. Create a Render account - either via Github itself or use your own email address
+   - Either way, you will need to use your email address to confirm registration with Render
+3. Once you have signed up, then proceed to Set Up a PostgreSQL Database if no setup already exists - skip Steps 3,5,6 if you already have a Database setup
+   - go to the Render dashboard and Click the **New +** button, hover over **PostgreSQL**, and click it
+   - Next, define your database settings by giving your *database instance* a unique name
+   - For **Region**, use **Frankfurt (EU Central)** if you are based in Europe
+   - Select the free tier and click on **Create Database**
+   - Once the status on your database shows **Available**, it means the database has been successfully created and is ready to use
+   - Scroll down this page to see your database settings. You will need the **External Database URL**
+4. Once the database is set up, you need to connect it to your Django project
+   - Install dj-database-url by running the command
+   - **pip install dj-database-url**
+5. If you created your Postgres Database setup within Render, then head over to your database settings on Render and copy the **External Database URL**
+6. Copy this into your **env.py** i.e. **os.environ["DATABASE_URL"]="postgres:// ...**
+- Note: There is no need to do this step, if **os.environ["DATABASE_URL"]** is already contains the URL of a previous, working database
+7. Ensure that in your *settings.py* under your sitename the following settings are at the top of the file:
+  ```
+  import dj-database-url
+  import os
 
-2. Then ensure that you have pushed your latest version including Procfile to GitHub
-
-3. Create a Heroku account. You will need to enter 
-* first name
-* last name
-* email address,  
-* role e.g. *student*
-* location
-* primary development language i.e. *Python*
-
-4. Click *Create free account*
-
-5. Proceed with confirmation via email
-
-6. Log into Heroku
-
-7. Create a new application by clicking the *Create New App* button.<br>
-You will need to enter
-* The *App name*
-* The region
-* Then click the *Create app* button
-
-8. Go into settings -> Config Var and add the following:
-    +  key by the name of *PORT* with the value of *8000*.<p>
-
-9. The next step is to add a couple of  buildpacks to your application.<br>Then click the *Add buildpack* button
-
-10. Include the following buildpacks:
-    + The first buildpack is *heroku/python* - then click "Save changes"
-    + The second buildpack is *heroku/nodejs* - then click "Save changes"
-    + Please note: the order is significant - the Python buildpack **must** appear on top before the NodeJs buildpack.<br>One can use the mouse to drag the buildpacks into the correct order<p>
-
-11. Then click the *Deploy* option. This is where you choose the deployment method of *GitHub*
-
-12. Find the repo with the project you want to deploy
-
-13. Confirm that you want to connect to GitHub by clicking the *Connect* button
-
-14. Scroll down to the two options, *Automatic deploys - Manual deploy*
-
-15. In this section, you can click *Enable Automatic deploys* - Heroku will rebuild your app every time you push a new change  
-to your code to GitHub
-
-16. Or you can choose to *manually deploy* using the *Deploy Branch* option here 
-
-17. Pick which branch you want to deploy -- Generally this would be **main**
-
-18. Click **Deploy Branch** and wait until the project is built
-
-19. Ensure there are no errors. Heroku will display the message **Your app was successfully deployed**
-
-20. Click the *View* button and you will be taken to an URL of the form *https:\/\/\<project-name>.herokuapp.com/*<br>
-This is your deployed app in operation
+  DATABASES = {
+	"default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
+  }
+   ```
+8. Confirm everything is installed correctly by running **pip3 install -r requirements.txt**
+9. Next, migrate your tables to your new database to ensure the connection was successful
+   - **python manage.py makemigrations**
+   - **python manage.py migrate**
+10. Create a folder in the root directory called **staticfiles**
+11. Populate this folder by running **python manage.py collectstatic --noinput**
+12. Push your codebase to your Git repo
+13. Head over to your Render dashboard. Click **New +** and **Select Web Service**
+14. Connect your GitHub if you haven't already
+    - This is done by: **Search** for the repo you want to deploy and click the **Connect** button
+15. Give your **webservice** a name and ensure you are connecting to the right branch
+   - Use the same **Region** as used earlier
+   - Build command should be: **pip install -r requirements.txt**
+   - Start command should be: **gunicorn \<sitename\>.wsgi**
+   - (Note: this would be the same entry that follows the word **web:** in a Heroku Procfile; although a Procfile is **not** needed by Render)
+   - Select the free tier and click on **Create Web Service**
+16. Copy the **\<webservice-name\>.com** name that was chosen - that is, *No https://, No URL* - simply **\<webservice-name\>.com**
+   - Enter that into ALLOWED_HOSTS
+   - The entry should be:
+   - ```
+     ALLOWED_HOSTS = ['\<webservice-name\>.com', ...]
+     Ensure
+     DEBUG = False
+     ```
+17. Push your codebase to your Git repo
+18. Once that is done, on the left hand column, click Environment
+   - This is where you enter the contents of **env.py**
+   - You do this by selecting by going to the **Secret Files** option
+   - Under **Filename**, enter **env.py**
+   - Under **Contents** copy and paste the contents of **env.py** into the box provided
+   - Then click **Save Changes**
+19. Everything should now be set up for deployment i.e. the database name, the 'secret' environment variables, the *render.com webservice name*
+20. At the top right of the Render Dashboard, click **Manual Deploy** then **Deploy latest commit**
+21. The date, time and *Building In progess* spinner will be displayed
+21. Ensure there are no errors. Render will display the message **Your service is live** in the log,<br>whilst above the log, the word **Live** will be shown in green
+22. Click the URL link of the form **https:\/\/\<webservice-name>.onrender.com/**
 
 ### How to Fork the Repository
 1. Log in (or sign up) to Github.
