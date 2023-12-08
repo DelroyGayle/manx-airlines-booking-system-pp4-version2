@@ -1384,6 +1384,7 @@ def compute_change_fees(request,
         the_fees_template_values["total_price_string"] = "GBP0.00"
         # The Actual Total Price
         the_fees_template_values["total_price"] = 0
+        Common.save_context["total_price"] = 0
 
     else:
 
