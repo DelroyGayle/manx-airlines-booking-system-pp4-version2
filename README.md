@@ -852,7 +852,7 @@ Note: The same validation is applied to the *Returning Date*
 
    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/cfd46e5f-c44c-4d59-833a-b9087dbe2be2)
 
-<summary>Same Day Return Journey - entering an earlier Return Time than the Departure Time e.g. 13:30pm and 11:00am</summary>
+<summary>Same Day Return Journey - entering an earlier Return Time than the Departure Time e.g. 13:30 pm and 11:00 am</summary>
 <br/> 
 
    ![image](https://github.com/DelroyGayle/manx-airlines-booking-system-p4/assets/91061592/fa80a9d7-0a96-475f-8a5f-e74f56810113)
@@ -1088,6 +1088,8 @@ Note: The same validation is applied to the *Returning Date*
     * Django was used as the web framework.
 * [Semantic UI](https://semantic-ui.com/)
     * Semantic UI was used for the design, styling and responsiveness of the website.
+* [ElephantSQL Postgres](https://www.elephantsql.com/)
+    * ElephantSQL was used for the SQL Database setup
 * [Cloudinary](https://cloudinary.com/)
     * Cloudinary was used for image management.
 * [bitstring](https://pypi.org/project/bitstring/)
@@ -1100,7 +1102,6 @@ Note: The same validation is applied to the *Returning Date*
 * [Heroku](https://heroku.com) for the initial deployment of the site
 * [Render](https://render.com/) for the final deployment of the site
 * [Jquery](https://jquery.com/) for scripting purposes
-* [ElephantSQL Postgres](https://www.elephantsql.com/) was used for the SQL Database
 * [Balsamiq:](https://balsamiq.com/) was used to create the wireframes
 * [DrawSQL](https://drawsql.app/) was used to draw the SQL tables
 * [Am I Responsive](http://ami.responsivedesign.is/) was used for creating the multi-device mock-up shown at the top of this README.md file
@@ -1212,14 +1213,14 @@ To avoid such an error, please use *the Home Button, the Search Bar and the Crea
 
 ## Deployment
 
-The project is deployed on Render. 
+The project is deployed on Render.<br> 
 All credit goes to Sophia Iroegbu and her tutorial [How to Deploy a Django App on Render](https://www.freecodecamp.org/news/deploying-a-django-app-to-render/) which worked flawlessly.<br><br>
 These are the steps in order to deploy on Render:
 1. Regarding your project - ensure you have PostgreSQL Database setup - for my project, [ElephantSQL Postgres](https://www.elephantsql.com/) was used
      + However alternatively there is an option to create a PostgreSQL database within Render
 2. Create a Render account - either via Github itself or use your own email address
    - Either way, you will need to use your email address to confirm registration with Render
-3. Once you have signed up, then proceed to Set Up a PostgreSQL Database if no setup already exists - skip Steps 3,5,6 if you already have a Database setup
+3. Once you have signed up, then proceed to Set Up a PostgreSQL Database if no setup already exists <br>- *skip Steps 3,5,6 if you already have a Database setup*
    - go to the Render dashboard and Click the **New +** button, hover over **PostgreSQL**, and click it
    - Next, define your database settings by giving your *database instance* a unique name
    - For **Region**, use **Frankfurt (EU Central)** if you are based in Europe
@@ -1229,9 +1230,9 @@ These are the steps in order to deploy on Render:
 4. Once the database is set up, you need to connect it to your Django project
    - Install dj-database-url by running the command
    - **pip install dj-database-url**
-5. If you created your Postgres Database setup within Render, then head over to your database settings on Render and copy the **External Database URL**
-6. Copy this into your **env.py** i.e. **os.environ["DATABASE_URL"]="postgres:// ...**
-- Note: There is no need to do this step, if **os.environ["DATABASE_URL"]** is already contains the URL of a previous, working database
+5. If you created your Postgres Database setup within Render, <br>then head over to your database settings on Render and copy the **External Database URL**
+6. Copy this into your **env.py** i.e. **os.environ["DATABASE_URL"]="postgres:// ..."**
+- Note: There is no need to do this step, if **os.environ["DATABASE_URL"]** already contains the URL of a previous, working database
 7. Ensure that in your *settings.py* under your sitename the following settings are at the top of the file:
   ```
   import dj-database-url
@@ -1248,20 +1249,20 @@ These are the steps in order to deploy on Render:
 10. Create a folder in the root directory called **staticfiles**
 11. Populate this folder by running **python manage.py collectstatic --noinput**
 12. Push your codebase to your Git repo
-13. Head over to your Render dashboard. Click **New +** and **Select Web Service**
+13. Head over to your Render dashboard. Click **New +** and **Select Web web-service-name**
 14. Connect your GitHub if you haven't already
     - This is done by: **Search** for the repo you want to deploy and click the **Connect** button
-15. Give your **webservice** a name and ensure you are connecting to the right branch
+15. Give your **web web-service-name** a name and ensure you are connecting to the right branch
    - Use the same **Region** as used earlier
    - Build command should be: **pip install -r requirements.txt**
    - Start command should be: **gunicorn \<sitename\>.wsgi**
    - (Note: this would be the same entry that follows the word **web:** in a Heroku Procfile; although a Procfile is **not** needed by Render)
    - Select the free tier and click on **Create Web Service**
-16. Copy the **\<webservice-name\>.com** name that was chosen - that is, *No https://, No URL* - simply **\<webservice-name\>.com**
+16. Copy the **\<web-service-name\>.com** name that was chosen - that is, *No https://, No URL* - simply **\<web-service-name\>.com**
    - Enter that into ALLOWED_HOSTS
    - The entry should be:
    - ```
-     ALLOWED_HOSTS = ['\<webservice-name\>.com', ...]
+     ALLOWED_HOSTS = ['\<web-service-name\>.com', ...]
      Ensure
      DEBUG = False
      ```
@@ -1272,11 +1273,11 @@ These are the steps in order to deploy on Render:
    - Under **Filename**, enter **env.py**
    - Under **Contents** copy and paste the contents of **env.py** into the box provided
    - Then click **Save Changes**
-19. Everything should now be set up for deployment i.e. the database name, the 'secret' environment variables, the *render.com webservice name*
+19. Everything should now be set up for deployment i.e. the database name, the 'secret' environment variables, <br>the *render.com web service name*
 20. At the top right of the Render Dashboard, click **Manual Deploy** then **Deploy latest commit**
-21. The date, time and *Building In progess* spinner will be displayed
+21. The date, time and *Building In progress* spinner will be displayed
 21. Ensure there are no errors. Render will display the message **Your service is live** in the log,<br>whilst above the log, the word **Live** will be shown in green
-22. Click the URL link of the form **https:\/\/\<webservice-name>.onrender.com/**
+22. Click the URL link of the form **https:\/\/\<web-service-name>.onrender.com/**
 
 ### How to Fork the Repository
 1. Log in (or sign up) to Github.
