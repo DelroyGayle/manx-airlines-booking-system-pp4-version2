@@ -29,5 +29,5 @@ urlpatterns = [
                     template_name='users/login.html'), name='login'),
 ]
 
-handler404="booking.views.handle_not_found"
-handler500="booking.views.handle_500"
+handler404 = "booking.views.handle_not_found"
+handler500 = "booking.views.handle_500"
